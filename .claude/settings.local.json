@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"c:\\\\Users\\\\New\\\\Documents\\\\Projects\\\\vizitka.html\")",
+      "Bash(npx --version)",
+      "Bash(npx netlify-cli:*)",
+      "Bash(surge --version)",
+      "Bash(npm --version)"
+    ]
+  }
+}

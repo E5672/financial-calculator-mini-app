@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовый Калькулятор</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Финансовый Калькулятор</h1>
+
+        <div class="card">
+            <h2>Доходы</h2>
+            <div class="input-group">
+                <label for="salary">Зарплата</label>
+                <input type="number" id="salary" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="freelance">Фриланс</label>
+                <input type="number" id="freelance" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="passive_income">Пассивный доход</label>
+                <input type="number" id="passive_income" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="other_income">Прочие доходы</label>
+                <input type="number" id="other_income" min="0" placeholder="0">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Расходы</h2>
+            <div class="input-group">
+                <label for="rent">Аренда</label>
+                <input type="number" id="rent" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="food">Еда</label>
+                <input type="number" id="food" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="transport">Транспорт</label>
+                <input type="number" id="transport" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="marketing">Маркетинг</label>
+                <input type="number" id="marketing" min="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label for="other_expenses">Прочие расходы</label>
+                <input type="number" id="other_expenses" min="0" placeholder="0">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Период</h2>
+            <div class="period-selector">
+                <label>
+                    <input type="radio" name="period" value="day"> День
+                </label>
+                <label>
+                    <input type="radio" name="period" value="week"> Неделя
+                </label>
+                <label>
+                    <input type="radio" name="period" value="month" checked> Месяц
+                </label>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="result-card profit-card" id="profit-card">
+                <h3>Прибыль</h3>
+                <div class="value" id="profit-value">0</div>
+            </div>
+            <div class="result-card">
+                <h3>Доход</h3>
+                <div class="value" id="income-value">0</div>
+            </div>
+            <div class="result-card">
+                <h3>Расход</h3>
+                <div class="value" id="expense-value">0</div>
+            </div>
+            <div class="result-card">
+                <h3>% Расходов</h3>
+                <div class="value" id="expense-ratio-value">0%</div>
+            </div>
+        </div>
+
+        <div class="warning" id="warning" style="display: none;">
+            Расходы превышают доходы
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
