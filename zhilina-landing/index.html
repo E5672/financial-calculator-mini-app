@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Жилина Елена — Эксперт по логистике и нейросотрудникам</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --card: #1a1e2a;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --text: #e8eaf0;
+      --muted: #8b90a0;
+      --border: #252a38;
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(13, 15, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,212,170,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: #a89cff;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-badge::before { content: '●'; font-size: 0.5rem; color: var(--accent2); }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+      max-width: 500px;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #8b7fff);
+      color: #fff;
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.5);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* hero photo */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      position: relative;
+    }
+    .hero-photo-wrap {
+      position: relative;
+      width: 420px;
+      max-width: 100%;
+    }
+    .hero-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.6), rgba(0,212,170,0.3));
+      z-index: 0;
+    }
+    .hero-photo-wrap img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: 26px;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      max-height: 580px;
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 96px 48px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 56px;
+    }
+
+    /* ── ADVANTAGES ── */
+    .advantages { background: var(--surface); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,0.4);
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .card:hover::after { opacity: 1; }
+    .card-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── REVIEWS ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .review-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.3s;
+    }
+    .review-card:hover { border-color: rgba(0,212,170,0.3); }
+    .stars { color: #ffc107; font-size: 0.9rem; margin-bottom: 14px; }
+    .review-text {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .reviewer-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .reviewer-name { font-size: 0.9rem; font-weight: 700; }
+    .reviewer-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── FORM ── */
+    .form-section { background: var(--surface); }
+    .form-wrapper {
+      max-width: 620px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+    }
+    .form-wrapper h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .form-wrapper p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+    }
+    select option { background: var(--surface); }
+    textarea { resize: vertical; min-height: 100px; }
+    .form-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), #8b7fff);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.35);
+    }
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.5);
+    }
+    .form-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    footer span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    /* ── SUCCESS ── */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 24px;
+    }
+    .success-msg .check {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+    .success-msg h3 { font-size: 1.4rem; margin-bottom: 8px; }
+    .success-msg p { color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero-sub { margin: 0 auto 36px; }
+      .hero-btns { justify-content: center; }
+      .hero-visual { order: -1; }
+      section { padding: 64px 24px; }
+      .cards, .reviews-grid { grid-template-columns: 1fr; }
+      .form-wrapper { padding: 32px 24px; }
+    }
+    @media (max-width: 600px) {
+      .cards, .reviews-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ЖЕ</div>
+  <div class="nav-links">
+    <a href="#advantages">Преимущества</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#form">Консультация</a>
+  </div>
+  <a href="#form" class="nav-cta">Записаться</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">Эксперт-практик · 10+ лет</div>
+      <h1>Жилина<br><span>Елена</span></h1>
+      <p class="hero-sub">
+        Эксперт по оптимизации логистики и внедрению нейросотрудников в бизнес.
+        Помогаю компаниям сокращать издержки и масштабироваться с помощью ИИ.
+      </p>
+      <div class="hero-btns">
+        <a href="#form" class="btn-primary">Записаться на консультацию</a>
+        <a href="#advantages" class="btn-ghost">Узнать больше</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo-wrap">
+        <img src="photo.png" alt="Жилина Елена" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section class="advantages" id="advantages">
+  <div class="container">
+    <div class="section-label">Почему выбирают меня</div>
+    <h2 class="section-title">3 ключевых преимущества</h2>
+    <p class="section-sub">Системный подход, измеримые результаты и индивидуальные решения для вашего бизнеса</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>Быстрый результат без воды</h3>
+        <p>Уже в первый месяц вы увидите конкретные изменения: оптимизированные маршруты, сокращённые расходы и автоматизированные процессы, которые реально работают.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>Нейросотрудники под ключ</h3>
+        <p>Внедряю ИИ-ассистентов, которые берут на себя рутину: обработку заявок, коммуникацию с клиентами, аналитику — освобождая ваших сотрудников для стратегических задач.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Системный аудит логистики</h3>
+        <p>Провожу глубокий анализ цепочки поставок и нахожу скрытые потери. Мои клиенты экономят в среднем 30–40% логистических затрат уже в первые 3 месяца.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-label">Отзывы учеников</div>
+    <h2 class="section-title">Что говорят мои клиенты</h2>
+    <p class="section-sub">Реальные результаты реальных людей, которые доверились мне и изменили свой бизнес</p>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"После работы с Еленой мы сократили логистические расходы на 38%. Она не просто дала советы — она выстроила систему с нуля и обучила команду. Нейросотрудник, которого внедрили, теперь обрабатывает 60% входящих заявок."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">АМ</div>
+          <div>
+            <div class="reviewer-name">Алексей Морозов</div>
+            <div class="reviewer-role">Директор транспортной компании</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Елена — это редкое сочетание эксперта-практика и отличного педагога. Прошла её курс по нейросотрудникам, за 2 месяца внедрила 3 автоматизации в своём интернет-магазине. Продажи выросли, а я перестала тонуть в рутине."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">НК</div>
+          <div>
+            <div class="reviewer-name">Наталья Кравцова</div>
+            <div class="reviewer-role">Владелец e-commerce бизнеса</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Скептически относился к ИИ в логистике, но Елена доказала на цифрах. Провела аудит, нашла потери, которые мы не замечали 5 лет. Внедрение нейросотрудника заняло 3 недели, а окупилось за первый месяц."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">ДП</div>
+          <div>
+            <div class="reviewer-name">Дмитрий Петров</div>
+            <div class="reviewer-role">Руководитель отдела логистики</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section" id="form">
+  <div class="container">
+    <div class="form-wrapper">
+      <div class="form-content">
+        <div class="section-label" style="margin-bottom: 8px;">Запись на консультацию</div>
+        <h2>Начнём работу</h2>
+        <p>Оставьте заявку — я свяжусь с вами в течение 24 часов и проведём бесплатный 30-минутный разбор вашей ситуации.</p>
+        <form id="leadForm" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label for="name">Ваше имя</label>
+            <input type="text" id="name" name="name" placeholder="Иван Иванов" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон или Telegram</label>
+            <input type="text" id="phone" name="phone" placeholder="+7 900 000-00-00" required />
+          </div>
+          <div class="form-group">
+            <label for="topic">Что хотите решить?</label>
+            <select id="topic" name="topic">
+              <option value="">Выберите тему...</option>
+              <option value="audit">Аудит логистики</option>
+              <option value="ai">Внедрение нейросотрудника</option>
+              <option value="optimization">Оптимизация затрат</option>
+              <option value="training">Обучение команды</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="comment">Кратко о вашей задаче</label>
+            <textarea id="comment" name="comment" placeholder="Расскажите о своём бизнесе и главной проблеме..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Отправить заявку →</button>
+          <p class="form-note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности. Никакого спама.</p>
+        </form>
+      </div>
+      <div class="success-msg" id="successMsg">
+        <div class="check">✅</div>
+        <h3>Заявка отправлена!</h3>
+        <p>Елена свяжется с вами в течение 24 часов. Ждите звонка или сообщения.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>Жилина Елена</span> — Эксперт по оптимизации логистики и нейросотрудникам</p>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('leadForm');
+    const success = document.getElementById('successMsg');
+    form.style.display = 'none';
+    success.style.display = 'block';
+  }
+
+  // Smooth active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) cur = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + cur ? '#e8eaf0' : '';
+    });
+  });
+</script>
+</body>
+</html>
