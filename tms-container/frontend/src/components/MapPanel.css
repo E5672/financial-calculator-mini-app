@@ -1,0 +1,182 @@
+.map-panel {
+  flex: 1;
+  position: relative;
+  background: var(--color-surface-2);
+  min-width: 0;
+}
+
+.map-panel__map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Легенда */
+.map-legend {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  background: rgba(26, 29, 39, 0.9);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.map-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.map-legend__line {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Overlay */
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+}
+
+.map-overlay__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.map-overlay__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.map-overlay__text {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Placeholder */
+.map-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.map-placeholder__icon {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.map-placeholder__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-dim);
+}
+
+.map-placeholder__sub {
+  font-size: 13px;
+  color: var(--color-text-dim);
+  text-align: center;
+  max-width: 260px;
+}
+
+/* Pick overlay */
+.map-pick-overlay {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.map-pick-overlay__badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(26, 29, 39, 0.95);
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  pointer-events: all;
+  white-space: nowrap;
+}
+
+.map-pick-overlay__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.map-pick-overlay__cancel {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+.map-pick-overlay__cancel:hover { color: var(--color-text); background: var(--color-surface-3); }
+
+/* Fallback badge */
+.map-fallback-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning);
+  color: var(--color-warning);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  z-index: 100;
+  white-space: nowrap;
+}

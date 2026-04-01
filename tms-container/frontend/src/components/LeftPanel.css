@@ -1,0 +1,280 @@
+.left-panel {
+  width: 340px;
+  min-width: 300px;
+  max-width: 340px;
+  height: 100%;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.left-panel__header {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+}
+
+.left-panel__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.left-panel__logo-icon {
+  font-size: 24px;
+}
+
+.left-panel__logo-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.left-panel__logo-sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.left-panel__section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.left-panel__section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.section-icon {
+  font-size: 14px;
+}
+
+/* Route points */
+.route-points {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-point {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.route-point__dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 22px;
+}
+
+.route-point__dot--a { background: rgba(34, 197, 94, 0.2); color: var(--color-success); border: 1.5px solid var(--color-success); }
+.route-point__dot--b { background: rgba(79, 128, 255, 0.2); color: var(--color-primary); border: 1.5px solid var(--color-primary); }
+.route-point__dot--c { background: rgba(245, 158, 11, 0.2); color: var(--color-warning); border: 1.5px solid var(--color-warning); }
+
+.route-point__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.route-connector {
+  height: 8px;
+  width: 1px;
+  background: var(--color-border-light);
+  margin-left: 13px;
+  position: relative;
+}
+
+/* Transport */
+.transport-type {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transport-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-size: 18px;
+}
+
+.transport-badge__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.transport-badge__sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.transport-badge__check {
+  margin-left: auto;
+  color: var(--color-primary);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Checkboxes */
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.check-row:hover {
+  background: var(--color-surface-3);
+}
+
+.check-row__input {
+  display: none;
+}
+
+.check-row__box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.check-row__box--checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.check-row__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.check-row__label {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.check-row__note {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* Econ grid */
+.econ-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.num-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.num-field__label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.num-field__input {
+  padding: 7px 9px;
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Calculate button */
+.btn-calculate {
+  margin: 16px 16px 8px;
+  padding: 13px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 4px 15px rgba(79, 128, 255, 0.35);
+  transition: all var(--transition);
+}
+
+.btn-calculate:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  box-shadow: 0 6px 20px rgba(79, 128, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-calculate:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-calculate--disabled {
+  background: var(--color-surface-3);
+  color: var(--color-text-dim);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-calculate--loading {
+  background: var(--color-primary-hover);
+  cursor: wait;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.hint-text {
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-dim);
+  padding: 0 16px 16px;
+}
