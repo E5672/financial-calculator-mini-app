@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0C0A1E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>VIP TAXI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+        /* Фон на html — покрывает весь вьюпорт, включая боковые поля */
+        html {
+            background: linear-gradient(160deg, #0C0A1E 0%, #130C2A 50%, #0C0A1E 100%);
+            min-height: 100%;
+            overflow-x: hidden;
+            color-scheme: dark;
+        }
+
+        :root {
+            --bg:       #0C0A1E;
+            --bg2:      #13112B;
+            --bg3:      #1C1935;
+            --bg4:      #2D2860;
+            --gold:     #7B6FF0;
+            --gold2:    #9D95F5;
+            --gold-dim: rgba(123,111,240,0.12);
+            --gold-glow:rgba(123,111,240,0.26);
+            --green:    #22C55E;
+            --red:      #EF4444;
+            --text:     #FAFAFA;
+            --text2:    #A1A1C0;
+            --text3:    #5A5680;
+            --border:   rgba(255,255,255,0.07);
+            --border2:  rgba(255,255,255,0.13);
+            --r:        16px;
+            --r-sm:     10px;
+        }
+
+        body {
+            background: transparent;
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 82px;
+            overscroll-behavior: none;
+            overflow-x: hidden;
+        }
+
+        /* ─────────── HERO ─────────── */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+            background: #0C0A1E;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+            filter: brightness(0.55) saturate(0.75);
+            display: block;
+        }
+
+        /* fallback gradient if image fails */
+        .hero-img-fallback {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 70% 50%, #1e1040 0%, #0C0A1E 70%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(12,10,30,0.0)  0%,
+                rgba(12,10,30,0.20) 35%,
+                rgba(12,10,30,0.72) 65%,
+                rgba(12,10,30,1)    100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 20px 22px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(123,111,240,0.15);
+            border: 1px solid rgba(123,111,240,0.35);
+            border-radius: 100px;
+            padding: 5px 13px 5px 10px;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+
+        .hero-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 6px var(--gold);
+            flex-shrink: 0;
+        }
+
+        .hero-pill-text {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -0.8px;
+            line-height: 1;
+            background: linear-gradient(130deg, #FFFFFF 30%, #9D95F5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 7px;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        /* ─────────── SCREENS ─────────── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+        #screen-stats { padding-top: 20px; }
+
+        .pad { padding: 0 16px; }
+
+        /* ─────────── SETTINGS CARD ─────────── */
+        .settings-card {
+            margin: 14px 16px 12px;
+            background: var(--bg2);
+            border-radius: var(--r);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .settings-left {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .settings-ico {
+            width: 34px; height: 34px;
+            background: var(--gold-dim);
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .settings-ico svg { width: 17px; height: 17px; stroke: var(--gold); fill: none; stroke-width: 2; }
+
+        .settings-name { font-size: 15px; font-weight: 700; }
+        .settings-hint { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+        .chevron {
+            width: 18px; height: 18px;
+            stroke: var(--text3); fill: none; stroke-width: 2.5; stroke-linecap: round;
+            transition: transform 0.25s ease;
+            flex-shrink: 0;
+        }
+        .chevron.open { transform: rotate(180deg); }
+
+        .settings-body {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.32s ease;
+        }
+        .settings-body.open { max-height: 500px; }
+
+        .settings-divider { height: 1px; background: var(--border); }
+
+        .settings-fields { padding: 6px 16px 14px; }
+
+        .sfield {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .sfield:last-child { border-bottom: none; }
+
+        .sfield-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+
+        .sfield-body { flex: 1; }
+        .sfield-label { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 3px; }
+
+        .sfield-body input,
+        .sfield-body select {
+            width: 100%;
+            background: none; border: none;
+            color: var(--text); font-size: 16px; font-weight: 600;
+            outline: none; -webkit-appearance: none; appearance: none; padding: 0;
+        }
+
+        .sfield-body select {
+            font-size: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2352525B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+            padding-right: 16px;
+            cursor: pointer;
+        }
+
+        /* ─────────── TRIP INPUTS ─────────── */
+        .trip-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 0 16px 12px;
+        }
+
+        .inp-card {
+            background: var(--bg2);
+            border-radius: var(--r);
+            border: 1px solid var(--border);
+            padding: 14px 14px 12px;
+            transition: border-color 0.15s;
+        }
+
+        .inp-card:focus-within { border-color: rgba(123,111,240,0.45); }
+
+        .inp-label {
+            font-size: 10px; font-weight: 800;
+            letter-spacing: 0.8px; text-transform: uppercase;
+            color: var(--text3); margin-bottom: 8px;
+        }
+
+        .inp-card input {
+            width: 100%; background: none; border: none;
+            color: var(--text); font-size: clamp(22px, 7vw, 30px); font-weight: 800;
+            outline: none; -webkit-appearance: none; padding: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .inp-card input::placeholder { color: var(--bg4); }
+        .inp-unit { font-size: 11px; color: var(--text3); margin-top: 5px; }
+
+        /* ─────────── BUTTONS ─────────── */
+        .btn-calc {
+            display: block; width: calc(100% - 32px);
+            margin: 0 16px 0;
+            padding: 18px;
+            border-radius: var(--r); border: none;
+            background: linear-gradient(135deg, #7B6FF0 0%, #5040D8 100%);
+            color: #fff; font-size: 17px; font-weight: 800;
+            cursor: pointer; letter-spacing: 0.2px;
+            box-shadow: 0 8px 28px rgba(100,80,220,0.38);
+            transition: opacity .15s, transform .1s, box-shadow .15s;
+        }
+        .btn-calc:active { opacity:.88; transform:scale(.98); box-shadow:0 4px 14px rgba(100,80,220,.22); }
+
+        .btn-go {
+            display: block; width: 100%;
+            padding: 18px; border-radius: var(--r); border: none;
+            background: linear-gradient(135deg, #27C869 0%, #15A34A 100%);
+            color: #fff; font-size: 19px; font-weight: 800;
+            cursor: pointer; letter-spacing: 0.2px;
+            box-shadow: 0 8px 28px rgba(34,197,94,0.26);
+            transition: opacity .15s, transform .1s;
+            margin-top: 10px;
+        }
+        .btn-go:active { opacity:.88; transform:scale(.98); }
+
+        /* ─────────── RESULT ─────────── */
+        .result-wrap { margin: 12px 16px 0; }
+
+        .result-card {
+            background: var(--bg2);
+            border-radius: var(--r);
+            border: 1px solid var(--border);
+            padding: 26px 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-glow {
+            position: absolute;
+            top: -50px; left: 50%;
+            transform: translateX(-50%);
+            width: 220px; height: 130px;
+            background: var(--gold-glow);
+            filter: blur(50px);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: background .3s;
+        }
+        .result-glow.neg { background: rgba(239,68,68,0.18); }
+
+        .result-label {
+            font-size: 10px; font-weight: 800;
+            letter-spacing: 1.2px; text-transform: uppercase;
+            color: var(--text3); text-align: center; margin-bottom: 6px;
+        }
+
+        .result-amount {
+            font-size: clamp(48px, 16vw, 68px); font-weight: 900;
+            line-height: 1; text-align: center; letter-spacing: -2px;
+            white-space: nowrap; overflow: hidden;
+            background: linear-gradient(140deg, #D0CCFF 0%, #9D95F5 40%, #6655E8 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .result-amount.negative {
+            background: linear-gradient(140deg, #FF8080 0%, #EF4444 100%);
+            -webkit-background-clip: text; background-clip: text;
+        }
+
+        .result-chips {
+            display: flex; justify-content: center; gap: 8px;
+            margin-top: 18px; padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .chip {
+            background: var(--bg3);
+            border-radius: 100px;
+            padding: 7px 16px;
+            text-align: center;
+        }
+        .chip-val { font-size: 15px; font-weight: 700; color: var(--red); }
+        .chip-lbl { font-size: 10px; color: var(--text3); margin-top: 1px; letter-spacing: 0.3px; }
+
+        /* ─────────── TAB BAR ─────────── */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 480px;
+            background: rgba(12,10,30,0.95);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border);
+            display: flex; z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        .tab-btn {
+            flex: 1; padding: 10px 8px 13px;
+            background: none; border: none;
+            color: var(--text3); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .tab-btn.active { color: var(--gold); }
+        .tab-btn svg { width: 22px; height: 22px; stroke-width: 1.8; }
+
+        .tab-line {
+            position: absolute; bottom: 0; height: 2px;
+            background: linear-gradient(90deg, #9D95F5, #7B6FF0);
+            border-radius: 2px 2px 0 0;
+            width: 50%; left: 0;
+            transition: left 0.28s cubic-bezier(.4,0,.2,1);
+        }
+
+        /* ─────────── STATS SCREEN ─────────── */
+        .stats-top {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 4px 16px 16px;
+        }
+        .stats-title { font-size: 24px; font-weight: 900; letter-spacing: -0.4px; }
+
+        .seg-wrap { padding: 0 16px; margin-bottom: 10px; }
+
+        .seg {
+            display: flex;
+            background: var(--bg2); border-radius: var(--r-sm);
+            border: 1px solid var(--border);
+            padding: 3px; gap: 2px;
+        }
+
+        .seg-btn {
+            flex: 1; padding: 8px 4px;
+            background: none; border: none; border-radius: 8px;
+            color: var(--text2); font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .seg-btn.active {
+            background: linear-gradient(135deg, #7B6FF0, #5040D8);
+            color: #fff; font-weight: 800;
+        }
+
+        .chart-wrap {
+            background: var(--bg2); border-radius: var(--r);
+            border: 1px solid var(--border);
+            padding: 14px; margin: 0 16px 12px;
+            height: 220px; position: relative;
+        }
+        .chart-empty {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text3); font-size: 13px;
+        }
+
+        .btn-best {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: calc(100% - 32px); margin: 0 16px 16px;
+            padding: 15px; border-radius: var(--r);
+            border: 1px solid rgba(123,111,240,0.28);
+            background: rgba(123,111,240,0.07);
+            color: var(--gold); font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: opacity .15s;
+        }
+        .btn-best:active { opacity: .65; }
+
+        /* ─────────── TRIP LIST ─────────── */
+        .trips-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 4px 16px 10px;
+        }
+        .trips-head-label {
+            font-size: 11px; font-weight: 800;
+            letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3);
+        }
+
+        #trips-list { padding: 0 16px 8px; }
+
+        .trip-item {
+            background: var(--bg2); border-radius: var(--r);
+            border: 1px solid var(--border);
+            padding: 13px 13px 13px 0;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 11px;
+            overflow: hidden; position: relative;
+        }
+
+        .trip-bar {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            border-radius: 0 2px 2px 0;
+        }
+        .trip-bar.pos { background: var(--green); }
+        .trip-bar.neg { background: var(--red); }
+
+        .trip-check-wrap { display: flex; align-items: center; padding-left: 13px; flex-shrink: 0; min-height: 44px; }
+
+        .trip-check {
+            appearance: none; -webkit-appearance: none;
+            width: 26px; height: 26px;
+            border: 1.5px solid var(--text3); border-radius: 8px;
+            background: transparent; cursor: pointer; position: relative;
+            transition: all 0.15s; flex-shrink: 0;
+        }
+        .trip-check:checked { background: var(--gold); border-color: var(--gold); }
+        .trip-check:checked::after {
+            content: '';
+            position: absolute; left: 7px; top: 3px;
+            width: 6px; height: 12px;
+            border: 2px solid #000;
+            border-top: none; border-left: none;
+            transform: rotate(45deg);
+        }
+
+        .trip-main { flex: 1; min-width: 0; }
+
+        .trip-income { font-size: 21px; font-weight: 800; color: var(--green); letter-spacing: -0.4px; line-height: 1; }
+        .trip-income.neg { color: var(--red); }
+
+        .trip-meta { font-size: 12px; color: var(--text2); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .trip-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+
+        .trip-btn {
+            background: var(--bg3); border: none; border-radius: 8px;
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 14px; transition: opacity .15s;
+        }
+        .trip-btn:active { opacity: .6; }
+
+        /* ─────────── MODAL ─────────── */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.72);
+            z-index: 200; display: flex; align-items: flex-end;
+        }
+        .modal-overlay.hidden { display: none; }
+
+        .modal {
+            background: var(--bg2); border-radius: 24px 24px 0 0;
+            border-top: 1px solid var(--border2);
+            padding: 8px 20px calc(28px + env(safe-area-inset-bottom));
+            width: 100%; max-width: 480px; margin: 0 auto;
+        }
+
+        .modal-handle {
+            width: 36px; height: 4px; background: var(--bg4);
+            border-radius: 2px; margin: 0 auto 20px;
+        }
+
+        .modal h3 { font-size: 19px; font-weight: 800; margin-bottom: 18px; }
+
+        .modal-field { margin-bottom: 14px; }
+        .modal-field label { display: block; font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 8px; }
+        .modal-field input {
+            width: 100%; background: var(--bg3);
+            border: 1px solid var(--border2); border-radius: var(--r-sm);
+            color: var(--text); font-size: 22px; font-weight: 700;
+            padding: 13px 15px; outline: none; -webkit-appearance: none;
+            transition: border-color .15s;
+        }
+        .modal-field input:focus { border-color: var(--gold); }
+
+        .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
+
+        .btn-cancel {
+            flex: 1; background: var(--bg3); color: var(--text);
+            padding: 15px; border-radius: var(--r); border: none;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+        .btn-save {
+            flex: 2;
+            background: linear-gradient(135deg, #7B6FF0, #5040D8);
+            color: #fff; padding: 15px; border-radius: var(--r); border: none;
+            font-size: 16px; font-weight: 800; cursor: pointer;
+        }
+
+        /* ─────────── BEST TIME ─────────── */
+        .best-section-lbl {
+            font-size: 11px; font-weight: 800;
+            letter-spacing: 0.8px; text-transform: uppercase;
+            color: var(--text3); margin: 14px 0 9px;
+        }
+        .best-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid var(--border);
+        }
+        .best-row:last-child { border-bottom: none; }
+        .best-row-lbl { font-size: 14px; }
+        .best-row-val { font-weight: 700; font-size: 13px; color: var(--gold); }
+
+        /* ─────────── TOAST ─────────── */
+        .toast {
+            position: fixed; bottom: 94px; left: 16px; right: 16px;
+            background: var(--bg3); border: 1px solid var(--border2);
+            color: var(--text); padding: 11px 20px; border-radius: 100px;
+            font-size: 14px; font-weight: 600; z-index: 300;
+            opacity: 0; transition: opacity .25s;
+            pointer-events: none; text-align: center;
+            backdrop-filter: blur(12px);
+        }
+        .toast.show { opacity: 1; }
+
+        /* ─────────── TOUCH & TAP TARGETS ─────────── */
+        button, select, input[type="checkbox"] {
+            touch-action: manipulation;
+        }
+
+        .trip-btn, .tab-btn {
+            min-height: 44px;
+        }
+
+
+        /* ─────────── MISC ─────────── */
+        .hidden { display: none !important; }
+        .mb12 { margin-bottom: 12px; }
+
+        .empty-state { text-align: center; padding: 44px 20px; color: var(--text3); }
+        .empty-state .icon { font-size: 38px; margin-bottom: 10px; opacity: .45; }
+        .empty-state p { font-size: 13px; line-height: 1.7; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ SCREEN: ВЫГОДА ═══════════ -->
+<div id="screen-profit" class="screen active">
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-img-fallback"></div>
+        <img class="hero-img"
+             src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80"
+             alt="luxury car"
+             onerror="this.style.display='none'">
+        <div class="hero-overlay">
+            <div class="hero-pill">
+                <div class="hero-dot"></div>
+                <span class="hero-pill-text">VIP Taxi Pro</span>
+            </div>
+            <div class="hero-title">Считай выгоду</div>
+            <div class="hero-sub">Считай не километры, а деньги</div>
+        </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="settings-card" id="settings-card">
+        <div class="settings-header" onclick="toggleSettings()">
+            <div class="settings-left">
+                <div class="settings-ico">
+                    <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div>
+                    <div class="settings-name">Настройки</div>
+                    <div class="settings-hint" id="settings-summary">Нажмите для настройки</div>
+                </div>
+            </div>
+            <svg class="chevron" id="settings-chevron" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
+
+        <div class="settings-body" id="settings-body">
+            <div class="settings-divider"></div>
+            <div class="settings-fields">
+
+                <div class="sfield">
+                    <div class="sfield-icon">⛽</div>
+                    <div class="sfield-body">
+                        <div class="sfield-label">Расход (л / 100 км)</div>
+                        <input type="number" id="fuel-rate" placeholder="10" inputmode="decimal" step="0.1" min="0">
+                    </div>
+                </div>
+
+                <div class="sfield">
+                    <div class="sfield-icon">💰</div>
+                    <div class="sfield-body">
+                        <div class="sfield-label">Цена топлива (₽ / л)</div>
+                        <input type="number" id="fuel-price" placeholder="60" inputmode="decimal" step="0.5" min="0">
+                    </div>
+                </div>
+
+                <div class="sfield">
+                    <div class="sfield-icon">🚖</div>
+                    <div class="sfield-body">
+                        <div class="sfield-label">Агрегатор</div>
+                        <select id="aggregator" onchange="onAggregatorChange()">
+                            <option value="20">Яндекс Такси — 20%</option>
+                            <option value="25">Uber / Go — 25%</option>
+                            <option value="10">VIP Taxi — 10%</option>
+                            <option value="0">Прямой заказ — 0%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sfield">
+                    <div class="sfield-icon">%</div>
+                    <div class="sfield-body">
+                        <div class="sfield-label">Комиссия (%)</div>
+                        <input type="number" id="custom-percent" placeholder="20" inputmode="decimal" step="0.5" min="0" max="100">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TRIP INPUTS -->
+    <div class="trip-row">
+        <div class="inp-card">
+            <div class="inp-label">Стоимость</div>
+            <input type="number" id="order-price" placeholder="0" inputmode="numeric" min="0">
+            <div class="inp-unit">рублей</div>
+        </div>
+        <div class="inp-card">
+            <div class="inp-label">Километраж</div>
+            <input type="number" id="km" placeholder="0" inputmode="decimal" step="0.1" min="0" pattern="[0-9]*">
+            <div class="inp-unit">километров</div>
+        </div>
+    </div>
+
+    <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+
+    <!-- RESULT -->
+    <div id="result" class="hidden">
+        <div class="result-wrap">
+            <div class="result-card">
+                <div class="result-glow" id="result-glow"></div>
+                <div class="result-label">Чистый доход</div>
+                <div class="result-amount" id="result-income">0 ₽</div>
+                <div class="result-chips">
+                    <div class="chip">
+                        <div class="chip-val" id="result-fuel">0 ₽</div>
+                        <div class="chip-lbl">Топливо</div>
+                    </div>
+                    <div class="chip">
+                        <div class="chip-val" id="result-commission">0 ₽</div>
+                        <div class="chip-lbl">Комиссия</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-go" onclick="saveTrip()">🚕 Поехал</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════════ SCREEN: СТАТИСТИКА ═══════════ -->
+<div id="screen-stats" class="screen">
+
+    <div class="stats-top">
+        <div class="stats-title">Статистика</div>
+    </div>
+
+    <div class="seg-wrap">
+        <div class="seg" id="chart-type-ctrl">
+            <button class="seg-btn active" onclick="setChartType('line', this)">Линия</button>
+            <button class="seg-btn" onclick="setChartType('bar', this)">Столбцы</button>
+            <button class="seg-btn" onclick="setChartType('pie', this)">Круг</button>
+        </div>
+    </div>
+
+    <div class="seg-wrap">
+        <div class="seg" id="period-ctrl">
+            <button class="seg-btn active" onclick="setPeriod('hours', this)">Часы</button>
+            <button class="seg-btn" onclick="setPeriod('days', this)">Дни</button>
+            <button class="seg-btn" onclick="setPeriod('months', this)">Месяцы</button>
+            <button class="seg-btn" onclick="setPeriod('year', this)">Год</button>
+        </div>
+    </div>
+
+    <div class="chart-wrap">
+        <canvas id="myChart"></canvas>
+        <div class="chart-empty hidden" id="chart-empty">Нет данных для отображения</div>
+    </div>
+
+    <button class="btn-best" onclick="showBestTime()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Лучшее время для заработка
+    </button>
+
+    <div class="trips-head">
+        <div class="trips-head-label">Поездки сегодня</div>
+    </div>
+    <div id="trips-list"></div>
+
+</div>
+
+<!-- ═══════════ TAB BAR ═══════════ -->
+<div class="tab-bar" id="tab-bar">
+    <div class="tab-line" id="tab-line"></div>
+
+    <button class="tab-btn active" id="tab-profit" onclick="switchTab('profit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+            <path d="M12 6v6l4 2"/>
+        </svg>
+        Выгода
+    </button>
+
+    <button class="tab-btn" id="tab-stats" onclick="switchTab('stats')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        Статистика
+    </button>
+</div>
+
+<!-- ═══════════ TOAST ═══════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════ MODAL: Лучшее время ═══════════ -->
+<div id="modal-best" class="modal-overlay hidden" onclick="closeOverlay(event,'modal-best')">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3>⭐ Лучшее время</h3>
+        <div id="best-content"></div>
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeModal('modal-best')">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ MODAL: Редактировать ═══════════ -->
+<div id="modal-edit" class="modal-overlay hidden" onclick="closeOverlay(event,'modal-edit')">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3>✏️ Редактировать</h3>
+        <div class="modal-field">
+            <label>Стоимость заказа (₽)</label>
+            <input type="number" id="edit-price" inputmode="decimal" min="0">
+        </div>
+        <input type="hidden" id="edit-trip-id">
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeModal('modal-edit')">Отмена</button>
+            <button class="btn-save"   onclick="saveEditTrip()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let trips = [];
+let settings = {};
+let chartType = 'line';
+let period = 'hours';
+let chartInstance = null;
+let pendingCalc = null;
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function init() {
+    trips = JSON.parse(localStorage.getItem('vt-trips') || '[]');
+    settings = JSON.parse(localStorage.getItem('vt-settings') || '{}');
+
+    if (settings.fuelRate)  document.getElementById('fuel-rate').value  = settings.fuelRate;
+    if (settings.fuelPrice) document.getElementById('fuel-price').value = settings.fuelPrice;
+    if (settings.aggregator) document.getElementById('aggregator').value = settings.aggregator;
+
+    if (settings.customPercent !== undefined && settings.customPercent !== '') {
+        document.getElementById('custom-percent').value = settings.customPercent;
+    } else if (settings.aggregator) {
+        document.getElementById('custom-percent').value = settings.aggregator;
+    }
+
+    ['fuel-rate', 'fuel-price', 'custom-percent'].forEach(id =>
+        document.getElementById(id).addEventListener('input', persistSettings)
+    );
+    document.getElementById('aggregator').addEventListener('change', () => {
+        onAggregatorChange();
+        persistSettings();
+    });
+}
+
+function persistSettings() {
+    settings = {
+        fuelRate:      document.getElementById('fuel-rate').value,
+        fuelPrice:     document.getElementById('fuel-price').value,
+        aggregator:    document.getElementById('aggregator').value,
+        customPercent: document.getElementById('custom-percent').value,
+    };
+    localStorage.setItem('vt-settings', JSON.stringify(settings));
+    updateSettingsSummary();
+}
+
+// ═══════════════════════════════
+// AGGREGATOR
+// ═══════════════════════════════
+function onAggregatorChange() {
+    const val = document.getElementById('aggregator').value;
+    document.getElementById('custom-percent').value = val;
+    persistSettings();
+}
+
+function getCommissionPct() {
+    return parseFloat(document.getElementById('custom-percent').value) || 0;
+}
+
+function getAggregatorLabel() {
+    const sel = document.getElementById('aggregator');
+    const pct  = getCommissionPct();
+    const name = sel.options[sel.selectedIndex].text.split(' —')[0];
+    return `${name} (${pct}%)`;
+}
+
+// ═══════════════════════════════
+// CALCULATE
+// ═══════════════════════════════
+function calculate() {
+    const price  = parseFloat(document.getElementById('order-price').value) || 0;
+    const km     = parseFloat(document.getElementById('km').value) || 0;
+    const fRate  = parseFloat(document.getElementById('fuel-rate').value) || 0;
+    const fPrice = parseFloat(document.getElementById('fuel-price').value) || 0;
+    const pct    = getCommissionPct();
+
+    const fuel       = Math.round((km / 100) * fRate * fPrice);
+    const commission = Math.round(price * (pct / 100));
+    const netIncome  = Math.round(price - commission - fuel);
+
+    pendingCalc = { price, km, fuel, commission, netIncome, aggregator: getAggregatorLabel() };
+
+    const el   = document.getElementById('result-income');
+    const glow = document.getElementById('result-glow');
+    el.textContent = netIncome + ' ₽';
+
+    if (netIncome < 0) {
+        el.className  = 'result-amount negative';
+        glow.className = 'result-glow neg';
+    } else {
+        el.className  = 'result-amount';
+        glow.className = 'result-glow';
+    }
+
+    document.getElementById('result-fuel').textContent       = '−' + fuel + ' ₽';
+    document.getElementById('result-commission').textContent = '−' + commission + ' ₽';
+    document.getElementById('result').classList.remove('hidden');
+    persistSettings();
+}
+
+// ═══════════════════════════════
+// SAVE TRIP
+// ═══════════════════════════════
+function saveTrip() {
+    if (!pendingCalc) return;
+
+    const trip = {
+        id:         Date.now(),
+        price:      pendingCalc.price,
+        km:         pendingCalc.km,
+        fuel:       pendingCalc.fuel,
+        commission: pendingCalc.commission,
+        netIncome:  pendingCalc.netIncome,
+        aggregator: pendingCalc.aggregator,
+        timestamp:  new Date().toISOString(),
+    };
+
+    trips.unshift(trip);
+    localStorage.setItem('vt-trips', JSON.stringify(trips));
+
+    document.getElementById('order-price').value = '';
+    document.getElementById('km').value = '';
+    document.getElementById('result').classList.add('hidden');
+    pendingCalc = null;
+
+    showToast('✅ Поездка сохранена');
+    renderTrips();
+}
+
+// ═══════════════════════════════
+// TAB
+// ═══════════════════════════════
+function switchTab(tab) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + tab).classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('tab-line').style.left = tab === 'profit' ? '0%' : '50%';
+    if (tab === 'stats') renderChart();
+}
+
+// ═══════════════════════════════
+// CHART
+// ═══════════════════════════════
+function setChartType(type, btn) {
+    chartType = type;
+    activateSeg(btn);
+    renderChart();
+}
+
+function setPeriod(p, btn) {
+    period = p;
+    activateSeg(btn);
+    renderChart();
+}
+
+function activateSeg(btn) {
+    btn.closest('.seg').querySelectorAll('.seg-btn')
+        .forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function buildChartData() {
+    const now = new Date();
+
+    if (period === 'hours') {
+        const totals = new Array(24).fill(0);
+        trips.forEach(t => { totals[new Date(t.timestamp).getHours()] += t.netIncome; });
+        return { labels: Array.from({length:24},(_,i)=>`${pad(i)}:00`), data: totals.map(Math.round) };
+    }
+
+    if (period === 'days') {
+        const year = now.getFullYear(), month = now.getMonth();
+        const dim  = new Date(year, month+1, 0).getDate();
+        const totals = new Array(dim).fill(0);
+        trips.forEach(t => {
+            const d = new Date(t.timestamp);
+            if (d.getFullYear()===year && d.getMonth()===month) totals[d.getDate()-1] += t.netIncome;
+        });
+        return { labels: Array.from({length:dim},(_,i)=>`${i+1}`), data: totals.map(Math.round) };
+    }
+
+    if (period === 'months') {
+        const year = now.getFullYear();
+        const M = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+        const totals = new Array(12).fill(0);
+        trips.forEach(t => { const d=new Date(t.timestamp); if(d.getFullYear()===year) totals[d.getMonth()]+=t.netIncome; });
+        return { labels: M, data: totals.map(Math.round) };
+    }
+
+    if (period === 'year') {
+        const sy = now.getFullYear();
+        const years = Array.from({length:5},(_,i)=>sy+i);
+        const totals = new Array(5).fill(0);
+        trips.forEach(t => { const y=new Date(t.timestamp).getFullYear(); const idx=years.indexOf(y); if(idx!==-1) totals[idx]+=t.netIncome; });
+        return { labels: years.map(String), data: totals.map(Math.round) };
+    }
+
+    return { labels:[], data:[] };
+}
+
+function renderChart() {
+    const {labels,data} = buildChartData();
+    const isEmpty = !labels.length;
+
+    document.getElementById('chart-empty').classList.toggle('hidden', !isEmpty);
+
+    const ctx = document.getElementById('myChart');
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    if (isEmpty) return;
+
+    const isPie = chartType === 'pie';
+    const pieColors = data.map((_,i) => `hsl(${Math.round(i*360/data.length)},60%,55%)`);
+
+    chartInstance = new Chart(ctx, {
+        type: chartType,
+        data: {
+            labels,
+            datasets: [{
+                label: 'Доход ₽',
+                data,
+                backgroundColor: isPie ? pieColors : 'rgba(123,111,240,0.18)',
+                borderColor:     isPie ? pieColors : 'rgba(155,148,245,0.9)',
+                borderWidth: isPie ? 0 : 2,
+                tension: 0.45,
+                fill: chartType === 'line',
+                pointBackgroundColor: '#9D95F5',
+                pointRadius: 3,
+                pointHoverRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 280 },
+            plugins: {
+                legend: { display: isPie, labels: { color:'#A1A1AA', font:{size:11}, boxWidth:10 } },
+                tooltip: { callbacks: { label: c => ` ${c.parsed.y ?? c.parsed} ₽` },
+                    backgroundColor: '#18181B', titleColor:'#FAFAFA', bodyColor:'#A1A1AA',
+                    borderColor:'rgba(255,255,255,0.1)', borderWidth:1, padding:10 }
+            },
+            scales: isPie ? {} : {
+                x: { ticks:{color:'#52525B',font:{size:10},maxRotation:45}, grid:{color:'#18181B'}, border:{color:'#27272A'} },
+                y: { ticks:{color:'#52525B',font:{size:10},callback:v=>v+'₽'}, grid:{color:'#18181B'}, border:{color:'#27272A'} }
+            }
+        }
+    });
+}
+
+// ═══════════════════════════════
+// BEST TIME
+// ═══════════════════════════════
+function showBestTime() {
+    if (!trips.length) { showToast('Пока нет поездок'); return; }
+
+    const hourMap = {}, dayMap = {};
+    const DAY = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+
+    trips.forEach(t => {
+        const d = new Date(t.timestamp);
+        const h = d.getHours(), wd = d.getDay();
+        if (!hourMap[h])  hourMap[h]  = {total:0,count:0};
+        if (!dayMap[wd])  dayMap[wd]  = {total:0,count:0};
+        hourMap[h].total += t.netIncome; hourMap[h].count++;
+        dayMap[wd].total += t.netIncome; dayMap[wd].count++;
+    });
+
+    const topH = Object.entries(hourMap).sort((a,b)=>b[1].total-a[1].total).slice(0,3);
+    const topD = Object.entries(dayMap).sort((a,b)=>b[1].total-a[1].total).slice(0,3);
+
+    let html = '<div class="best-section-lbl">Прибыльные часы</div>';
+    topH.forEach(([h,v]) => { html += `<div class="best-row"><span class="best-row-lbl">${pad(h)}:00 – ${pad(+h+1)}:00</span><span class="best-row-val">${Math.round(v.total)} ₽ · ${v.count} поезд.</span></div>`; });
+
+    html += '<div class="best-section-lbl">Прибыльные дни</div>';
+    topD.forEach(([d,v]) => { html += `<div class="best-row"><span class="best-row-lbl">${DAY[d]}</span><span class="best-row-val">${Math.round(v.total)} ₽ · ${v.count} поезд.</span></div>`; });
+
+    document.getElementById('best-content').innerHTML = html;
+    document.getElementById('modal-best').classList.remove('hidden');
+}
+
+// ═══════════════════════════════
+// TRIPS LIST
+// ═══════════════════════════════
+function isToday(iso) {
+    const d=new Date(iso), n=new Date();
+    return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
+}
+
+function renderTrips() {
+    const el = document.getElementById('trips-list');
+    const today = trips.filter(t => isToday(t.timestamp) && !t.archived);
+
+    if (!today.length) {
+        el.innerHTML = `<div class="empty-state"><div class="icon">🚕</div><p>Сегодня поездок нет.<br>Рассчитайте и нажмите «Поехал».</p></div>`;
+        return;
+    }
+
+    el.innerHTML = today.map(t => {
+        const tm  = new Date(t.timestamp).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+        const neg = t.netIncome < 0;
+        return `<div class="trip-item">
+            <div class="trip-bar ${neg?'neg':'pos'}"></div>
+            <div class="trip-check-wrap">
+                <input type="checkbox" class="trip-check" onchange="archiveTrip(${t.id})" title="В статистику">
+            </div>
+            <div class="trip-main">
+                <div class="trip-income${neg?' neg':''}">${t.netIncome} ₽</div>
+                <div class="trip-meta">${t.price} ₽ · ${t.km} км · ${t.aggregator} · ${tm}</div>
+            </div>
+            <div class="trip-actions">
+                <button class="trip-btn" onclick="openEdit(${t.id})">✏️</button>
+                <button class="trip-btn" onclick="deleteTrip(${t.id})">❌</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function archiveTrip(id) {
+    setTimeout(() => {
+        trips = trips.map(t => t.id===id ? {...t,archived:true} : t);
+        localStorage.setItem('vt-trips', JSON.stringify(trips));
+        renderTrips();
+        if (chartInstance) renderChart();
+    }, 380);
+}
+
+function deleteTrip(id) {
+    trips = trips.filter(t => t.id!==id);
+    localStorage.setItem('vt-trips', JSON.stringify(trips));
+    renderTrips();
+    if (chartInstance) renderChart();
+}
+
+function openEdit(id) {
+    const t = trips.find(t=>t.id===id);
+    if (!t) return;
+    document.getElementById('edit-price').value   = t.price;
+    document.getElementById('edit-trip-id').value = id;
+    document.getElementById('modal-edit').classList.remove('hidden');
+}
+
+function saveEditTrip() {
+    const id       = parseInt(document.getElementById('edit-trip-id').value);
+    const newPrice = parseFloat(document.getElementById('edit-price').value) || 0;
+
+    trips = trips.map(t => {
+        if (t.id !== id) return t;
+        const fRate  = parseFloat(settings.fuelRate)  || 0;
+        const fPrice = parseFloat(settings.fuelPrice) || 0;
+        const fuel   = Math.round((t.km/100)*fRate*fPrice);
+        let pct = 0;
+        const m = t.aggregator.match(/(\d+(?:\.\d+)?)%/);
+        if (m) pct = parseFloat(m[1]);
+        const commission = Math.round(newPrice*(pct/100));
+        const netIncome  = Math.round(newPrice-commission-fuel);
+        return {...t, price:newPrice, commission, netIncome};
+    });
+
+    localStorage.setItem('vt-trips', JSON.stringify(trips));
+    closeModal('modal-edit');
+    renderTrips();
+    if (chartInstance) renderChart();
+}
+
+// ═══════════════════════════════
+// MODAL
+// ═══════════════════════════════
+function closeModal(id)         { document.getElementById(id).classList.add('hidden'); }
+function closeOverlay(e, id)    { if (e.target===e.currentTarget) closeModal(id); }
+
+// ═══════════════════════════════
+// TOAST
+// ═══════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>el.classList.remove('show'), 1800);
+}
+
+// ═══════════════════════════════
+// SETTINGS COLLAPSE
+// ═══════════════════════════════
+function toggleSettings() {
+    const body    = document.getElementById('settings-body');
+    const chevron = document.getElementById('settings-chevron');
+    const isOpen  = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+}
+
+function updateSettingsSummary() {
+    const rate  = document.getElementById('fuel-rate').value;
+    const price = document.getElementById('fuel-price').value;
+    const pct   = document.getElementById('custom-percent').value;
+    const parts = [];
+    if (rate)  parts.push(rate + ' л');
+    if (price) parts.push(price + ' ₽/л');
+    if (pct)   parts.push(pct + '%');
+    document.getElementById('settings-summary').textContent =
+        parts.length ? parts.join(' · ') : 'Нажмите для настройки';
+}
+
+// ═══════════════════════════════
+// UTILS
+// ═══════════════════════════════
+function pad(n) { return String(n).padStart(2,'0'); }
+
+// ═══════════════════════════════
+// BOOT
+// ═══════════════════════════════
+init();
+updateSettingsSummary();
+renderTrips();
+</script>
+</body>
+</html>
