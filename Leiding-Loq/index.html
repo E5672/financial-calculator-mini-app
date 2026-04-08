@@ -771,5 +771,72 @@ setTimeout(() => {
 })();
 </script>
 
+<!-- ══ ЗАЩИТА ══ -->
+<script>
+(function() {
+  'use strict';
+
+  // 1. Правая кнопка мыши
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // 2. Горячие клавиши
+  document.addEventListener('keydown', function(e) {
+    const k = e.key.toLowerCase();
+    // F12, Ctrl+Shift+I/J/C/K, Ctrl+U, Ctrl+S, Ctrl+A, Ctrl+P
+    if (e.key === 'F12') { e.preventDefault(); return; }
+    if (e.ctrlKey && e.shiftKey && ['i','j','c','k'].includes(k)) { e.preventDefault(); return; }
+    if (e.ctrlKey && ['u','s','p'].includes(k)) { e.preventDefault(); return; }
+    // Cmd+Option+I (Mac)
+    if (e.metaKey && e.altKey && k === 'i') { e.preventDefault(); return; }
+  });
+
+  // 3. Выбор текста — только в полях ввода
+  document.addEventListener('selectstart', function(e) {
+    if (!['INPUT','TEXTAREA'].includes(e.target.tagName)) e.preventDefault();
+  });
+
+  // 4. Перетаскивание элементов
+  document.addEventListener('dragstart', e => e.preventDefault());
+
+  // 5. Печать страницы
+  window.addEventListener('beforeprint', function() {
+    document.body.innerHTML = '';
+  });
+
+  // 6. DevTools detector: размер окна
+  (function devToolsSize() {
+    const THRESHOLD = 160;
+    function check() {
+      if (
+        window.outerWidth  - window.innerWidth  > THRESHOLD ||
+        window.outerHeight - window.innerHeight > THRESHOLD
+      ) {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#050816;color:#4ade80;font-family:monospace;font-size:1.2rem">© Leiding-Loq · Защищено авторским правом</div>';
+      }
+    }
+    setInterval(check, 1000);
+    window.addEventListener('resize', check);
+  })();
+
+  // 7. DevTools detector: debugger-ловушка
+  (function devToolsDebugger() {
+    let open = false;
+    const run = new Function('debugger');
+    function check() {
+      const t = Date.now();
+      run();
+      if (Date.now() - t > 100) {
+        if (!open) {
+          open = true;
+          document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#050816;color:#4ade80;font-family:monospace;font-size:1.2rem">© Leiding-Loq · Защищено авторским правом</div>';
+        }
+      } else { open = false; }
+    }
+    setInterval(check, 1500);
+  })();
+
+})();
+</script>
+
 </body>
 </html>
