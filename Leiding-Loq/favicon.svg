@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#050816"/>
+  <!-- Стрелка вправо-вверх — символ движения и точности -->
+  <path d="M14 46 L36 14 L50 14 L50 28 L20 50 Z" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linejoin="round"/>
+  <circle cx="50" cy="14" r="4" fill="#22c55e" opacity=".9"/>
+  <!-- Неоновое свечение -->
+  <path d="M14 46 L36 14 L50 14 L50 28 L20 50 Z" fill="none" stroke="#4ade80" stroke-width="1" stroke-linejoin="round" opacity=".5"/>
+</svg>

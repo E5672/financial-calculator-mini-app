@@ -1,1 +1,6 @@
 .vercel
+node_modules/
+*.DS_Store
+Thumbs.db
+*.log
+319092500555c81595a071bcda6a0a4e_505c41f6-30d4-4b5b-9296-579020be28aa.mp4
