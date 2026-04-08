@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Цифровая логика рейса — Елена Жилина</title>
+  <meta name="description" content="Логистика в цифре. Решения за секунды, а не часы. Рассчитайте рентабельность рейса прямо сейчас." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: '#050816' },
+          backdropBlur: { xl: '24px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #050816; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; }
+    ::selection { background: rgba(74,222,128,.3); color: #fff; }
+
+    /* ── Анимации появления ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    .fade-in {
+      opacity: 0;
+      transform: scale(0.97);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: scale(1); }
+
+    /* Задержки */
+    .delay-1 { transition-delay: .12s; }
+    .delay-2 { transition-delay: .26s; }
+    .delay-3 { transition-delay: .4s; }
+    .delay-4 { transition-delay: .54s; }
+    .delay-5 { transition-delay: .68s; }
+
+    /* ── Калькулятор ── */
+    input:focus { border-color: rgba(74,222,128,.5) !important; outline: none; }
+    .calc-result { display: none; }
+    .calc-result.show { display: block; }
+
+    /* ── Числа счётчика ── */
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stat-item.visible .stat-val { animation: countUp .5s ease forwards; }
+
+    /* ── НEON: цвета заголовков ── */
+    /* Главный заголовок — яркий нeon бело-голубой */
+    .neon-title {
+      color: #d8eeff;
+      text-shadow:
+        0 0 12px rgba(170, 220, 255, 0.75),
+        0 0 28px rgba(110, 185, 255, 0.45),
+        0 0 55px rgba(70, 150, 255, 0.22),
+        0 0 2px rgba(0,0,0,.9);   /* тёмный контур — не сливается с видео */
+    }
+    /* Подзаголовок — спокойнее */
+    .neon-sub {
+      color: #a8c8e8;
+      text-shadow:
+        0 0 10px rgba(140, 200, 255, 0.5),
+        0 0 24px rgba(90, 160, 255, 0.25),
+        0 0 2px rgba(0,0,0,.85);
+    }
+    /* Слова — чуть темнее по тону */
+    .hero-word {
+      display: block;
+      opacity: 0;
+      color: #8ab8d8;
+      text-shadow:
+        0 0 10px rgba(120, 185, 255, 0.6),
+        0 0 24px rgba(80, 145, 255, 0.35),
+        0 0 48px rgba(60, 120, 255, 0.18),
+        0 0 2px rgba(0,0,0,.9);
+      will-change: transform, opacity, filter;
+    }
+
+    /* Пульс зелёной точки */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+    .dot-pulse { animation: pulse-dot 2.2s infinite; }
+
+    /* ── Мобильный ── */
+    @media (max-width: 640px) {
+      .hero-main-h1 { font-size: clamp(2.4rem, 9vw, 3.2rem) !important; }
+      .hero-word     { font-size: clamp(1.8rem, 7vw, 2.6rem) !important; }
+    }
+
+    /* ── Модал контактов ── */
+    .contact-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 999;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .contact-modal-overlay.active { display: flex; }
+    .contact-modal {
+      background: #0a0e1f;
+      border: 1px solid rgba(74,222,128,.2);
+      border-radius: 28px;
+      padding: 36px 28px;
+      max-width: 440px; width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.7);
+    }
+    .contact-modal input,
+    .contact-modal textarea {
+      width: 100%;
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 13px 16px;
+      color: #fff;
+      font-size: .95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 12px;
+    }
+    .contact-modal input:focus,
+    .contact-modal textarea:focus { border-color: rgba(74,222,128,.5); }
+    .contact-modal input::placeholder,
+    .contact-modal textarea::placeholder { color: rgba(255,255,255,.3); }
+    .contact-modal textarea { resize: vertical; min-height: 80px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="relative min-h-screen overflow-hidden border-b border-white/10">
+
+  <!-- Видео — чистое, без затемнения -->
+  <video autoplay muted loop playsinline
+    class="absolute inset-0 h-full w-full object-cover pointer-events-none">
+    <source src="video.mp4" type="video/mp4" />
+  </video>
+
+  <!-- Только нижний переход к фону -->
+  <div class="absolute bottom-0 left-0 right-0 h-36 pointer-events-none"
+    style="background: linear-gradient(to top, #050816 0%, transparent 100%)"></div>
+
+  <!-- Левая тень — чтобы текст не сливался с видео -->
+  <div class="absolute inset-y-0 left-0 w-[55%] pointer-events-none hidden lg:block"
+    style="background: linear-gradient(to right, rgba(5,8,22,.55) 0%, transparent 100%)"></div>
+
+  <!-- Контент: строго левая сторона -->
+  <div class="relative z-10 flex min-h-screen items-center px-6 py-16 md:px-12 lg:px-20">
+    <div class="w-full max-w-[580px]">
+
+      <!-- Бейдж -->
+      <div class="fade-up mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-4 py-1.5 text-sm backdrop-blur-md neon-sub">
+        <span class="dot-pulse text-green-400">●</span>
+        расчёт за 3 секунды
+      </div>
+
+      <!-- Главный заголовок — крупный, неоновый -->
+      <h1 class="fade-up delay-1 hero-main-h1 neon-title mb-4 font-bold leading-[.9] tracking-tight"
+        style="font-size: clamp(3.2rem, 7.5vw, 6rem)">
+        Цифровая<br/>логика рейса
+      </h1>
+
+      <!-- Подзаголовок -->
+      <p class="fade-up delay-2 neon-sub mb-10 text-lg md:text-xl" style="font-weight:400">
+        Логистика в цифре. Решения за секунды.
+      </p>
+
+      <!-- Слова: стоят в колонке слева, вылетают из центра -->
+      <div id="words-col" class="mb-10 space-y-1 font-bold leading-none tracking-tight"
+        style="font-size: clamp(2rem, 4.8vw, 3.6rem)">
+        <div class="hero-word" id="hw-0">Считай</div>
+        <div class="hero-word" id="hw-1">Решай</div>
+        <div class="hero-word" id="hw-2">Управляй</div>
+      </div>
+
+      <!-- CTA кнопки -->
+      <div id="hero-cta" class="flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="opacity:0;transform:translateY(12px)">
+        <a href="anketa/"
+          class="rounded-2xl bg-green-500 px-7 py-3.5 font-semibold text-black shadow-[0_0_28px_rgba(34,197,94,.3)] transition hover:bg-green-400 text-center">
+          Действуй! →
+        </a>
+        <a href="#calculator"
+          class="rounded-2xl border border-white/25 bg-black/30 px-7 py-3.5 font-medium backdrop-blur-md transition hover:bg-white hover:text-black text-center">
+          Рассчитать рейс
+        </a>
+        <button onclick="openContactModal()"
+          class="rounded-2xl border border-white/12 bg-black/20 px-7 py-3.5 backdrop-blur-md transition hover:border-blue-400/40 hover:text-blue-200 text-center neon-sub">
+          Оставить контакты
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 2: Проблема + Фото ══════════════════════ -->
+<section class="mx-auto max-w-7xl px-6 py-10 md:px-10 lg:px-16">
+  <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
+
+    <!-- Текст: СЛЕВА -->
+    <div class="fade-up order-2 lg:order-1">
+      <div class="mb-4 text-sm uppercase tracking-[.26em] text-green-400/75">Проблема</div>
+      <h2 class="mb-7 font-bold tracking-tight leading-[.9]"
+        style="font-size: clamp(2.6rem, 5.5vw, 4.4rem)">
+        Логистика больше<br/>не интуиция
+      </h2>
+      <div class="space-y-4 text-lg leading-relaxed text-gray-300 md:text-xl">
+        <p>Рейсы до сих пор берут «на глаз».</p>
+        <p>Прибыль считают потом. Ошибки стоят дорого.</p>
+        <p class="font-semibold text-white">Мы переворачиваем это.</p>
+      </div>
+    </div>
+
+    <!-- Фото: СПРАВА, крупный портрет по грудь -->
+    <div class="fade-in order-1 flex justify-center lg:order-2 lg:justify-end">
+      <div class="relative w-full max-w-[400px] overflow-hidden rounded-[28px] border border-white/10 shadow-2xl"
+        style="background: rgba(255,255,255,.04)">
+        <img src="photo.png" alt="Елена Жилина"
+          class="w-full object-cover object-top"
+          style="height: clamp(380px, 48vw, 520px)" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 via-[40%] to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 px-5 py-4">
+          <div class="mb-0.5 text-base font-semibold leading-tight"
+            style="color:#16a34a;text-shadow:0 1px 4px rgba(0,0,0,.8)">
+            Елена Жилина
+          </div>
+          <div class="mb-2.5 text-xs leading-snug"
+            style="color:#4ade80;opacity:.85;text-shadow:0 1px 3px rgba(0,0,0,.7)">
+            Автор продукта · Оптимизация логистики · AI-архитектура процессов
+          </div>
+          <div class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs"
+            style="border:1px solid rgba(34,197,94,.25);background:rgba(0,0,0,.35);color:#86efac">
+            15+ лет в логистике
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 3: Статы ══════════════════════ -->
+<section class="border-y border-white/10 bg-white/[.02]">
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-0 md:grid-cols-4">
+    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">–30%</div>
+      <div class="text-xs uppercase tracking-[.18em] text-gray-400">затрат</div>
+    </div>
+    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">×3</div>
+      <div class="text-xs uppercase tracking-[.18em] text-gray-400">скорость</div>
+    </div>
+    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">–50%</div>
+      <div class="text-xs uppercase tracking-[.18em] text-gray-400">нагрузки</div>
+    </div>
+    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">24/7</div>
+      <div class="text-xs uppercase tracking-[.18em] text-gray-400">решения за секунды</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 4: Решение ══════════════════════ -->
+<section class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+  <div class="fade-up">
+    <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Решение</div>
+    <h2 class="mb-4 text-3xl font-semibold tracking-tight md:text-5xl">
+      Это не калькулятор.<br />
+      Это система принятия решений.
+    </h2>
+    <p class="max-w-2xl text-lg leading-relaxed text-gray-300">
+      Продукт считает рентабельность, учитывает ограничения и помогает управлять
+      процессом до того, как ошибка стала убытком.
+    </p>
+  </div>
+
+  <div class="grid gap-4">
+    <div class="fade-up delay-1 rounded-3xl border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm">
+      <div class="flex items-start gap-3">
+        <span class="mt-1 text-green-400">●</span>
+        <p class="text-base text-gray-200 md:text-lg">считает рентабельность рейса</p>
+      </div>
+    </div>
+    <div class="fade-up delay-2 rounded-3xl border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm">
+      <div class="flex items-start gap-3">
+        <span class="mt-1 text-green-400">●</span>
+        <p class="text-base text-gray-200 md:text-lg">учитывает ограничения и параметры</p>
+      </div>
+    </div>
+    <div class="fade-up delay-3 rounded-3xl border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm">
+      <div class="flex items-start gap-3">
+        <span class="mt-1 text-green-400">●</span>
+        <p class="text-base text-gray-200 md:text-lg">подбирает транспорт под задачу</p>
+      </div>
+    </div>
+    <div class="fade-up delay-4 rounded-3xl border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm">
+      <div class="flex items-start gap-3">
+        <span class="mt-1 text-green-400">●</span>
+        <p class="text-base text-gray-200 md:text-lg">контролирует критичные этапы процесса</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 5: Калькулятор ══════════════════════ -->
+<section id="calculator" class="border-y border-white/10" style="background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.03))">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+
+    <div class="fade-up">
+      <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Демо</div>
+      <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
+        Попробуй на реальном рейсе
+      </h2>
+      <p class="max-w-xl text-lg leading-relaxed text-gray-300">
+        Введи данные — и получи предварительный расчёт рентабельности за несколько секунд.
+      </p>
+
+      <div class="mt-8 space-y-3 text-gray-400 text-sm">
+        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Расчёт по реальным тарифам топлива</div>
+        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Учёт пробега и времени в пути</div>
+        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Оценка риска и маржинальности</div>
+      </div>
+    </div>
+
+    <div class="fade-in delay-2 rounded-[32px] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+      <div class="grid gap-4" id="calcForm">
+
+        <div>
+          <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Маршрут</label>
+          <input id="route" type="text"
+            class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
+            placeholder="Москва → Екатеринбург" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Расстояние, км</label>
+            <input id="distance" type="number" min="1"
+              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
+              placeholder="1700" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Ставка, ₽</label>
+            <input id="rate" type="number" min="1"
+              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
+              placeholder="85000" />
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Тип машины</label>
+          <select id="truck"
+            class="w-full rounded-2xl border border-white/10 bg-[#0d1020] px-4 py-3 text-white transition appearance-none cursor-pointer">
+            <option value="fura">Фура (20 т)</option>
+            <option value="mega">Мегатрак (24 т)</option>
+            <option value="ref">Рефрижератор</option>
+            <option value="tent">Тент (10 т)</option>
+            <option value="gazel">Газель</option>
+          </select>
+        </div>
+
+        <button onclick="calculate()"
+          class="mt-2 rounded-2xl bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400 active:scale-95">
+          Рассчитать
+        </button>
+      </div>
+
+      <!-- Результат -->
+      <div id="calcResult" class="calc-result mt-6 rounded-3xl border border-green-400/20 bg-green-400/5 p-5">
+        <div class="mb-3 text-sm uppercase tracking-[.18em] text-green-300">Результат</div>
+        <div class="space-y-2 text-gray-200">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Выручка</span>
+            <span id="res-revenue" class="font-medium">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Затраты (топливо + пробег)</span>
+            <span id="res-costs" class="font-medium text-red-400">—</span>
+          </div>
+          <div class="border-t border-white/10 pt-2 flex justify-between text-lg">
+            <span class="font-medium">Прибыль</span>
+            <span id="res-profit" class="font-semibold text-green-400">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Маржа</span>
+            <span id="res-margin" class="font-medium">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Время в пути</span>
+            <span id="res-time" class="font-medium">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Риск</span>
+            <span id="res-risk" class="font-medium">—</span>
+          </div>
+        </div>
+        <div class="mt-5 border-t border-white/10 pt-4">
+          <div class="mb-3 text-sm text-gray-300">Хочешь точнее? Анкета запускает детальный разбор мгновенно.</div>
+          <div class="flex flex-wrap gap-3">
+            <a href="anketa/"
+              class="inline-block rounded-2xl bg-green-500 px-5 py-3 text-black font-medium transition hover:bg-green-400">
+              Действуй! →
+            </a>
+            <button onclick="openContactModal()"
+              class="rounded-2xl border border-white/20 bg-white/5 px-5 py-3 text-sm text-gray-300 transition hover:bg-white/10">
+              Оставить контакты
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 6-7: Боли ══════════════════════ -->
+<section class="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-16">
+  <div class="mb-8 max-w-3xl fade-up">
+    <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Узкие места</div>
+    <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
+      Узкие места логистики<br />видны только в цифре
+    </h2>
+    <p class="text-lg leading-relaxed text-gray-300">
+      Оставляем анкету как основной путь в воронке, но внутри даём быстрый переход к мгновенному расчёту.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="fade-up delay-1 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+      — перегруженные логисты
+    </div>
+    <div class="fade-up delay-2 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+      — решения принимаются долго
+    </div>
+    <div class="fade-up delay-3 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+      — ошибки в рейсах
+    </div>
+    <div class="fade-up delay-4 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+      — хаос в процессах
+    </div>
+  </div>
+
+  <div class="mt-8 fade-up rounded-[28px] border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm md:p-8">
+    <div class="mb-3 text-lg font-medium">Нужно быстрее?</div>
+    <a href="#calculator"
+      class="inline-block rounded-2xl bg-green-500 px-5 py-3 text-black transition hover:bg-green-400">
+      Рассчитать сейчас
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 8: Как работает ══════════════════════ -->
+<section class="border-y border-white/10 bg-white/[.02]">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+    <div class="fade-up">
+      <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Как работает</div>
+      <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
+        Система принимает решения за секунды
+      </h2>
+    </div>
+
+    <div class="space-y-4 text-lg text-gray-300">
+      <div class="fade-up delay-1 flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">1</span>
+        считает рейсы
+      </div>
+      <div class="fade-up delay-2 flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">2</span>
+        подбирает транспорт
+      </div>
+      <div class="fade-up delay-3 flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">3</span>
+        контролирует процессы
+      </div>
+      <div class="fade-up delay-4 flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">4</span>
+        убирает человеческий фактор
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ БЛОК 9: CTA ══════════════════════ -->
+<section id="anketa" class="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-16">
+  <div class="fade-up rounded-[40px] border border-white/10 p-8 md:p-12"
+    style="background: radial-gradient(circle at top right, rgba(16,185,129,.12), transparent 26%), rgba(255,255,255,.03)">
+
+    <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Следующий шаг</div>
+    <h2 class="mb-6 max-w-4xl text-3xl font-semibold tracking-tight md:text-5xl">
+      Логистика не должна зависеть от людей.<br class="hidden md:block" />
+      Она должна работать как система.
+    </h2>
+    <p class="mb-8 max-w-2xl text-lg leading-relaxed text-gray-300">
+      Это уже не сервис «про помощь логисту». Это новая модель принятия решений,
+      которую можно масштабировать в продукт, SaaS и полноценную операционную систему.
+    </p>
+
+    <!-- Две кнопки CTA -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+      <a href="anketa/"
+        class="group inline-flex flex-col items-start rounded-2xl bg-green-500 px-7 py-4 text-black transition hover:bg-green-400 active:scale-95">
+        <span class="text-lg font-bold leading-tight">Действуй! →</span>
+        <span class="text-xs font-normal opacity-70 mt-0.5">Анкета запускает обработку мгновенно, пропуск нежелателен</span>
+      </a>
+      <button onclick="openContactModal()"
+        class="inline-flex flex-col items-start rounded-2xl border border-white/20 bg-white/5 px-7 py-4 text-left transition hover:bg-white/10 active:scale-95">
+        <span class="text-lg font-medium leading-tight text-white">Оставить контакты</span>
+        <span class="text-xs text-gray-400 mt-0.5">Имя, мессенджер, комментарий</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════ МОДАЛ: КОНТАКТЫ ══════════════════════ -->
+<div class="contact-modal-overlay" id="contactModal">
+  <div class="contact-modal">
+    <div class="mb-5 flex items-center justify-between">
+      <div>
+        <div class="mb-1 text-sm uppercase tracking-[.2em] text-green-400/70">Быстрый контакт</div>
+        <h3 class="text-xl font-semibold">Оставить контакты</h3>
+      </div>
+      <button onclick="closeContactModal()" class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-gray-400 transition hover:border-white/30 hover:text-white text-lg">×</button>
+    </div>
+
+    <form id="contact-form" onsubmit="submitContact(event)">
+      <input id="c-name" type="text" required placeholder="Ваше имя" />
+      <input id="c-messenger" type="text" required placeholder="Telegram, WhatsApp, телефон..." />
+      <textarea id="c-comment" rows="3" placeholder="Комментарий (необязательно)"></textarea>
+      <div class="flex gap-3">
+        <button type="submit" id="c-submit"
+          class="flex-1 rounded-xl bg-green-500 py-3 text-sm font-semibold text-black transition hover:bg-green-400 active:scale-95">
+          Отправить
+        </button>
+        <button type="button" onclick="closeContactModal()"
+          class="rounded-xl border border-white/15 px-5 py-3 text-sm text-gray-400 transition hover:bg-white/5">
+          Отмена
+        </button>
+      </div>
+    </form>
+
+    <div id="contact-success" class="hidden rounded-2xl border border-green-400/30 bg-green-400/[.06] p-5 text-center">
+      <div class="mb-1 text-lg font-medium text-green-300">Отправлено ✓</div>
+      <div class="text-sm text-gray-400">Елена свяжется с вами в ближайшее время.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="border-t border-white/10 px-6 py-8 text-center text-sm text-gray-500">
+  © 2025 Елена Жилина · Цифровая логика рейса
+</footer>
+
+<!-- ══════════════════════ JS ══════════════════════ -->
+<script>
+// ── Калькулятор ──────────────────────────────────
+const FUEL = 58;          // руб/литр (среднее по рынку)
+const FUEL_PER_KM = {     // расход л/100 км
+  fura:  32,
+  mega:  35,
+  ref:   36,
+  tent:  24,
+  gazel: 12,
+};
+const WEAR_PER_KM = {     // износ и прочее руб/км
+  fura:  8,
+  mega:  9,
+  ref:   10,
+  tent:  6,
+  gazel: 3,
+};
+const AVG_SPEED = 650;   // км/день (с учётом стоянок)
+
+function calculate() {
+  const distance = parseFloat(document.getElementById('distance').value);
+  const rate     = parseFloat(document.getElementById('rate').value);
+  const truckKey = document.getElementById('truck').value;
+
+  if (!distance || !rate || distance <= 0 || rate <= 0) {
+    alert('Введи расстояние и ставку');
+    return;
+  }
+
+  const fuelCost   = (distance / 100) * FUEL_PER_KM[truckKey] * FUEL;
+  const wearCost   = distance * WEAR_PER_KM[truckKey];
+  const totalCosts = fuelCost + wearCost;
+  const profit     = rate - totalCosts;
+  const margin     = (profit / rate * 100);
+  const days       = (distance / AVG_SPEED);
+
+  const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+
+  document.getElementById('res-revenue').textContent = fmt(rate);
+  document.getElementById('res-costs').textContent   = fmt(totalCosts);
+  document.getElementById('res-profit').textContent  = fmt(profit);
+  document.getElementById('res-margin').textContent  = margin.toFixed(1) + '%';
+  document.getElementById('res-time').textContent    = days < 1
+    ? Math.round(days * 24) + ' ч'
+    : days.toFixed(1) + ' дн';
+
+  const risk = margin > 30 ? '🟢 низкий' : margin > 15 ? '🟡 средний' : '🔴 высокий';
+  document.getElementById('res-risk').textContent = risk;
+
+  const result = document.getElementById('calcResult');
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Модал контактов ───────────────────────────────
+function openContactModal() {
+  document.getElementById('contactModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('contactModal').addEventListener('click', function(e) {
+  if (e.target === this) closeContactModal();
+});
+
+async function submitContact(e) {
+  e.preventDefault();
+  const btn = document.getElementById('c-submit');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+
+  const name      = document.getElementById('c-name').value.trim();
+  const messenger = document.getElementById('c-messenger').value.trim();
+  const comment   = document.getElementById('c-comment').value.trim();
+
+  const token  = '8293478939:AAGGs7i0b8XRXWlYKThU4B8M7zrZXu-rSq8';
+  const chatId = '8647054217';
+  const text   = `<b>📞 Контакт с Leiding-Loq</b>\n\n<b>Имя:</b> ${name}\n<b>Мессенджер:</b> ${messenger}${comment ? `\n<b>Комментарий:</b> ${comment}` : ''}`;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
+    });
+  } catch {}
+
+  document.getElementById('contact-form').style.display = 'none';
+  document.getElementById('contact-success').classList.remove('hidden');
+  setTimeout(closeContactModal, 2800);
+}
+
+// ── Анимации появления (IntersectionObserver) ─────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-up, .fade-in, .stat-item').forEach(el => {
+  observer.observe(el);
+});
+
+// ── Hero: badge + h1 + subtitle мгновенно ────────
+setTimeout(() => {
+  document.querySelectorAll('section:first-of-type .fade-up').forEach(el => {
+    el.classList.add('visible');
+  });
+}, 80);
+
+// ── Hero: слова летят из центра экрана → влево ────
+(function() {
+  // Задержки появления каждого слова
+  const DELAYS = [820, 1360, 1900]; // ms
+  const IDS    = ['hw-0', 'hw-1', 'hw-2'];
+
+  function flyWord(el, delay) {
+    setTimeout(() => {
+      // Позиция слова в финальном состоянии (левая колонка)
+      const rect = el.getBoundingClientRect();
+      const wordCX = rect.left + rect.width  / 2;
+      const wordCY = rect.top  + rect.height / 2;
+      // Центр экрана
+      const vpCX = window.innerWidth  / 2;
+      const vpCY = window.innerHeight / 2;
+      // Смещение: насколько слово сейчас «не в центре»
+      const dx = vpCX - wordCX;
+      const dy = vpCY - wordCY;
+
+      el.animate([
+        // Старт: слово в центре экрана, маленькое
+        {
+          opacity: 0,
+          transform: `translate(${dx}px, ${dy}px) scale(0.06)`,
+          filter: 'blur(14px)',
+          offset: 0
+        },
+        // Разгон: быстро растёт, летит к зрителю
+        {
+          opacity: 1,
+          transform: `translate(${dx * 0.18}px, ${dy * 0.18}px) scale(1.28)`,
+          filter: 'blur(0px) drop-shadow(0 0 28px rgba(100,180,255,.7))',
+          offset: 0.52
+        },
+        // Слегка «перелетает» влево
+        {
+          transform: `translate(-6px, 0) scale(1.04)`,
+          filter: 'blur(0px) drop-shadow(0 0 16px rgba(80,155,255,.45))',
+          offset: 0.78
+        },
+        // Финал: на месте в левой колонке
+        {
+          opacity: 1,
+          transform: `translate(0, 0) scale(1)`,
+          filter: 'blur(0px) drop-shadow(0 0 10px rgba(80,145,255,.28))',
+          offset: 1
+        }
+      ], {
+        duration: 680,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        fill: 'both'
+      });
+    }, delay);
+  }
+
+  // Запускаем анимацию после рендера — нужны финальные координаты
+  window.addEventListener('load', () => {
+    IDS.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) flyWord(el, DELAYS[i]);
+    });
+  });
+
+  // Кнопки плавно появляются после последнего слова
+  const CTA_DELAY = DELAYS[2] + 700;
+  setTimeout(() => {
+    const cta = document.getElementById('hero-cta');
+    if (!cta) return;
+    cta.style.transition = 'opacity .55s ease, transform .55s ease';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      cta.style.opacity = '1';
+      cta.style.transform = 'translateY(0)';
+    }));
+  }, CTA_DELAY);
+})();
+</script>
+
+</body>
+</html>

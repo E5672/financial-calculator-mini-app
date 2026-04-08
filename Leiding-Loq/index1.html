@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Анкета для логиста</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --card: #1a1e2a;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --text: #e8eaf0;
+      --muted: #8b90a0;
+      --border: #252a38;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+      padding: 40px 16px 80px;
+    }
+
+    .page-header {
+      max-width: 760px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    form {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── STEP CARD ── */
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .hint {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(108,99,255,0.08);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #a89cff;
+      margin-bottom: 20px;
+    }
+    .hint::before { content: '💡'; flex-shrink: 0; }
+
+    /* ── FIELD ── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      background: #1e2335;
+      border: 2px solid #4a5068;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+    input::placeholder, textarea::placeholder { color: #6b7080; opacity: 1; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── CHECKBOX GROUP ── */
+    .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .check-item input[type="checkbox"] { display: none; }
+    .check-box {
+      width: 20px; height: 20px;
+      border: 2px solid #4a5068;
+      border-radius: 5px;
+      background: #1e2335;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .check-item input[type="checkbox"]:checked + .check-box {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .check-item input[type="checkbox"]:checked + .check-box::after {
+      content: '✓';
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .check-label {
+      font-size: 0.93rem;
+      color: var(--text);
+    }
+    .check-item:hover .check-box { border-color: var(--accent); }
+
+    /* nested checkboxes */
+    .check-nested {
+      margin-left: 30px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* inline other field */
+    .inline-other {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .inline-other input[type="text"] {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; margin-top: 4px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 580px;
+    }
+    thead th {
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td {
+      padding: 10px 8px;
+      vertical-align: middle;
+    }
+    tbody td:first-child {
+      font-size: 0.88rem;
+      color: var(--text);
+      min-width: 160px;
+      padding-left: 14px;
+    }
+    tbody td input[type="text"] {
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+    .row-check { display: flex; align-items: center; gap: 8px; }
+
+    /* ── MULTI-SELECT DROPDOWN ── */
+    .ms-wrap { position: relative; width: 100%; min-width: 120px; }
+    .ms-trigger {
+      width: 100%;
+      background: #1e2335;
+      border: 2px solid #4a5068;
+      border-radius: 8px;
+      padding: 7px 28px 7px 10px;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .ms-trigger::after {
+      content: '▾';
+      position: absolute;
+      right: 9px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .ms-trigger.open { border-color: var(--accent); }
+    .ms-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 180px;
+      background: #1a1e2a;
+      border: 1px solid #4a5068;
+      border-radius: 10px;
+      z-index: 50;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      padding: 6px 0;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .ms-dropdown.open { display: block; }
+    .ms-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-size: 0.83rem;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .ms-option:hover { background: rgba(108,99,255,0.1); }
+    .ms-option input[type="checkbox"] { display: none; }
+    .ms-cb {
+      width: 16px; height: 16px;
+      border: 2px solid #4a5068;
+      border-radius: 4px;
+      background: #1e2335;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ms-option input[type="checkbox"]:checked + .ms-cb {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .ms-option input[type="checkbox"]:checked + .ms-cb::after {
+      content: '✓';
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .ms-other-input {
+      display: none;
+      padding: 4px 14px 8px;
+    }
+    .ms-other-input input {
+      width: 100%;
+      background: #1e2335;
+      border: 1px solid #4a5068;
+      border-radius: 7px;
+      padding: 6px 10px;
+      color: var(--text);
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .ms-other-input input:focus { border-color: var(--accent); }
+    /* одиночный select для времени */
+    .time-select {
+      width: 100%;
+      background: #1e2335;
+      border: 2px solid #4a5068;
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b90a0'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+    .time-select:focus { border-color: var(--accent); }
+    .time-select option { background: #1a1e2a; }
+
+    /* ── SUBMIT ── */
+    .submit-wrap { text-align: center; }
+    button[type="submit"] {
+      background: linear-gradient(135deg, var(--accent), #8b7fff);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 48px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.5);
+    }
+    button[type="submit"]:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-msg {
+      display: none;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(0,212,170,0.3);
+      border-radius: var(--radius);
+      padding: 48px 24px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .success-msg .icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-msg h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .success-msg p { color: var(--muted); }
+
+    /* ── SKIP BUTTON ── */
+    .skip-wrap {
+      text-align: center;
+      margin-top: 8px;
+    }
+    .btn-skip {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 12px 32px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-skip:hover { border-color: #ff6b6b; color: #ff6b6b; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--card);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 20px;
+      padding: 40px 32px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    .modal-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .modal h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; }
+    .modal p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 28px; }
+    .modal-btns { display: flex; flex-direction: column; gap: 12px; }
+    .btn-stay {
+      background: linear-gradient(135deg, var(--accent), #8b7fff);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.35);
+      transition: transform 0.2s;
+    }
+    .btn-stay:hover { transform: translateY(-2px); }
+    .btn-leave {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 12px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-leave:hover { color: #ff6b6b; border-color: #ff6b6b; }
+
+    /* ── RESPONSIVE ── */
+
+    /* Планшет горизонтальный: 768–1024px */
+    @media (max-width: 1024px) {
+      body { padding: 32px 24px 64px; }
+      .page-header h1 { font-size: 1.9rem; }
+      table { min-width: 520px; }
+    }
+
+    /* Планшет вертикальный: 600–768px */
+    @media (max-width: 768px) {
+      body { padding: 24px 16px 56px; }
+      .page-header { margin-bottom: 28px; }
+      .page-header h1 { font-size: 1.6rem; }
+      .page-header p { font-size: 0.9rem; }
+      form { gap: 20px; }
+      .step { padding: 24px 18px; }
+      .step-title { font-size: 1rem; }
+      .hint { font-size: 0.8rem; padding: 9px 12px; }
+      .field-label { font-size: 0.85rem; }
+      input[type="text"], input[type="email"], textarea { font-size: 0.9rem; padding: 11px 13px; }
+      thead th { font-size: 0.72rem; padding: 10px 8px; }
+      tbody td:first-child { min-width: 130px; font-size: 0.82rem; }
+      tbody td input[type="text"] { font-size: 0.78rem; padding: 7px 8px; }
+      button[type="submit"] { width: 100%; padding: 14px; }
+      .btn-skip { width: 100%; }
+    }
+
+    /* Телефон: до 600px */
+    @media (max-width: 600px) {
+      body { padding: 20px 12px 48px; }
+      .page-header h1 { font-size: 1.4rem; }
+      .step { padding: 20px 14px; }
+      .step-num { width: 30px; height: 30px; font-size: 0.8rem; }
+      .step-title { font-size: 0.95rem; }
+      .check-label { font-size: 0.88rem; }
+      .check-box { width: 18px; height: 18px; }
+      .inline-other { flex-wrap: wrap; gap: 8px; }
+      .inline-other input[type="text"] { width: 100%; }
+      /* Таблица — вертикальная раскладка на телефоне */
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 480px; }
+      thead th { font-size: 0.68rem; padding: 8px 6px; }
+      tbody td { padding: 8px 6px; }
+      tbody td:first-child { min-width: 110px; font-size: 0.78rem; padding-left: 8px; }
+      tbody td input[type="text"] { font-size: 0.75rem; padding: 6px 7px; }
+      .row-check { gap: 6px; }
+      .field { margin-bottom: 14px; }
+      .success-msg { padding: 32px 16px; }
+      .success-msg .icon { font-size: 2.4rem; }
+      .success-msg h2 { font-size: 1.3rem; }
+      .modal { padding: 28px 20px; }
+      .modal h3 { font-size: 1.05rem; }
+    }
+
+    /* Маленький телефон: до 380px */
+    @media (max-width: 380px) {
+      .page-header h1 { font-size: 1.25rem; }
+      .step { padding: 16px 12px; }
+      .step-title { font-size: 0.9rem; }
+      table { min-width: 420px; }
+      button[type="submit"] { font-size: 0.9rem; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>📝 Анкета для логиста</h1>
+  <p>Заполните форму — это поможет понять ваши задачи и упростить работу</p>
+</div>
+
+<form id="anketaForm" onsubmit="handleSubmit(event)">
+
+  <!-- ШАГ 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-title">О тебе</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Имя</label>
+      <input type="text" name="name" placeholder="Введи своё имя"/>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Должность</label>
+      <input type="text" name="position" placeholder="Например: логист, диспетчер, менеджер по перевозкам"/>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Чем занимаешься в логистике (выбери или напиши своё):</label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" name="sphere" value="Мультимодальные перевозки"/>
+          <span class="check-box"></span>
+          <span class="check-label">Мультимодальные перевозки</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="sphere" value="Автоперевозки"/>
+          <span class="check-box"></span>
+          <span class="check-label">Автоперевозки</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="sphere" value="Контейнерные перевозки"/>
+          <span class="check-box"></span>
+          <span class="check-label">Контейнерные перевозки</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="sphere" value="Сборный груз"/>
+          <span class="check-box"></span>
+          <span class="check-label">Сборный груз</span>
+        </label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0">
+            <input type="checkbox" name="sphere" value="Другое"/>
+            <span class="check-box"></span>
+            <span class="check-label">Другое:</span>
+          </label>
+          <input type="text" name="sphere_other" placeholder="Напиши своё"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Сколько лет работаешь в логистике (примерно):</label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" name="years" value="<1"/>
+          <span class="check-box"></span>
+          <span class="check-label">&lt;1</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="years" value="1–3"/>
+          <span class="check-box"></span>
+          <span class="check-label">1–3</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="years" value="3–5"/>
+          <span class="check-box"></span>
+          <span class="check-label">3–5</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="years" value="5+"/>
+          <span class="check-box"></span>
+          <span class="check-label">5+</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="hint">Отметь то, чем реально занимаешься.</div>
+  </div>
+
+  <!-- ШАГ 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div class="step-title">Что у тебя есть / чем работаешь</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Работаешь с устройствами:</label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" name="device" value="Компьютер"/>
+          <span class="check-box"></span>
+          <span class="check-label">Компьютер</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="device" value="Ноутбук"/>
+          <span class="check-box"></span>
+          <span class="check-label">Ноутбук</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="device" value="Планшет"/>
+          <span class="check-box"></span>
+          <span class="check-label">Планшет</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="device" value="Телефон"/>
+          <span class="check-box"></span>
+          <span class="check-label">Телефон</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Используешь таблицы:</label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" name="tables" value="Excel"/>
+          <span class="check-box"></span>
+          <span class="check-label">Excel</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="tables" value="Google таблицы"/>
+          <span class="check-box"></span>
+          <span class="check-label">Google таблицы</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="tables" value="CRM-системы"/>
+          <span class="check-box"></span>
+          <span class="check-label">CRM-системы</span>
+        </label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0">
+            <input type="checkbox" name="tables" value="Другое"/>
+            <span class="check-box"></span>
+            <span class="check-label">Другое:</span>
+          </label>
+          <input type="text" name="tables_other" placeholder="Напиши своё"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Программы для учёта перевозок:</label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" name="software" value="Antor"/>
+          <span class="check-box"></span>
+          <span class="check-label">Antor</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="software" value="1С:Логистика"/>
+          <span class="check-box"></span>
+          <span class="check-label">1С:Логистика</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="software" value="SAP / ERP"/>
+          <span class="check-box"></span>
+          <span class="check-label">SAP / ERP</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="software" value="CRM-системы"/>
+          <span class="check-box"></span>
+          <span class="check-label">CRM-системы</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="software" value="Другие (укажи какие)"/>
+          <span class="check-box"></span>
+          <span class="check-label">Другие (укажи какие)</span>
+        </label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0">
+            <input type="checkbox" name="software" value="Другое"/>
+            <span class="check-box"></span>
+            <span class="check-label">Другое:</span>
+          </label>
+          <input type="text" name="software_other" placeholder="Напиши своё"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">Отметь все, что реально используешь.</div>
+  </div>
+
+  <!-- ШАГ 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div class="step-title">Что больше всего занимает времени</div>
+    </div>
+    <div class="hint">Отметь процессы, которыми занимаешься, и укажи, как выполняешь, сколько времени это занимает. Пример — по желанию.</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Чем занимаешься</th>
+            <th>Как выполняешь<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(вручную / Excel / Google таблицы / CRM / ERP / другое)</span></th>
+            <th>Сколько времени занимает<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(минуты / часы / весь день)</span></th>
+            <th>Пример<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(по желанию)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_cost"/>
+                  <span class="check-box"></span>
+                </label>
+                Считаю стоимость перевозки
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="cost_how"></div></td>
+            <td><select class="time-select" name="cost_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="cost_example" placeholder="Пример"/></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_route"/>
+                  <span class="check-box"></span>
+                </label>
+                Считаю, какой маршрут выбрать
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="route_how"></div></td>
+            <td><select class="time-select" name="route_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="route_example" placeholder="Пример"/></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_track"/>
+                  <span class="check-box"></span>
+                </label>
+                Проверяю, где находится груз
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="track_how"></div></td>
+            <td><select class="time-select" name="track_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="track_example" placeholder="Пример"/></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_reports"/>
+                  <span class="check-box"></span>
+                </label>
+                Составляю отчёты
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="reports_how"></div></td>
+            <td><select class="time-select" name="reports_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="reports_example" placeholder="Пример"/></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_comm"/>
+                  <span class="check-box"></span>
+                </label>
+                Общаюсь с перевозчиками и клиентами
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="comm_how"></div></td>
+            <td><select class="time-select" name="comm_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="comm_example" placeholder="Пример"/></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="row-check">
+                <label class="check-item">
+                  <input type="checkbox" name="process_other"/>
+                  <span class="check-box"></span>
+                </label>
+                <input type="text" name="process_other_text" placeholder="Другое (укажи своё)" style="width:130px;padding:6px 10px;font-size:0.82rem"/>
+              </div>
+            </td>
+            <td><div class="ms-wrap" data-name="other_how"></div></td>
+            <td><select class="time-select" name="other_time"><option value="">— выбери —</option><option>30 минут</option><option>1 час</option><option>2 часа</option><option>больше 3 часов</option><option>полдня</option><option>весь день</option><option>круглосуточно</option><option>свой вариант</option></select></td>
+            <td><input type="text" name="other_example" placeholder="Пример"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ШАГ 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div class="step-title">Что хотелось бы, чтобы стало проще</div>
+    </div>
+    <div class="hint">Отметь всё, что хотелось бы упростить или автоматизировать:</div>
+
+    <div class="check-group">
+      <label class="check-item">
+        <input type="checkbox" name="simplify" value="Таблицы сами считают стоимость"/>
+        <span class="check-box"></span>
+        <span class="check-label">Таблицы сами считают стоимость</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" name="simplify" value="Система показывает, где груз"/>
+        <span class="check-box"></span>
+        <span class="check-label">Система показывает, где груз</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" name="simplify" value="Программа помогает выбрать маршрут"/>
+        <span class="check-box"></span>
+        <span class="check-label">Программа помогает выбрать маршрут</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" name="simplify" value="Отчёты делаются сами"/>
+        <span class="check-box"></span>
+        <span class="check-label">Отчёты делаются сами</span>
+      </label>
+
+      <!-- Уведомления с вложенными чекбоксами -->
+      <label class="check-item" id="notif-parent">
+        <input type="checkbox" name="simplify" value="Приходят напоминания / уведомления" id="notif-toggle"/>
+        <span class="check-box"></span>
+        <span class="check-label">Приходят напоминания / уведомления:</span>
+      </label>
+      <div class="check-nested" id="notif-nested">
+        <label class="check-item">
+          <input type="checkbox" name="notif_target" value="Водителям"/>
+          <span class="check-box"></span>
+          <span class="check-label">Водителям</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="notif_target" value="Клиентам"/>
+          <span class="check-box"></span>
+          <span class="check-label">Клиентам</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="notif_target" value="Терминалам"/>
+          <span class="check-box"></span>
+          <span class="check-label">Терминалам</span>
+        </label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0">
+            <input type="checkbox" name="notif_target" value="Другим"/>
+            <span class="check-box"></span>
+            <span class="check-label">Другим:</span>
+          </label>
+          <input type="text" name="notif_other" placeholder="Кому именно"/>
+        </div>
+      </div>
+
+      <div class="inline-other">
+        <label class="check-item" style="flex-shrink:0">
+          <input type="checkbox" name="simplify" value="Другое"/>
+          <span class="check-box"></span>
+          <span class="check-label">Другое:</span>
+        </label>
+        <input type="text" name="simplify_other" placeholder="Напиши своё"/>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:16px">Здесь можно написать всё, что хотелось бы, чтобы делалось само, без твоего постоянного внимания.</div>
+  </div>
+
+  <!-- ШАГ 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div class="step-title">Парк, рейсы и источники грузов</div>
+    </div>
+    <div class="hint">Это поможет понять масштаб работы и процессы, которые нужно упростить.</div>
+
+    <div class="field">
+      <label class="field-label">Сколько машин в парке:</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="cars" value="1–5"/><span class="check-box"></span><span class="check-label">1–5</span></label>
+        <label class="check-item"><input type="checkbox" name="cars" value="6–10"/><span class="check-box"></span><span class="check-label">6–10</span></label>
+        <label class="check-item"><input type="checkbox" name="cars" value="11–20"/><span class="check-box"></span><span class="check-label">11–20</span></label>
+        <label class="check-item"><input type="checkbox" name="cars" value="21+"/><span class="check-box"></span><span class="check-label">21+</span></label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0"><input type="checkbox" name="cars" value="другое"/><span class="check-box"></span><span class="check-label">другое:</span></label>
+          <input type="text" name="cars_other" placeholder="Укажи количество"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Сколько рейсов в день:</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="trips" value="1–5"/><span class="check-box"></span><span class="check-label">1–5</span></label>
+        <label class="check-item"><input type="checkbox" name="trips" value="6–10"/><span class="check-box"></span><span class="check-label">6–10</span></label>
+        <label class="check-item"><input type="checkbox" name="trips" value="11–20"/><span class="check-box"></span><span class="check-label">11–20</span></label>
+        <label class="check-item"><input type="checkbox" name="trips" value="21+"/><span class="check-box"></span><span class="check-label">21+</span></label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0"><input type="checkbox" name="trips" value="другое"/><span class="check-box"></span><span class="check-label">другое:</span></label>
+          <input type="text" name="trips_other" placeholder="Укажи количество"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Количество клиентов, с которыми работаешь регулярно:</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="clients" value="1–10"/><span class="check-box"></span><span class="check-label">1–10</span></label>
+        <label class="check-item"><input type="checkbox" name="clients" value="11–20"/><span class="check-box"></span><span class="check-label">11–20</span></label>
+        <label class="check-item"><input type="checkbox" name="clients" value="21–50"/><span class="check-box"></span><span class="check-label">21–50</span></label>
+        <label class="check-item"><input type="checkbox" name="clients" value="51+"/><span class="check-box"></span><span class="check-label">51+</span></label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0"><input type="checkbox" name="clients" value="другое"/><span class="check-box"></span><span class="check-label">другое:</span></label>
+          <input type="text" name="clients_other" placeholder="Укажи количество"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Источники грузов / перевозчиков:</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="sources" value="Собственные клиенты"/><span class="check-box"></span><span class="check-label">Собственные клиенты</span></label>
+        <label class="check-item"><input type="checkbox" name="sources" value="Внешние клиенты / заказы с бирж / платформ"/><span class="check-box"></span><span class="check-label">Внешние клиенты / заказы с бирж / платформ</span></label>
+        <label class="check-item"><input type="checkbox" name="sources" value="Работа через партнёров / посредников"/><span class="check-box"></span><span class="check-label">Работа через партнёров / посредников</span></label>
+        <div class="inline-other">
+          <label class="check-item" style="flex-shrink:0"><input type="checkbox" name="sources" value="Другое"/><span class="check-box"></span><span class="check-label">Другое:</span></label>
+          <input type="text" name="sources_other" placeholder="Напиши своё"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Комментарии (по желанию):</label>
+      <input type="text" name="step5_comment" placeholder="Любые дополнения..."/>
+    </div>
+  </div>
+
+  <!-- ШАГ 6 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div class="step-title">Что для тебя самое важное</div>
+    </div>
+    <div class="hint">Выбери главные приоритеты:</div>
+
+    <div class="check-group">
+      <label class="check-item"><input type="checkbox" name="priority" value="Счёт стоимости"/><span class="check-box"></span><span class="check-label">Счёт стоимости</span></label>
+      <label class="check-item"><input type="checkbox" name="priority" value="Проверка маршрута"/><span class="check-box"></span><span class="check-label">Проверка маршрута</span></label>
+      <label class="check-item"><input type="checkbox" name="priority" value="Отслеживание груза"/><span class="check-box"></span><span class="check-label">Отслеживание груза</span></label>
+      <label class="check-item"><input type="checkbox" name="priority" value="Отчёты"/><span class="check-box"></span><span class="check-label">Отчёты</span></label>
+      <div class="inline-other">
+        <label class="check-item" style="flex-shrink:0"><input type="checkbox" name="priority" value="Другое"/><span class="check-box"></span><span class="check-label">Другое:</span></label>
+        <input type="text" name="priority_other" placeholder="Напиши своё"/>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:16px">Это поможет понять, с чего начать делать продукт.</div>
+  </div>
+
+  <!-- ШАГ 7 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">7</div>
+      <div class="step-title">Дополнительно</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Есть ли у тебя примеры, как ты сейчас работаешь?</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="has_examples" value="Да"/><span class="check-box"></span><span class="check-label">Да</span></label>
+        <label class="check-item"><input type="checkbox" name="has_examples" value="Нет"/><span class="check-box"></span><span class="check-label">Нет</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Есть пожелания или идеи, что должно быть обязательно?</label>
+      <div class="hint">Даже маленькая идея поможет понять, что для тебя важно.</div>
+      <textarea name="ideas" placeholder="Комментарии / Примеры..."></textarea>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button type="submit" id="submitBtn">Отправить анкету →</button>
+  </div>
+  <div class="skip-wrap">
+    <button type="button" class="btn-skip" id="skipBtn">Пропустить анкету</button>
+  </div>
+
+</form>
+
+<!-- Модальное окно при попытке пропустить -->
+<div class="modal-overlay" id="skipModal">
+  <div class="modal">
+    <div class="modal-icon">⚡</div>
+    <h3>Хочешь ускорить процесс?</h3>
+    <p>Заполни анкету — и дело пойдёт в работу мгновенно.</p>
+    <div class="modal-btns">
+      <button class="btn-stay" id="btnStay">Заполнить анкету</button>
+      <button class="btn-leave" id="btnLeave">Уйти без анкеты</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-msg" id="successMsg">
+  <div class="icon">✅</div>
+  <h2>Спасибо!</h2>
+  <p>Анкета отправлена. Елена свяжется с тобой в ближайшее время.</p>
+</div>
+
+<script>
+  // ── MULTI-SELECT ──
+  const HOW_OPTIONS = ['Вручную','Excel','Google таблицы','CRM','ERP','Другое'];
+
+  function buildMultiSelect(wrap) {
+    const name = wrap.dataset.name;
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'ms-trigger';
+    trigger.textContent = '— выбери —';
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'ms-dropdown';
+
+    const selected = new Set();
+
+    HOW_OPTIONS.forEach(opt => {
+      const label = document.createElement('label');
+      label.className = 'ms-option';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      const box = document.createElement('span');
+      box.className = 'ms-cb';
+      const text = document.createElement('span');
+      text.textContent = opt;
+
+      label.appendChild(cb);
+      label.appendChild(box);
+      label.appendChild(text);
+
+      cb.addEventListener('change', () => {
+        if (cb.checked) selected.add(opt); else selected.delete(opt);
+        const other = dropdown.querySelector('.ms-other-input');
+        if (opt === 'Другое') other.style.display = cb.checked ? 'block' : 'none';
+        updateTrigger();
+        syncHidden();
+      });
+
+      dropdown.appendChild(label);
+
+      if (opt === 'Другое') {
+        const otherWrap = document.createElement('div');
+        otherWrap.className = 'ms-other-input';
+        const otherInput = document.createElement('input');
+        otherInput.type = 'text';
+        otherInput.placeholder = 'Укажи свой вариант';
+        otherInput.dataset.otherFor = name;
+        otherInput.addEventListener('input', syncHidden);
+        otherWrap.appendChild(otherInput);
+        dropdown.appendChild(otherWrap);
+      }
+    });
+
+    // скрытое поле для сбора значений
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = name;
+    wrap.appendChild(hidden);
+
+    function updateTrigger() {
+      const vals = [...selected];
+      trigger.textContent = vals.length ? vals.join(', ') : '— выбери —';
+      trigger.classList.toggle('open', dropdown.classList.contains('open'));
+    }
+
+    function syncHidden() {
+      const otherInput = dropdown.querySelector('[data-other-for]');
+      const vals = [...selected].map(v => v === 'Другое' && otherInput?.value ? otherInput.value : v);
+      hidden.value = vals.join(', ');
+    }
+
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.contains('open');
+      // закрыть все остальные
+      document.querySelectorAll('.ms-dropdown.open').forEach(d => {
+        d.classList.remove('open');
+        d.previousElementSibling?.classList.remove('open');
+      });
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        trigger.classList.add('open');
+      }
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(dropdown);
+  }
+
+  document.querySelectorAll('.ms-wrap').forEach(buildMultiSelect);
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.ms-dropdown.open').forEach(d => {
+      d.classList.remove('open');
+      d.previousElementSibling?.classList.remove('open');
+    });
+  });
+
+  const BOT = '8293478939:AAGGs7i0b8XRXWlYKThU4B8M7zrZXu-rSq8';
+  const CHAT = 8647054217;
+
+  // Данные клиента из лендинга
+  const clientData = JSON.parse(sessionStorage.getItem('clientData') || '{}');
+
+  function clientBlock() {
+    if (!clientData.name && !clientData.phone) return '';
+    return [
+      '📥 <b>Заявка с сайта</b>',
+      `👤 Имя: ${esc(clientData.name || '—')}`,
+      `📞 Контакт: ${esc(clientData.phone || '—')}`,
+      `📋 Тема: ${esc(clientData.topic || '—')}`,
+      `💬 Комментарий: ${esc(clientData.comment || '—')}`,
+      '',
+    ].join('\n');
+  }
+
+  // Экранируем символы которые ломают HTML в Telegram
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function sendToBot(text) {
+    await fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: CHAT, text, parse_mode: 'HTML' })
+    });
+  }
+
+  // Вложенные чекбоксы уведомлений
+  document.getElementById('notif-toggle').addEventListener('change', function() {
+    document.getElementById('notif-nested').style.opacity = this.checked ? '1' : '0.4';
+  });
+
+  // Кнопка "Пропустить"
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    document.getElementById('skipModal').classList.add('active');
+  });
+  document.getElementById('btnStay').addEventListener('click', () => {
+    document.getElementById('skipModal').classList.remove('active');
+  });
+  document.getElementById('btnLeave').addEventListener('click', async () => {
+    // Отправляем только данные клиента без анкеты
+    const text = clientBlock() +
+      '⚠️ <b>Клиент ушёл без заполнения анкеты</b>';
+    try { await sendToBot(text); } catch {}
+    sessionStorage.removeItem('clientData');
+    window.location.href = '/';
+  });
+
+  // Отправка анкеты
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Отправляем...';
+
+    const fd = new FormData(e.target);
+    const get = k => fd.get(k) || '';
+    const getAll = k => fd.getAll(k).join(', ');
+
+    const ev = (k) => esc(get(k));
+    const eva = (k) => esc(getAll(k));
+
+    const text = clientBlock() + [
+      '📋 <b>Анкета логиста</b>',
+      '',
+      '<b>ШАГ 1. О тебе</b>',
+      `👤 Имя: ${ev('name')}`,
+      `💼 Должность: ${ev('position')}`,
+      `🚛 Сфера: ${eva('sphere')}${get('sphere_other') ? ' / ' + esc(get('sphere_other')) : ''}`,
+      `📅 Лет в логистике: ${eva('years')}`,
+      '',
+      '<b>ШАГ 2. Инструменты</b>',
+      `🖥 Устройства: ${eva('device')}`,
+      `📊 Таблицы: ${eva('tables')}${get('tables_other') ? ' / ' + esc(get('tables_other')) : ''}`,
+      `💻 Программы: ${eva('software')}${get('software_other') ? ' / ' + esc(get('software_other')) : ''}`,
+      '',
+      '<b>ШАГ 3. Что занимает время</b>',
+      `Стоимость: ${ev('cost_how')} | ${ev('cost_time')} | ${ev('cost_example')}`,
+      `Маршрут: ${ev('route_how')} | ${ev('route_time')} | ${ev('route_example')}`,
+      `Где груз: ${ev('track_how')} | ${ev('track_time')} | ${ev('track_example')}`,
+      `Отчёты: ${ev('reports_how')} | ${ev('reports_time')} | ${ev('reports_example')}`,
+      `Общение: ${ev('comm_how')} | ${ev('comm_time')} | ${ev('comm_example')}`,
+      `Другое: ${ev('process_other_text')} — ${ev('other_how')} | ${ev('other_time')} | ${ev('other_example')}`,
+      '',
+      '<b>ШАГ 4. Упростить / автоматизировать</b>',
+      `✅ ${eva('simplify')}${get('simplify_other') ? ' / ' + esc(get('simplify_other')) : ''}`,
+      `🔔 Уведомления: ${eva('notif_target')}${get('notif_other') ? ' / ' + esc(get('notif_other')) : ''}`,
+      '',
+      '<b>ШАГ 5. Масштаб</b>',
+      `🚗 Машин: ${eva('cars')}${get('cars_other') ? ' / ' + esc(get('cars_other')) : ''}`,
+      `🛣 Рейсов в день: ${eva('trips')}${get('trips_other') ? ' / ' + esc(get('trips_other')) : ''}`,
+      `👥 Клиентов: ${eva('clients')}${get('clients_other') ? ' / ' + esc(get('clients_other')) : ''}`,
+      `📦 Источники: ${eva('sources')}${get('sources_other') ? ' / ' + esc(get('sources_other')) : ''}`,
+      `💬 Комментарий: ${ev('step5_comment')}`,
+      '',
+      '<b>ШАГ 6. Приоритеты</b>',
+      `⭐ ${eva('priority')}${get('priority_other') ? ' / ' + esc(get('priority_other')) : ''}`,
+      '',
+      '<b>ШАГ 7. Дополнительно</b>',
+      `📎 Примеры есть: ${eva('has_examples')}`,
+      `💡 Идеи: ${ev('ideas')}`,
+    ].join('\n');
+
+    try {
+      await sendToBot(text);
+      sessionStorage.removeItem('clientData');
+      document.getElementById('anketaForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Отправить анкету →';
+      alert('Ошибка отправки. Попробуйте ещё раз.');
+    }
+  }
+</script>
+</body>
+</html>
