@@ -516,113 +516,175 @@
   </div>
 </section>
 
-<!-- ══════════════════════ БЛОК 5: Калькулятор ══════════════════════ -->
-<section id="calculator" class="border-y border-white/10" style="background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.03))">
-  <div class="sec-inner mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-10 sm:gap-8 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:px-16 lg:py-24">
+<!-- ══════════════════════ БЛОК 5: Демо-решение ══════════════════════ -->
+<section id="calculator" class="border-y border-white/10" style="background: linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,.03))">
+  <div class="sec-inner mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-10 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:gap-16 lg:px-16 lg:py-24">
 
-    <div class="fade-up">
-      <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Демо</div>
-      <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
-        Попробуй на реальном рейсе
+    <!-- ЛЕВАЯ ЧАСТЬ: продающий текст -->
+    <div class="fade-up flex flex-col justify-center">
+      <div class="mb-4 text-xs uppercase tracking-[.22em] text-green-400/80 sm:text-sm sm:tracking-[.24em]">Демо</div>
+      <h2 class="mb-4 text-2xl font-semibold leading-[1.1] tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+        Рассчитай рейс как система,<br class="hidden sm:block" /> а не «на глаз»
       </h2>
-      <p class="max-w-xl text-lg leading-relaxed text-gray-300">
-        Введи данные — и получи предварительный расчёт рентабельности за несколько секунд.
+      <p class="mb-7 text-base leading-relaxed text-gray-400 sm:text-lg">
+        Система за секунды покажет прибыль,<br class="hidden sm:block" />время, нагрузку и риск по рейсу
       </p>
 
-      <div class="mt-8 space-y-3 text-gray-400 text-sm">
-        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Расчёт по реальным тарифам топлива</div>
-        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Учёт пробега и времени в пути</div>
-        <div class="flex items-center gap-2"><span class="text-green-400">→</span> Оценка риска и маржинальности</div>
+      <!-- Список -->
+      <ul class="mb-8 space-y-3">
+        <li class="flex items-start gap-3 text-sm text-gray-300 sm:text-base">
+          <span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-[10px] text-green-400">✓</span>
+          Считает реальную прибыль
+        </li>
+        <li class="flex items-start gap-3 text-sm text-gray-300 sm:text-base">
+          <span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-[10px] text-green-400">✓</span>
+          Учитывает время рейса
+        </li>
+        <li class="flex items-start gap-3 text-sm text-gray-300 sm:text-base">
+          <span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-[10px] text-green-400">✓</span>
+          Показывает риск и платные дороги
+        </li>
+        <li class="flex items-start gap-3 text-sm text-gray-300 sm:text-base">
+          <span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-[10px] text-green-400">✓</span>
+          Помогает избежать убыточных рейсов
+        </li>
+      </ul>
+
+      <!-- Нижний блок -->
+      <div class="rounded-2xl border border-white/8 bg-white/[.025] p-4 text-xs leading-relaxed text-gray-500 sm:p-5 sm:text-sm">
+        <div class="mb-1.5 font-medium text-gray-400">Это демо-расчёт.</div>
+        В рабочей версии система:<br/>
+        — автоматически подтягивает данные из заявки<br/>
+        — учитывает ограничения и слоты<br/>
+        — обучается на ваших рейсах
       </div>
     </div>
 
-    <div class="fade-in delay-2 rounded-[32px] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl md:p-8">
-      <div class="grid gap-4" id="calcForm">
+    <!-- ПРАВАЯ ЧАСТЬ: интерактивная карточка -->
+    <div class="fade-in delay-2">
+      <div id="demoCard" class="rounded-[28px] border border-white/10 bg-black/40 p-5 shadow-[0_0_60px_rgba(0,0,0,.5)] backdrop-blur-xl sm:rounded-[32px] sm:p-7"
+        style="box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.5), 0 0 40px rgba(74,222,128,.04)">
 
-        <div>
-          <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Маршрут</label>
-          <input id="route" type="text"
-            class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
-            placeholder="Москва → Екатеринбург" />
-        </div>
+        <!-- ФОРМА ВВОДА -->
+        <div id="demoForm">
+          <!-- Маршрут -->
+          <div class="mb-4">
+            <label class="mb-1.5 block text-[11px] uppercase tracking-[.16em] text-gray-500">Маршрут</label>
+            <input id="d-route" type="text" value="Москва → Екатеринбург"
+              class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-gray-600 transition focus:border-green-400/40 focus:outline-none sm:rounded-2xl sm:py-3 sm:text-base" />
+          </div>
 
-        <div class="calc-grid-2 grid grid-cols-2 gap-3">
-          <div>
-            <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Расстояние, км</label>
-            <input id="distance" type="number" min="1"
-              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
-              placeholder="1700" />
+          <!-- Ставка + тип машины -->
+          <div class="mb-4 grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1.5 block text-[11px] uppercase tracking-[.16em] text-gray-500">Ставка клиента</label>
+              <div class="relative">
+                <input id="d-rate" type="number" value="85000" min="1"
+                  class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white transition focus:border-green-400/40 focus:outline-none sm:rounded-2xl sm:py-3" />
+                <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-600">₽</span>
+              </div>
+            </div>
+            <div>
+              <label class="mb-1.5 block text-[11px] uppercase tracking-[.16em] text-gray-500">Тип машины</label>
+              <select id="d-truck"
+                class="w-full rounded-xl border border-white/10 bg-[#0a0e1f] px-3 py-2.5 text-sm text-white transition appearance-none focus:border-green-400/40 focus:outline-none sm:rounded-2xl sm:py-3">
+                <option value="fura">Фура (20 т)</option>
+                <option value="mega">Мегатрак (24 т)</option>
+                <option value="ref">Рефрижератор</option>
+                <option value="tent">Тент (10 т)</option>
+                <option value="gazel">Газель</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Ставка, ₽</label>
-            <input id="rate" type="number" min="1"
-              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 transition"
-              placeholder="85000" />
-          </div>
-        </div>
 
-        <div>
-          <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Тип машины</label>
-          <select id="truck"
-            class="w-full rounded-2xl border border-white/10 bg-[#0d1020] px-4 py-3 text-white transition appearance-none cursor-pointer">
-            <option value="fura">Фура (20 т)</option>
-            <option value="mega">Мегатрак (24 т)</option>
-            <option value="ref">Рефрижератор</option>
-            <option value="tent">Тент (10 т)</option>
-            <option value="gazel">Газель</option>
-          </select>
-        </div>
-
-        <button onclick="calculate()"
-          class="mt-2 rounded-2xl bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400 active:scale-95">
-          Рассчитать
-        </button>
-      </div>
-
-      <!-- Результат -->
-      <div id="calcResult" class="calc-result mt-6 rounded-3xl border border-green-400/20 bg-green-400/5 p-5">
-        <div class="mb-3 text-sm uppercase tracking-[.18em] text-green-300">Результат</div>
-        <div class="space-y-2 text-gray-200">
-          <div class="flex justify-between">
-            <span class="text-gray-400">Выручка</span>
-            <span id="res-revenue" class="font-medium">—</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">Затраты (топливо + пробег)</span>
-            <span id="res-costs" class="font-medium text-red-400">—</span>
-          </div>
-          <div class="border-t border-white/10 pt-2 flex justify-between text-lg">
-            <span class="font-medium">Прибыль</span>
-            <span id="res-profit" class="font-semibold text-green-400">—</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">Маржа</span>
-            <span id="res-margin" class="font-medium">—</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">Время в пути</span>
-            <span id="res-time" class="font-medium">—</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">Риск</span>
-            <span id="res-risk" class="font-medium">—</span>
-          </div>
-        </div>
-        <div class="mt-5 border-t border-white/10 pt-4">
-          <div class="mb-3 text-sm text-gray-300">Хочешь точнее? Анкета запускает детальный разбор мгновенно.</div>
-          <div class="flex flex-wrap gap-3">
-            <a href="anketa/"
-              class="inline-block rounded-2xl bg-green-500 px-5 py-3 text-black font-medium transition hover:bg-green-400">
-              Действуй! →
-            </a>
-            <button onclick="openContactModal()"
-              class="rounded-2xl border border-white/20 bg-white/5 px-5 py-3 text-sm text-gray-300 transition hover:bg-white/10">
-              Оставить контакты
+          <!-- Раскрываемый блок параметров -->
+          <div class="mb-5">
+            <button onclick="toggleDemoParams()" id="demoParamsToggle"
+              class="flex w-full items-center justify-between rounded-xl border border-white/8 bg-white/[.025] px-4 py-2.5 text-xs text-gray-400 transition hover:border-white/15 hover:text-gray-300">
+              <span>▾ Параметры расчёта</span>
+              <span class="text-gray-600 text-[10px]">необязательно</span>
             </button>
+            <div id="demoParams" class="overflow-hidden" style="max-height:0;transition:max-height .35s ease-out,opacity .3s ease;opacity:0">
+              <div class="mt-3 grid grid-cols-2 gap-3 rounded-xl border border-white/8 bg-white/[.02] p-3 sm:grid-cols-2">
+                <div>
+                  <label class="mb-1 block text-[10px] uppercase tracking-[.14em] text-gray-600">Расход, л/км</label>
+                  <input id="d-fuel-rate" type="number" step="0.01" value="0.32"
+                    class="w-full rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white focus:border-green-400/30 focus:outline-none" />
+                </div>
+                <div>
+                  <label class="mb-1 block text-[10px] uppercase tracking-[.14em] text-gray-600">Цена дизеля, ₽</label>
+                  <input id="d-fuel-price" type="number" value="65"
+                    class="w-full rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white focus:border-green-400/30 focus:outline-none" />
+                </div>
+                <div>
+                  <label class="mb-1 block text-[10px] uppercase tracking-[.14em] text-gray-600">Зарплата, ₽</label>
+                  <input id="d-salary" type="number" value="15000"
+                    class="w-full rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white focus:border-green-400/30 focus:outline-none" />
+                </div>
+                <div>
+                  <label class="mb-1 block text-[10px] uppercase tracking-[.14em] text-gray-600">Платон (≈), ₽</label>
+                  <input id="d-platon" type="number" value="3200"
+                    class="w-full rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white focus:border-green-400/30 focus:outline-none" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Кнопка -->
+          <button onclick="demoCalc()"
+            class="w-full rounded-xl bg-green-500 py-3 text-sm font-semibold text-black shadow-[0_0_24px_rgba(74,222,128,.2)] transition hover:bg-green-400 hover:shadow-[0_0_32px_rgba(74,222,128,.3)] active:scale-[.98] sm:rounded-2xl sm:py-3.5 sm:text-base">
+            Проверить рейс
+          </button>
+        </div>
+
+        <!-- РЕЗУЛЬТАТ -->
+        <div id="demoResult" style="display:none;opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease">
+
+          <!-- Вердикт -->
+          <div id="demoVerdict" class="mb-5 rounded-xl p-4 sm:rounded-2xl sm:p-5"></div>
+
+          <!-- Метрики -->
+          <div class="mb-5 grid grid-cols-2 gap-2 sm:gap-3">
+            <div class="rounded-xl border border-white/8 bg-white/[.03] p-3 sm:p-4">
+              <div class="mb-0.5 text-[10px] uppercase tracking-[.14em] text-gray-500">Прибыль</div>
+              <div id="r-profit" class="text-lg font-semibold sm:text-xl">—</div>
+            </div>
+            <div class="rounded-xl border border-white/8 bg-white/[.03] p-3 sm:p-4">
+              <div class="mb-0.5 text-[10px] uppercase tracking-[.14em] text-gray-500">Время рейса</div>
+              <div id="r-time" class="text-lg font-semibold sm:text-xl">—</div>
+            </div>
+            <div class="rounded-xl border border-white/8 bg-white/[.03] p-3 sm:p-4">
+              <div class="mb-0.5 text-[10px] uppercase tracking-[.14em] text-gray-500">Топливо</div>
+              <div id="r-fuel" class="text-base font-medium text-gray-300 sm:text-lg">—</div>
+            </div>
+            <div class="rounded-xl border border-white/8 bg-white/[.03] p-3 sm:p-4">
+              <div class="mb-0.5 text-[10px] uppercase tracking-[.14em] text-gray-500">Платные дороги</div>
+              <div id="r-platon" class="text-base font-medium text-gray-300 sm:text-lg">—</div>
+            </div>
+          </div>
+
+          <!-- Почему -->
+          <div id="r-reasons" class="mb-5 rounded-xl border border-white/8 bg-white/[.02] p-4 sm:rounded-2xl sm:p-5">
+            <div class="mb-2 text-xs uppercase tracking-[.16em] text-gray-500">Почему</div>
+            <ul id="r-reasons-list" class="space-y-1.5 text-sm text-gray-400"></ul>
+          </div>
+
+          <!-- Кнопки -->
+          <div class="flex flex-col gap-2.5 sm:flex-row">
+            <button onclick="demoReset()"
+              class="flex-1 rounded-xl border border-white/15 bg-white/[.04] py-2.5 text-sm text-gray-300 transition hover:bg-white/8 sm:rounded-2xl sm:py-3">
+              Изменить параметры
+            </button>
+            <a href="anketa/"
+              class="flex-1 rounded-xl bg-green-500 py-2.5 text-center text-sm font-semibold text-black transition hover:bg-green-400 sm:rounded-2xl sm:py-3">
+              Получить полный расчёт →
+            </a>
           </div>
         </div>
+
       </div>
     </div>
+
   </div>
 </section>
 
@@ -772,57 +834,113 @@
 
 <!-- ══════════════════════ JS ══════════════════════ -->
 <script>
-// ── Калькулятор ──────────────────────────────────
-const FUEL = 58;          // руб/литр (среднее по рынку)
-const FUEL_PER_KM = {     // расход л/100 км
-  fura:  32,
-  mega:  35,
-  ref:   36,
-  tent:  24,
-  gazel: 12,
-};
-const WEAR_PER_KM = {     // износ и прочее руб/км
-  fura:  8,
-  mega:  9,
-  ref:   10,
-  tent:  6,
-  gazel: 3,
-};
-const AVG_SPEED = 650;   // км/день (с учётом стоянок)
+// ══ Демо-калькулятор ══════════════════════════════════════
+var demoParamsOpen = false;
 
-function calculate() {
-  const distance = parseFloat(document.getElementById('distance').value);
-  const rate     = parseFloat(document.getElementById('rate').value);
-  const truckKey = document.getElementById('truck').value;
+function toggleDemoParams() {
+  var panel = document.getElementById('demoParams');
+  var btn   = document.getElementById('demoParamsToggle');
+  demoParamsOpen = !demoParamsOpen;
+  if (demoParamsOpen) {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    panel.style.opacity   = '1';
+    btn.querySelector('span').textContent = '▴ Параметры расчёта';
+  } else {
+    panel.style.maxHeight = '0';
+    panel.style.opacity   = '0';
+    btn.querySelector('span').textContent = '▾ Параметры расчёта';
+  }
+}
 
-  if (!distance || !rate || distance <= 0 || rate <= 0) {
-    alert('Введи расстояние и ставку');
-    return;
+function demoCalc() {
+  var rate      = parseFloat(document.getElementById('d-rate').value)      || 85000;
+  var fuelRate  = parseFloat(document.getElementById('d-fuel-rate').value)  || 0.32; // л/км
+  var fuelPrice = parseFloat(document.getElementById('d-fuel-price').value) || 65;
+  var salary    = parseFloat(document.getElementById('d-salary').value)     || 15000;
+  var platon    = parseFloat(document.getElementById('d-platon').value)     || 3200;
+  var truck     = document.getElementById('d-truck').value;
+
+  // Расстояние по типу машины (мок для Москва-Ёбург ≈ 1730 км)
+  var distMap = { fura:1730, mega:1730, ref:1730, tent:1200, gazel:600 };
+  var dist    = distMap[truck] || 1730;
+
+  var wearMap = { fura:8, mega:9, ref:10, tent:6, gazel:3 };
+  var wear    = dist * (wearMap[truck] || 8);
+
+  var fuelCost  = dist * fuelRate * fuelPrice;
+  var totalCost = fuelCost + wear + salary + platon;
+  var profit    = rate - totalCost;
+  var margin    = (profit / rate) * 100;
+  var days      = dist / 650;
+
+  var fmt = function(n) {
+    return new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+  };
+  var fmtTime = function(d) {
+    return d < 1 ? Math.round(d * 24) + ' ч' : d.toFixed(1) + ' дн';
+  };
+
+  // Вердикт
+  var verdict, verdictColor, verdictBg;
+  var reasons = [];
+
+  if (margin > 30) {
+    verdict = 'Рейс выгоден';
+    verdictColor = '#4ade80';
+    verdictBg = 'rgba(74,222,128,.07)';
+    reasons = ['хорошая маржа при текущих расходах', 'время рейса в норме', 'нагрузка в пределах допустимого'];
+  } else if (margin > 14) {
+    verdict = 'Рейс: рискованный';
+    verdictColor = '#fbbf24';
+    verdictBg = 'rgba(251,191,36,.07)';
+    reasons = ['высокая доля топлива в расходах', 'длительный рейс при средней марже', 'нагрузка на машину выше нормы'];
+  } else {
+    verdict = 'Рейс убыточный';
+    verdictColor = '#f87171';
+    verdictBg = 'rgba(248,113,113,.07)';
+    reasons = ['затраты превышают допустимый порог', 'топливо и зарплата съедают выручку', 'рейс не рекомендован без корректировки ставки'];
   }
 
-  const fuelCost   = (distance / 100) * FUEL_PER_KM[truckKey] * FUEL;
-  const wearCost   = distance * WEAR_PER_KM[truckKey];
-  const totalCosts = fuelCost + wearCost;
-  const profit     = rate - totalCosts;
-  const margin     = (profit / rate * 100);
-  const days       = (distance / AVG_SPEED);
+  // Заполняем DOM
+  var vEl = document.getElementById('demoVerdict');
+  vEl.style.cssText = 'border:1px solid ' + verdictColor + '22;background:' + verdictBg;
+  vEl.innerHTML =
+    '<div style="font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:' + verdictColor + '88;margin-bottom:4px">Решение системы</div>' +
+    '<div style="font-size:1.2rem;font-weight:600;color:' + verdictColor + '">' + verdict + '</div>' +
+    '<div style="font-size:.8rem;color:rgba(255,255,255,.4);margin-top:4px">маржа ' + margin.toFixed(1) + '% · дистанция ' + dist + ' км</div>';
 
-  const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+  document.getElementById('r-profit').textContent = fmt(profit);
+  document.getElementById('r-profit').style.color = profit > 0 ? '#4ade80' : '#f87171';
+  document.getElementById('r-time').textContent   = fmtTime(days);
+  document.getElementById('r-fuel').textContent   = fmt(fuelCost);
+  document.getElementById('r-platon').textContent = fmt(platon);
 
-  document.getElementById('res-revenue').textContent = fmt(rate);
-  document.getElementById('res-costs').textContent   = fmt(totalCosts);
-  document.getElementById('res-profit').textContent  = fmt(profit);
-  document.getElementById('res-margin').textContent  = margin.toFixed(1) + '%';
-  document.getElementById('res-time').textContent    = days < 1
-    ? Math.round(days * 24) + ' ч'
-    : days.toFixed(1) + ' дн';
+  var list = document.getElementById('r-reasons-list');
+  list.innerHTML = reasons.map(function(r) {
+    return '<li style="display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">—</span><span>' + r + '</span></li>';
+  }).join('');
 
-  const risk = margin > 30 ? '🟢 низкий' : margin > 15 ? '🟡 средний' : '🔴 высокий';
-  document.getElementById('res-risk').textContent = risk;
+  // Показываем результат
+  var form = document.getElementById('demoForm');
+  var res  = document.getElementById('demoResult');
+  form.style.display = 'none';
+  res.style.display  = 'block';
+  requestAnimationFrame(function() { requestAnimationFrame(function() {
+    res.style.opacity   = '1';
+    res.style.transform = 'translateY(0)';
+    res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }); });
+}
 
-  const result = document.getElementById('calcResult');
-  result.classList.add('show');
-  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function demoReset() {
+  var form = document.getElementById('demoForm');
+  var res  = document.getElementById('demoResult');
+  res.style.opacity   = '0';
+  res.style.transform = 'translateY(10px)';
+  setTimeout(function() {
+    res.style.display  = 'none';
+    form.style.display = 'block';
+  }, 320);
 }
 
 // ── Модал контактов ───────────────────────────────
