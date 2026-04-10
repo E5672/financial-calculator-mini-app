@@ -110,10 +110,71 @@
     }
     .dot-pulse { animation: pulse-dot 2.2s infinite; }
 
-    /* ── Мобильный ── */
+    /* ══ МОБИЛЬНЫЙ АДАПТИВ (320–430px) ══════════════════ */
+    html, body { overflow-x: hidden; max-width: 100%; }
+
     @media (max-width: 640px) {
-      .hero-main-h1 { font-size: clamp(2.4rem, 9vw, 3.2rem) !important; }
-      .hero-word     { font-size: clamp(1.8rem, 7vw, 2.6rem) !important; }
+
+      /* ── Типографика ── */
+      .hero-main-h1 { font-size: clamp(2rem, 8vw, 2.8rem) !important; }
+      .hero-word     { font-size: clamp(1.5rem, 6vw, 2.1rem) !important; }
+
+      /* ── Hero ── */
+      .hero-content  { padding: 3rem 1.25rem 2.5rem !important; }
+      #words-col     { margin-bottom: 1.25rem !important; }
+      .hero-badge    { font-size: .8rem !important; }
+
+      /* Hero: тёмный оверлей поверх видео на мобильном */
+      .hero-mobile-overlay { display: block !important; }
+
+      /* ── CTA кнопки в героe ── */
+      #hero-cta {
+        flex-direction: column !important;
+        gap: .75rem !important;
+      }
+      #hero-cta a, #hero-cta button {
+        width: 100% !important;
+        padding: .85rem 1.25rem !important;
+        font-size: .95rem !important;
+        text-align: center !important;
+        justify-content: center !important;
+      }
+
+      /* ── Вертикальные отступы секций ── */
+      .sec-inner { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+
+      /* ── Статы ── */
+      .stat-val       { font-size: 2rem !important; }
+      .stat-item      { padding: 1.25rem !important; }
+
+      /* ── Калькулятор ── */
+      .calc-grid-2    { grid-template-columns: 1fr !important; }
+
+      /* ── Фото ── */
+      .photo-img      { height: clamp(240px, 65vw, 300px) !important; }
+
+      /* ── Блок "боли" — карточки ── */
+      .pain-card      { padding: 1rem 1.25rem !important; font-size: 1rem !important; }
+
+      /* ── CTA-секция ── */
+      .cta-block      { border-radius: 24px !important; padding: 1.5rem !important; }
+      .cta-btn        { width: 100% !important; }
+
+      /* ── Модал: нижний лист ── */
+      .contact-modal-overlay {
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+      .contact-modal {
+        border-radius: 24px 24px 0 0 !important;
+        padding: 1.75rem 1.25rem 2.25rem !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 900px) {
+      .sec-inner { padding-top: 4rem !important; padding-bottom: 4rem !important; }
     }
 
     /* ── Модал контактов ── */
@@ -235,55 +296,59 @@
     <source src="video.mp4" type="video/mp4" />
   </video>
 
-  <!-- Только нижний переход к фону -->
+  <!-- Нижний переход к фону -->
   <div class="absolute bottom-0 left-0 right-0 h-36 pointer-events-none"
     style="background: linear-gradient(to top, #050816 0%, transparent 100%)"></div>
 
-  <!-- Левая тень — чтобы текст не сливался с видео -->
+  <!-- Левая тень (десктоп) -->
   <div class="absolute inset-y-0 left-0 w-[55%] pointer-events-none hidden lg:block"
     style="background: linear-gradient(to right, rgba(5,8,22,.55) 0%, transparent 100%)"></div>
 
-  <!-- Контент: строго левая сторона -->
-  <div class="relative z-10 flex min-h-screen items-center px-6 py-16 md:px-12 lg:px-20">
+  <!-- Мобильный оверлей: затемняет видео для читаемости текста -->
+  <div class="hero-mobile-overlay absolute inset-0 pointer-events-none hidden"
+    style="background: linear-gradient(160deg, rgba(5,8,22,.72) 0%, rgba(5,8,22,.45) 60%, rgba(5,8,22,.2) 100%)"></div>
+
+  <!-- Контент -->
+  <div class="hero-content relative z-10 flex min-h-screen items-center px-6 py-16 md:px-12 lg:px-20">
     <div class="w-full max-w-[580px]">
 
       <!-- Бейдж -->
-      <div class="fade-up mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-4 py-1.5 text-sm backdrop-blur-md neon-sub">
+      <div class="hero-badge fade-up mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3.5 py-1.5 text-sm backdrop-blur-md neon-sub">
         <span class="dot-pulse text-green-400">●</span>
         расчёт за 3 секунды
       </div>
 
-      <!-- Главный заголовок — крупный, неоновый -->
-      <h1 class="fade-up delay-1 hero-main-h1 neon-title mb-4 font-bold leading-[.9] tracking-tight"
+      <!-- Главный заголовок -->
+      <h1 class="fade-up delay-1 hero-main-h1 neon-title mb-3 font-bold leading-[.95] tracking-tight"
         style="font-size: clamp(3.2rem, 7.5vw, 6rem)">
         Цифровая<br/>логика рейса
       </h1>
 
       <!-- Подзаголовок -->
-      <p class="fade-up delay-2 neon-sub mb-10 text-lg md:text-xl" style="font-weight:400">
+      <p class="fade-up delay-2 neon-sub mb-6 text-base md:text-xl" style="font-weight:400">
         Логистика в цифре. Решения за секунды.
       </p>
 
-      <!-- Слова: стоят в колонке слева, вылетают из центра -->
-      <div id="words-col" class="mb-10 space-y-1 font-bold leading-none tracking-tight"
-        style="font-size: clamp(2rem, 4.8vw, 3.6rem)">
+      <!-- Слова -->
+      <div id="words-col" class="mb-8 space-y-1 font-bold leading-none tracking-tight"
+        style="font-size: clamp(1.8rem, 4.8vw, 3.6rem)">
         <div class="hero-word" id="hw-0">Считай</div>
         <div class="hero-word" id="hw-1">Решай</div>
         <div class="hero-word" id="hw-2">Управляй</div>
       </div>
 
       <!-- CTA кнопки -->
-      <div id="hero-cta" class="flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="opacity:0;transform:translateY(12px)">
+      <div id="hero-cta" class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap" style="opacity:0;transform:translateY(12px)">
         <a href="anketa/"
-          class="rounded-2xl bg-green-500 px-7 py-3.5 font-semibold text-black shadow-[0_0_28px_rgba(34,197,94,.3)] transition hover:bg-green-400 text-center">
+          class="rounded-2xl bg-green-500 px-6 py-3 font-semibold text-black shadow-[0_0_28px_rgba(34,197,94,.3)] transition hover:bg-green-400 text-center text-sm sm:text-base sm:px-7 sm:py-3.5">
           Действуй! →
         </a>
         <a href="#calculator"
-          class="rounded-2xl border border-white/25 bg-black/30 px-7 py-3.5 font-medium backdrop-blur-md transition hover:bg-white hover:text-black text-center">
+          class="rounded-2xl border border-white/25 bg-black/30 px-6 py-3 font-medium backdrop-blur-md transition hover:bg-white hover:text-black text-center text-sm sm:text-base sm:px-7 sm:py-3.5">
           Рассчитать рейс
         </a>
         <button onclick="openContactModal()"
-          class="rounded-2xl border border-white/12 bg-black/20 px-7 py-3.5 backdrop-blur-md transition hover:border-blue-400/40 hover:text-blue-200 text-center neon-sub">
+          class="rounded-2xl border border-white/12 bg-black/20 px-6 py-3 backdrop-blur-md transition hover:border-blue-400/40 hover:text-blue-200 text-center text-sm sm:text-base sm:px-7 sm:py-3.5 neon-sub">
           Оставить контакты
         </button>
       </div>
@@ -293,45 +358,46 @@
 </section>
 
 <!-- ══════════════════════ БЛОК 2: Проблема + Фото ══════════════════════ -->
-<section class="mx-auto max-w-7xl px-6 py-10 md:px-10 lg:px-16">
-  <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
+<section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 md:px-10 lg:px-16">
+  <div class="grid grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-14">
 
-    <!-- Текст: СЛЕВА -->
-    <div class="fade-up order-2 lg:order-1">
-      <div class="mb-4 text-sm uppercase tracking-[.26em] text-green-400/75">Проблема</div>
-      <h2 class="mb-7 font-bold tracking-tight leading-[.9]"
-        style="font-size: clamp(2.6rem, 5.5vw, 4.4rem)">
-        Логистика больше<br/>не интуиция
-      </h2>
-      <div class="space-y-4 text-lg leading-relaxed text-gray-300 md:text-xl">
-        <p>Рейсы до сих пор берут «на глаз».</p>
-        <p>Прибыль считают потом. Ошибки стоят дорого.</p>
-        <p class="font-semibold text-white">Мы переворачиваем это.</p>
-      </div>
-    </div>
-
-    <!-- Фото: СПРАВА, крупный портрет по грудь -->
+    <!-- Фото: на мобильном — сверху, на десктопе — справа -->
     <div class="fade-in order-1 flex justify-center lg:order-2 lg:justify-end">
-      <div class="relative w-full max-w-[400px] overflow-hidden rounded-[28px] border border-white/10 shadow-2xl"
+      <div class="relative w-full max-w-[400px] overflow-hidden rounded-[20px] sm:rounded-[28px] border border-white/10 shadow-2xl"
         style="background: rgba(255,255,255,.04)">
         <img src="photo.png" alt="Елена Жилина"
-          class="w-full object-cover object-top"
-          style="height: clamp(380px, 48vw, 520px)" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 via-[40%] to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 px-5 py-4">
-          <div class="mb-0.5 text-base font-semibold leading-tight"
+          class="photo-img w-full object-cover object-top"
+          style="height: clamp(260px, 65vw, 520px)" />
+        <!-- Усиленный градиент снизу — текст не перекрывает лицо -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-[50%] to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 sm:px-5 sm:py-4">
+          <div class="mb-0.5 text-sm font-semibold leading-tight sm:text-base"
             style="color:#16a34a;text-shadow:0 1px 4px rgba(0,0,0,.8)">
             Елена Жилина
           </div>
-          <div class="mb-2.5 text-xs leading-snug"
+          <div class="mb-2 text-xs leading-snug"
             style="color:#4ade80;opacity:.85;text-shadow:0 1px 3px rgba(0,0,0,.7)">
-            Автор продукта · Оптимизация логистики · AI-архитектура процессов
+            Автор · Оптимизация логистики · AI-архитектура
           </div>
           <div class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs"
-            style="border:1px solid rgba(34,197,94,.25);background:rgba(0,0,0,.35);color:#86efac">
+            style="border:1px solid rgba(34,197,94,.25);background:rgba(0,0,0,.45);color:#86efac">
             15+ лет в логистике
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Текст: на мобильном — снизу, на десктопе — слева -->
+    <div class="fade-up order-2 lg:order-1">
+      <div class="mb-3 text-xs uppercase tracking-[.22em] text-green-400/75 sm:mb-4 sm:text-sm sm:tracking-[.26em]">Проблема</div>
+      <h2 class="mb-4 font-bold tracking-tight leading-[1]"
+        style="font-size: clamp(1.9rem, 6vw, 4.4rem)">
+        Логистика больше не интуиция
+      </h2>
+      <div class="space-y-3 text-base leading-relaxed text-gray-300 sm:text-lg md:text-xl">
+        <p>Рейсы до сих пор берут «на глаз».</p>
+        <p>Прибыль считают потом. Ошибки стоят дорого.</p>
+        <p class="font-semibold text-white">Мы переворачиваем это.</p>
       </div>
     </div>
 
@@ -341,27 +407,27 @@
 <!-- ══════════════════════ БЛОК 3: Статы ══════════════════════ -->
 <section class="border-y border-white/10 bg-white/[.02]">
   <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-0 md:grid-cols-4">
-    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
-      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">–30%</div>
-      <div class="text-xs uppercase tracking-[.18em] text-gray-400">затрат</div>
+    <div class="stat-item bg-[#050816] px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">–30%</div>
+      <div class="text-xs uppercase tracking-[.14em] text-gray-400 sm:tracking-[.18em]">затрат</div>
     </div>
-    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
-      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">×3</div>
-      <div class="text-xs uppercase tracking-[.18em] text-gray-400">скорость</div>
+    <div class="stat-item bg-[#050816] px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">×3</div>
+      <div class="text-xs uppercase tracking-[.14em] text-gray-400 sm:tracking-[.18em]">скорость</div>
     </div>
-    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
-      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">–50%</div>
-      <div class="text-xs uppercase tracking-[.18em] text-gray-400">нагрузки</div>
+    <div class="stat-item bg-[#050816] px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">–50%</div>
+      <div class="text-xs uppercase tracking-[.14em] text-gray-400 sm:tracking-[.18em]">нагрузки</div>
     </div>
-    <div class="stat-item bg-[#050816] px-6 py-6 md:px-8 md:py-8">
-      <div class="stat-val mb-1.5 text-4xl font-semibold tracking-tight md:text-5xl">24/7</div>
-      <div class="text-xs uppercase tracking-[.18em] text-gray-400">решения за секунды</div>
+    <div class="stat-item bg-[#050816] px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8">
+      <div class="stat-val mb-1 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">24/7</div>
+      <div class="text-xs uppercase tracking-[.14em] text-gray-400 sm:tracking-[.18em]">за секунды</div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════ БЛОК 4: Решение ══════════════════════ -->
-<section class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+<section class="sec-inner mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-10 sm:gap-8 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:px-16 lg:py-24">
   <div class="fade-up">
     <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Решение</div>
     <h2 class="mb-4 text-3xl font-semibold tracking-tight md:text-5xl">
@@ -404,7 +470,7 @@
 
 <!-- ══════════════════════ БЛОК 5: Калькулятор ══════════════════════ -->
 <section id="calculator" class="border-y border-white/10" style="background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.03))">
-  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+  <div class="sec-inner mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-10 sm:gap-8 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:px-16 lg:py-24">
 
     <div class="fade-up">
       <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Демо</div>
@@ -432,7 +498,7 @@
             placeholder="Москва → Екатеринбург" />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="calc-grid-2 grid grid-cols-2 gap-3">
           <div>
             <label class="mb-1 block text-xs uppercase tracking-widest text-gray-400">Расстояние, км</label>
             <input id="distance" type="number" min="1"
@@ -513,36 +579,36 @@
 </section>
 
 <!-- ══════════════════════ БЛОК 6-7: Боли ══════════════════════ -->
-<section class="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-16">
-  <div class="mb-8 max-w-3xl fade-up">
-    <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Узкие места</div>
-    <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
-      Узкие места логистики<br />видны только в цифре
+<section class="sec-inner mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:px-16 lg:py-24">
+  <div class="mb-6 max-w-3xl fade-up">
+    <div class="mb-3 text-xs uppercase tracking-[.2em] text-green-400/80 sm:mb-4 sm:text-sm sm:tracking-[.24em]">Узкие места</div>
+    <h2 class="mb-4 text-2xl font-semibold tracking-tight sm:text-3xl md:text-5xl">
+      Узкие места логистики видны только в цифре
     </h2>
-    <p class="text-lg leading-relaxed text-gray-300">
+    <p class="text-base leading-relaxed text-gray-300 sm:text-lg">
       Оставляем анкету как основной путь в воронке, но внутри даём быстрый переход к мгновенному расчёту.
     </p>
   </div>
 
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-    <div class="fade-up delay-1 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+    <div class="pain-card fade-up delay-1 rounded-2xl border border-white/10 bg-white/[.03] px-5 py-4 text-base text-gray-200 sm:rounded-3xl sm:p-6 sm:text-lg">
       — перегруженные логисты
     </div>
-    <div class="fade-up delay-2 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+    <div class="pain-card fade-up delay-2 rounded-2xl border border-white/10 bg-white/[.03] px-5 py-4 text-base text-gray-200 sm:rounded-3xl sm:p-6 sm:text-lg">
       — решения принимаются долго
     </div>
-    <div class="fade-up delay-3 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+    <div class="pain-card fade-up delay-3 rounded-2xl border border-white/10 bg-white/[.03] px-5 py-4 text-base text-gray-200 sm:rounded-3xl sm:p-6 sm:text-lg">
       — ошибки в рейсах
     </div>
-    <div class="fade-up delay-4 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-lg text-gray-200">
+    <div class="pain-card fade-up delay-4 rounded-2xl border border-white/10 bg-white/[.03] px-5 py-4 text-base text-gray-200 sm:rounded-3xl sm:p-6 sm:text-lg">
       — хаос в процессах
     </div>
   </div>
 
-  <div class="mt-8 fade-up rounded-[28px] border border-white/10 bg-white/[.03] p-6 backdrop-blur-sm md:p-8">
-    <div class="mb-3 text-lg font-medium">Нужно быстрее?</div>
+  <div class="mt-6 fade-up rounded-[20px] border border-white/10 bg-white/[.03] p-5 backdrop-blur-sm sm:mt-8 sm:rounded-[28px] sm:p-6 md:p-8">
+    <div class="mb-3 text-base font-medium sm:text-lg">Нужно быстрее?</div>
     <a href="#calculator"
-      class="inline-block rounded-2xl bg-green-500 px-5 py-3 text-black transition hover:bg-green-400">
+      class="inline-block rounded-xl bg-green-500 px-5 py-2.5 text-sm font-medium text-black transition hover:bg-green-400 sm:rounded-2xl sm:py-3 sm:text-base">
       Рассчитать сейчас
     </a>
   </div>
@@ -550,7 +616,7 @@
 
 <!-- ══════════════════════ БЛОК 8: Как работает ══════════════════════ -->
 <section id="sys-section" class="border-y border-white/10 bg-white/[.02]">
-  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
+  <div class="sec-inner mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-10 sm:gap-8 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:px-16 lg:py-24">
     <div class="fade-up">
       <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Как работает</div>
       <h2 class="mb-5 text-3xl font-semibold tracking-tight md:text-5xl">
@@ -587,31 +653,30 @@
 </section>
 
 <!-- ══════════════════════ БЛОК 9: CTA ══════════════════════ -->
-<section id="anketa" class="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-16">
-  <div class="fade-up rounded-[40px] border border-white/10 p-8 md:p-12"
+<section id="anketa" class="sec-inner mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 md:px-10 md:py-20 lg:px-16 lg:py-24">
+  <div class="cta-block fade-up rounded-[24px] border border-white/10 p-5 sm:rounded-[32px] sm:p-8 md:rounded-[40px] md:p-12"
     style="background: radial-gradient(circle at top right, rgba(16,185,129,.12), transparent 26%), rgba(255,255,255,.03)">
 
-    <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Следующий шаг</div>
-    <h2 class="mb-6 max-w-4xl text-3xl font-semibold tracking-tight md:text-5xl">
-      Логистика не должна зависеть от людей.<br class="hidden md:block" />
-      Она должна работать как система.
+    <div class="mb-3 text-xs uppercase tracking-[.2em] text-green-400/80 sm:mb-4 sm:text-sm sm:tracking-[.24em]">Следующий шаг</div>
+    <h2 class="mb-4 max-w-4xl text-2xl font-semibold tracking-tight sm:mb-6 sm:text-3xl md:text-5xl">
+      Логистика не должна зависеть от людей. Она должна работать как система.
     </h2>
-    <p class="mb-8 max-w-2xl text-lg leading-relaxed text-gray-300">
+    <p class="mb-6 max-w-2xl text-base leading-relaxed text-gray-300 sm:mb-8 sm:text-lg">
       Это уже не сервис «про помощь логисту». Это новая модель принятия решений,
       которую можно масштабировать в продукт, SaaS и полноценную операционную систему.
     </p>
 
-    <!-- Две кнопки CTA -->
-    <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+    <!-- CTA кнопки -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       <a href="anketa/"
-        class="group inline-flex flex-col items-start rounded-2xl bg-green-500 px-7 py-4 text-black transition hover:bg-green-400 active:scale-95">
-        <span class="text-lg font-bold leading-tight">Действуй! →</span>
-        <span class="text-xs font-normal opacity-70 mt-0.5">Анкета запускает обработку мгновенно, пропуск нежелателен</span>
+        class="cta-btn group inline-flex flex-col items-center justify-center rounded-xl bg-green-500 px-6 py-3.5 text-black transition hover:bg-green-400 active:scale-95 sm:items-start sm:rounded-2xl sm:px-7 sm:py-4">
+        <span class="text-base font-bold leading-tight sm:text-lg">Действуй! →</span>
+        <span class="mt-0.5 text-xs font-normal opacity-70 hidden sm:block">Анкета запускает обработку мгновенно</span>
       </a>
       <button onclick="openContactModal()"
-        class="inline-flex flex-col items-start rounded-2xl border border-white/20 bg-white/5 px-7 py-4 text-left transition hover:bg-white/10 active:scale-95">
-        <span class="text-lg font-medium leading-tight text-white">Оставить контакты</span>
-        <span class="text-xs text-gray-400 mt-0.5">Имя, мессенджер, комментарий</span>
+        class="cta-btn inline-flex flex-col items-center justify-center rounded-xl border border-white/20 bg-white/5 px-6 py-3.5 text-center transition hover:bg-white/10 active:scale-95 sm:items-start sm:rounded-2xl sm:px-7 sm:py-4 sm:text-left">
+        <span class="text-base font-medium leading-tight text-white sm:text-lg">Оставить контакты</span>
+        <span class="mt-0.5 text-xs text-gray-400 hidden sm:block">Имя, мессенджер, комментарий</span>
       </button>
     </div>
 
