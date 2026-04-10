@@ -120,24 +120,42 @@
       .hero-word     { font-size: clamp(1.5rem, 6vw, 2.1rem) !important; }
 
       /* ── Hero ── */
-      .hero-content  { padding: 3rem 1.25rem 2.5rem !important; }
-      #words-col     { margin-bottom: 1.25rem !important; }
-      .hero-badge    { font-size: .8rem !important; }
+      .hero-content {
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        padding: 3.5rem 1.25rem 2rem !important;
+      }
+      #words-col     { margin-bottom: 0 !important; }
+      .hero-badge    { font-size: .8rem !important; margin-bottom: .875rem !important; }
 
       /* Hero: тёмный оверлей поверх видео на мобильном */
       .hero-mobile-overlay { display: block !important; }
 
-      /* ── CTA кнопки в героe ── */
+      /* ── CTA кнопки — прижаты к низу экрана ── */
       #hero-cta {
-        flex-direction: column !important;
-        gap: .75rem !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: .5rem !important;
+        width: 100% !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
       }
       #hero-cta a, #hero-cta button {
-        width: 100% !important;
-        padding: .85rem 1.25rem !important;
-        font-size: .95rem !important;
+        flex: 1 1 calc(50% - .25rem) !important;
+        min-width: 0 !important;
+        padding: .65rem .75rem !important;
+        font-size: .78rem !important;
         text-align: center !important;
         justify-content: center !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      /* "Действуй" — на всю строку (главная кнопка) */
+      #hero-cta a:first-child {
+        flex: 1 1 100% !important;
+        font-size: .85rem !important;
+        padding: .75rem 1rem !important;
       }
 
       /* ── Вертикальные отступы секций ── */
@@ -151,7 +169,7 @@
       .calc-grid-2    { grid-template-columns: 1fr !important; }
 
       /* ── Фото ── */
-      .photo-img      { height: clamp(240px, 65vw, 300px) !important; }
+      .photo-img      { height: clamp(340px, 88vw, 420px) !important; object-position: center top !important; }
 
       /* ── Блок "боли" — карточки ── */
       .pain-card      { padding: 1rem 1.25rem !important; font-size: 1rem !important; }
@@ -310,6 +328,7 @@
 
   <!-- Контент -->
   <div class="hero-content relative z-10 flex min-h-screen items-center px-6 py-16 md:px-12 lg:px-20">
+    <!-- Основной контент (заголовок, слова) -->
     <div class="w-full max-w-[580px]">
 
       <!-- Бейдж -->
@@ -337,23 +356,40 @@
         <div class="hero-word" id="hw-2">Управляй</div>
       </div>
 
-      <!-- CTA кнопки -->
-      <div id="hero-cta" class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap" style="opacity:0;transform:translateY(12px)">
+      <!-- CTA кнопки (десктоп — внутри основного блока) -->
+      <div id="hero-cta" class="hidden sm:flex flex-row flex-wrap gap-2.5" style="opacity:0;transform:translateY(12px)">
         <a href="anketa/"
-          class="rounded-2xl bg-green-500 px-6 py-3 font-semibold text-black shadow-[0_0_28px_rgba(34,197,94,.3)] transition hover:bg-green-400 text-center text-sm sm:text-base sm:px-7 sm:py-3.5">
+          class="rounded-2xl bg-green-500 px-7 py-3.5 font-semibold text-black shadow-[0_0_28px_rgba(34,197,94,.3)] transition hover:bg-green-400 text-center text-base">
           Действуй! →
         </a>
         <a href="#calculator"
-          class="rounded-2xl border border-white/25 bg-black/30 px-6 py-3 font-medium backdrop-blur-md transition hover:bg-white hover:text-black text-center text-sm sm:text-base sm:px-7 sm:py-3.5">
+          class="rounded-2xl border border-white/25 bg-black/30 px-7 py-3.5 font-medium backdrop-blur-md transition hover:bg-white hover:text-black text-center text-base">
           Рассчитать рейс
         </a>
         <button onclick="openContactModal()"
-          class="rounded-2xl border border-white/12 bg-black/20 px-6 py-3 backdrop-blur-md transition hover:border-blue-400/40 hover:text-blue-200 text-center text-sm sm:text-base sm:px-7 sm:py-3.5 neon-sub">
+          class="rounded-2xl border border-white/12 bg-black/20 px-7 py-3.5 backdrop-blur-md transition hover:border-blue-400/40 hover:text-blue-200 text-center text-base neon-sub">
           Оставить контакты
         </button>
       </div>
 
     </div>
+
+    <!-- CTA кнопки (мобильный — прижаты к низу экрана через space-between) -->
+    <div id="hero-cta-mobile" class="sm:hidden flex flex-row flex-wrap gap-2" style="opacity:0;transform:translateY(12px)">
+      <a href="anketa/"
+        class="w-full rounded-xl bg-green-500 px-5 py-3 text-sm font-semibold text-black shadow-[0_0_20px_rgba(34,197,94,.25)] transition hover:bg-green-400 text-center">
+        Действуй! →
+      </a>
+      <a href="#calculator"
+        class="flex-1 rounded-xl border border-white/25 bg-black/40 px-3 py-2.5 text-xs font-medium backdrop-blur-md transition text-center">
+        Рассчитать
+      </a>
+      <button onclick="openContactModal()"
+        class="flex-1 rounded-xl border border-white/12 bg-black/20 px-3 py-2.5 text-xs backdrop-blur-md transition text-center neon-sub">
+        Контакты
+      </button>
+    </div>
+
   </div>
 </section>
 
@@ -367,9 +403,9 @@
         style="background: rgba(255,255,255,.04)">
         <img src="photo.png" alt="Елена Жилина"
           class="photo-img w-full object-cover object-top"
-          style="height: clamp(260px, 65vw, 520px)" />
-        <!-- Усиленный градиент снизу — текст не перекрывает лицо -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-[50%] to-transparent"></div>
+          style="height: clamp(340px, 88vw, 520px)" />
+        <!-- Градиент: текст внизу, лицо открыто -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/92 via-black/30 via-[30%] to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 px-4 py-3 sm:px-5 sm:py-4">
           <div class="mb-0.5 text-sm font-semibold leading-tight sm:text-base"
             style="color:#16a34a;text-shadow:0 1px 4px rgba(0,0,0,.8)">
@@ -1002,13 +1038,15 @@ setTimeout(() => {
   // Кнопки плавно появляются после последнего слова
   const CTA_DELAY = DELAYS[2] + 700;
   setTimeout(() => {
-    const cta = document.getElementById('hero-cta');
-    if (!cta) return;
-    cta.style.transition = 'opacity .55s ease, transform .55s ease';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      cta.style.opacity = '1';
-      cta.style.transform = 'translateY(0)';
-    }));
+    ['hero-cta', 'hero-cta-mobile'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.transition = 'opacity .55s ease, transform .55s ease';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }));
+    });
   }, CTA_DELAY);
 })();
 </script>
