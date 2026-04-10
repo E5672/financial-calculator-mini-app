@@ -153,6 +153,76 @@
     .contact-modal input::placeholder,
     .contact-modal textarea::placeholder { color: rgba(255,255,255,.3); }
     .contact-modal textarea { resize: vertical; min-height: 80px; margin-bottom: 16px; }
+
+    /* ── Блок "Система принимает решения" — активация цепочки ── */
+    #sys-chain { position: relative; }
+
+    .sys-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 28px;
+    }
+    .sys-item:last-child { padding-bottom: 0; }
+
+    .sys-circle {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(74,222,128,.12);
+      background: rgba(74,222,128,.04);
+      color: rgba(74,222,128,.28);
+      font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      transition: border-color .5s ease-out, background .5s ease-out,
+                  color .5s ease-out, box-shadow .5s ease-out;
+    }
+
+    .sys-text {
+      color: rgba(209,213,219,.28);
+      font-size: 1.05rem;
+      transition: color .5s ease-out;
+    }
+
+    /* Линия-связь между пунктами */
+    .sys-conn-wrap {
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      bottom: 0;
+      width: 1px;
+      background: rgba(74,222,128,.06);
+      overflow: hidden;
+    }
+    .sys-conn-fill {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 0;
+      background: linear-gradient(to bottom, rgba(74,222,128,.5), rgba(74,222,128,.15));
+      box-shadow: 0 0 5px rgba(74,222,128,.3);
+      transition: height .42s ease-out;
+    }
+    .sys-conn-fill.run { height: 100%; }
+
+    /* Активный пункт */
+    .sys-item.act .sys-circle {
+      border-color: rgba(74,222,128,.5);
+      background: rgba(74,222,128,.1);
+      color: #4ade80;
+      box-shadow: 0 0 20px rgba(74,222,128,.18), 0 0 6px rgba(74,222,128,.1) inset;
+    }
+    .sys-item.act .sys-text { color: rgba(255,255,255,.88); }
+
+    /* Финальный мягкий пульс */
+    @keyframes sys-glow-pulse {
+      0%, 100% { box-shadow: 0 0 14px rgba(74,222,128,.14), 0 0 4px rgba(74,222,128,.09) inset; }
+      50%       { box-shadow: 0 0 24px rgba(74,222,128,.26), 0 0 8px rgba(74,222,128,.16) inset; }
+    }
+    .sys-item.pulse-final .sys-circle {
+      animation: sys-glow-pulse 3.2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
@@ -489,22 +559,29 @@
       </h2>
     </div>
 
-    <div class="space-y-4 text-lg text-gray-300">
-      <div class="fade-up delay-1 flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">1</span>
-        считает рейсы
+    <div id="sys-chain" class="fade-up">
+      <!-- Пункт 1 -->
+      <div class="sys-item" id="sys-1">
+        <div class="sys-conn-wrap"><div class="sys-conn-fill" id="sys-conn-1"></div></div>
+        <div class="sys-circle">1</div>
+        <span class="sys-text">считает рейсы</span>
       </div>
-      <div class="fade-up delay-2 flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">2</span>
-        подбирает транспорт
+      <!-- Пункт 2 -->
+      <div class="sys-item" id="sys-2">
+        <div class="sys-conn-wrap"><div class="sys-conn-fill" id="sys-conn-2"></div></div>
+        <div class="sys-circle">2</div>
+        <span class="sys-text">подбирает транспорт</span>
       </div>
-      <div class="fade-up delay-3 flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">3</span>
-        контролирует процессы
+      <!-- Пункт 3 -->
+      <div class="sys-item" id="sys-3">
+        <div class="sys-conn-wrap"><div class="sys-conn-fill" id="sys-conn-3"></div></div>
+        <div class="sys-circle">3</div>
+        <span class="sys-text">контролирует процессы</span>
       </div>
-      <div class="fade-up delay-4 flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full border border-green-400/30 bg-green-400/10 text-xs font-semibold text-green-400">4</span>
-        убирает человеческий фактор
+      <!-- Пункт 4 (без коннектора) -->
+      <div class="sys-item" id="sys-4">
+        <div class="sys-circle">4</div>
+        <span class="sys-text">убирает человеческий фактор</span>
       </div>
     </div>
   </div>
@@ -686,6 +763,61 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.fade-up, .fade-in, .stat-item').forEach(el => {
   observer.observe(el);
 });
+
+// ── Активация цепочки "Система принимает решения" ────────
+(function() {
+  const chain = document.getElementById('sys-chain');
+  if (!chain) return;
+
+  let fired = false;
+
+  // Задержки (мс): активация пункта N, потом запуск коннектора N→N+1
+  const STEP_DELAY  = 420; // между активацией пунктов
+  const CONN_OFFSET = 160; // задержка запуска линии после активации пункта
+
+  function runChain() {
+    if (fired) return;
+    fired = true;
+
+    const items = [
+      document.getElementById('sys-1'),
+      document.getElementById('sys-2'),
+      document.getElementById('sys-3'),
+      document.getElementById('sys-4'),
+    ];
+    const conns = [
+      document.getElementById('sys-conn-1'),
+      document.getElementById('sys-conn-2'),
+      document.getElementById('sys-conn-3'),
+    ];
+
+    items.forEach((item, i) => {
+      const baseDelay = i * STEP_DELAY;
+
+      // Активируем кружок и текст
+      setTimeout(() => { if (item) item.classList.add('act'); }, baseDelay);
+
+      // Запускаем линию к следующему пункту
+      if (conns[i]) {
+        setTimeout(() => { conns[i].classList.add('run'); }, baseDelay + CONN_OFFSET);
+      }
+    });
+
+    // Финальный мягкий пульс всей цепочки
+    const totalDelay = items.length * STEP_DELAY + 500;
+    setTimeout(() => {
+      items.forEach(item => { if (item) item.classList.add('pulse-final'); });
+    }, totalDelay);
+  }
+
+  const chainObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) runChain();
+    });
+  }, { threshold: 0.35 });
+
+  chainObserver.observe(chain);
+})();
 
 // ── Hero: badge + h1 + subtitle мгновенно ────────
 setTimeout(() => {
