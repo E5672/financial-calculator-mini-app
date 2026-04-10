@@ -753,71 +753,50 @@ async function submitContact(e) {
   setTimeout(closeContactModal, 2800);
 }
 
+// ── Активация цепочки "Система принимает решения" ────────
+let sysChainFired = false;
+function runSysChain() {
+  if (sysChainFired) return;
+  sysChainFired = true;
+
+  const STEP  = 420; // мс между пунктами
+  const CONN  = 180; // задержка линии после активации пункта
+
+  const ids   = ['sys-1','sys-2','sys-3','sys-4'];
+  const cids  = ['sys-conn-1','sys-conn-2','sys-conn-3'];
+
+  ids.forEach((id, i) => {
+    const item = document.getElementById(id);
+    if (!item) return;
+    setTimeout(() => item.classList.add('act'), i * STEP);
+    if (cids[i]) {
+      const conn = document.getElementById(cids[i]);
+      if (conn) setTimeout(() => conn.classList.add('run'), i * STEP + CONN);
+    }
+  });
+
+  setTimeout(() => {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('pulse-final');
+    });
+  }, ids.length * STEP + 500);
+}
+
 // ── Анимации появления (IntersectionObserver) ─────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    if (entry.target.id === 'sys-chain') {
+      setTimeout(runSysChain, 200); // небольшая пауза после появления
+    }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.1 });
 
 document.querySelectorAll('.fade-up, .fade-in, .stat-item').forEach(el => {
   observer.observe(el);
 });
-
-// ── Активация цепочки "Система принимает решения" ────────
-(function() {
-  const chain = document.getElementById('sys-chain');
-  if (!chain) return;
-
-  let fired = false;
-
-  // Задержки (мс): активация пункта N, потом запуск коннектора N→N+1
-  const STEP_DELAY  = 420; // между активацией пунктов
-  const CONN_OFFSET = 160; // задержка запуска линии после активации пункта
-
-  function runChain() {
-    if (fired) return;
-    fired = true;
-
-    const items = [
-      document.getElementById('sys-1'),
-      document.getElementById('sys-2'),
-      document.getElementById('sys-3'),
-      document.getElementById('sys-4'),
-    ];
-    const conns = [
-      document.getElementById('sys-conn-1'),
-      document.getElementById('sys-conn-2'),
-      document.getElementById('sys-conn-3'),
-    ];
-
-    items.forEach((item, i) => {
-      const baseDelay = i * STEP_DELAY;
-
-      // Активируем кружок и текст
-      setTimeout(() => { if (item) item.classList.add('act'); }, baseDelay);
-
-      // Запускаем линию к следующему пункту
-      if (conns[i]) {
-        setTimeout(() => { conns[i].classList.add('run'); }, baseDelay + CONN_OFFSET);
-      }
-    });
-
-    // Финальный мягкий пульс всей цепочки
-    const totalDelay = items.length * STEP_DELAY + 500;
-    setTimeout(() => {
-      items.forEach(item => { if (item) item.classList.add('pulse-final'); });
-    }, totalDelay);
-  }
-
-  const chainObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) runChain();
-    });
-  }, { threshold: 0.35 });
-
-  chainObserver.observe(chain);
-})();
 
 // ── Hero: badge + h1 + subtitle мгновенно ────────
 setTimeout(() => {
