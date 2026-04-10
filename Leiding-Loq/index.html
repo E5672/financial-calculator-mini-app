@@ -154,7 +154,7 @@
     .contact-modal textarea::placeholder { color: rgba(255,255,255,.3); }
     .contact-modal textarea { resize: vertical; min-height: 80px; margin-bottom: 16px; }
 
-    /* ── Блок "Система принимает решения" — активация цепочки ── */
+    /* ══ Система принимает решения: state-driven анимация ══ */
     #sys-chain { position: relative; }
 
     .sys-item {
@@ -166,7 +166,7 @@
     }
     .sys-item:last-child { padding-bottom: 0; }
 
-    /* Dim-состояние по умолчанию */
+    /* Dim — начальное состояние */
     .sys-circle {
       flex-shrink: 0;
       width: 36px; height: 36px;
@@ -177,10 +177,16 @@
       font-size: 12px; font-weight: 600;
       display: flex; align-items: center; justify-content: center;
       position: relative; z-index: 1;
+      /* CSS transition — не keyframes */
+      transition: border-color .45s ease-out,
+                  background   .45s ease-out,
+                  color        .45s ease-out,
+                  box-shadow   .45s ease-out;
     }
     .sys-text {
       color: rgba(209,213,219,.28);
       font-size: 1.05rem;
+      transition: color .45s ease-out;
     }
 
     /* Линия-связь */
@@ -195,42 +201,27 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 0;
+      background: linear-gradient(to bottom, rgba(74,222,128,.5), rgba(74,222,128,.15));
+      box-shadow: 0 0 5px rgba(74,222,128,.28);
+      transition: height .38s ease-out;
     }
 
-    /* ── CSS-анимации (запускаются классом sys-active на секции) ── */
-    @keyframes sys-circle-on {
-      from { border-color: rgba(74,222,128,.12); background: rgba(74,222,128,.04); color: rgba(74,222,128,.28); box-shadow: none; }
-      to   { border-color: rgba(74,222,128,.5);  background: rgba(74,222,128,.1);  color: #4ade80; box-shadow: 0 0 20px rgba(74,222,128,.18), 0 0 6px rgba(74,222,128,.1) inset; }
+    /* Active state — управляется JS через classList */
+    .sys-item.act .sys-circle {
+      border-color: rgba(74,222,128,.5);
+      background:   rgba(74,222,128,.1);
+      color:        #4ade80;
+      box-shadow:   0 0 20px rgba(74,222,128,.18), 0 0 6px rgba(74,222,128,.1) inset;
     }
-    @keyframes sys-text-on {
-      from { color: rgba(209,213,219,.28); }
-      to   { color: rgba(255,255,255,.88); }
-    }
-    @keyframes sys-conn-on {
-      from { height: 0; }
-      to   { height: 100%; }
-    }
+    .sys-item.act .sys-text { color: rgba(255,255,255,.88); }
+    .sys-conn-fill.act      { height: 100%; }
+
+    /* Мягкий пульс (только для активных кружков в финале) */
     @keyframes sys-pulse {
       0%,100% { box-shadow: 0 0 14px rgba(74,222,128,.13), 0 0 4px rgba(74,222,128,.08) inset; }
-      50%     { box-shadow: 0 0 24px rgba(74,222,128,.25), 0 0 8px rgba(74,222,128,.15) inset; }
+      50%     { box-shadow: 0 0 26px rgba(74,222,128,.24), 0 0 8px rgba(74,222,128,.14) inset; }
     }
-
-    /* Кружки */
-    #sys-section.sys-active .sys-item:nth-child(1) .sys-circle { animation: sys-circle-on .4s ease-out 0s    both, sys-pulse 3s ease-in-out 2.2s infinite; }
-    #sys-section.sys-active .sys-item:nth-child(2) .sys-circle { animation: sys-circle-on .4s ease-out .5s   both, sys-pulse 3s ease-in-out 2.7s infinite; }
-    #sys-section.sys-active .sys-item:nth-child(3) .sys-circle { animation: sys-circle-on .4s ease-out 1.0s  both, sys-pulse 3s ease-in-out 3.2s infinite; }
-    #sys-section.sys-active .sys-item:nth-child(4) .sys-circle { animation: sys-circle-on .4s ease-out 1.5s  both, sys-pulse 3s ease-in-out 3.7s infinite; }
-
-    /* Текст */
-    #sys-section.sys-active .sys-item:nth-child(1) .sys-text { animation: sys-text-on .4s ease-out 0s   both; }
-    #sys-section.sys-active .sys-item:nth-child(2) .sys-text { animation: sys-text-on .4s ease-out .5s  both; }
-    #sys-section.sys-active .sys-item:nth-child(3) .sys-text { animation: sys-text-on .4s ease-out 1.0s both; }
-    #sys-section.sys-active .sys-item:nth-child(4) .sys-text { animation: sys-text-on .4s ease-out 1.5s both; }
-
-    /* Линии-коннекторы */
-    #sys-section.sys-active .sys-item:nth-child(1) .sys-conn-fill { animation: sys-conn-on .38s ease-out .32s both; background: linear-gradient(to bottom,rgba(74,222,128,.5),rgba(74,222,128,.15)); box-shadow: 0 0 5px rgba(74,222,128,.3); }
-    #sys-section.sys-active .sys-item:nth-child(2) .sys-conn-fill { animation: sys-conn-on .38s ease-out .82s both; background: linear-gradient(to bottom,rgba(74,222,128,.5),rgba(74,222,128,.15)); box-shadow: 0 0 5px rgba(74,222,128,.3); }
-    #sys-section.sys-active .sys-item:nth-child(3) .sys-conn-fill { animation: sys-conn-on .38s ease-out 1.32s both; background: linear-gradient(to bottom,rgba(74,222,128,.5),rgba(74,222,128,.15)); box-shadow: 0 0 5px rgba(74,222,128,.3); }
+    .sys-item.act.pulse .sys-circle { animation: sys-pulse 3s ease-in-out infinite; }
   </style>
 </head>
 <body>
@@ -761,16 +752,87 @@ async function submitContact(e) {
   setTimeout(closeContactModal, 2800);
 }
 
-// ── Активация цепочки "Система принимает решения" ────────
+// ══ Система принимает решения: state machine ══════════════
 (function() {
+  'use strict';
+
   var sec = document.getElementById('sys-section');
   if (!sec) return;
 
-  function activate() {
-    sec.classList.add('sys-active');
+  // ── State ──────────────────────────────────────────────
+  var itemStep = 0;   // 0–4: сколько пунктов активно
+  var connStep = 0;   // 0–3: сколько линий активно
+  var started  = false;
+
+  // ── Render: синхронизирует DOM со state ──────────────
+  function render() {
+    for (var i = 1; i <= 4; i++) {
+      var el = document.getElementById('sys-' + i);
+      if (!el) continue;
+      if (i <= itemStep) el.classList.add('act');
+      else               el.classList.remove('act', 'pulse');
+    }
+    for (var j = 1; j <= 3; j++) {
+      var conn = document.getElementById('sys-conn-' + j);
+      if (!conn) continue;
+      if (j <= connStep) conn.classList.add('act');
+      else               conn.classList.remove('act');
+    }
   }
 
-  // IntersectionObserver — основной триггер
+  // ── Sequence: очередь setTimeout ─────────────────────
+  var STEP     = 400;  // мс между активацией пунктов
+  var CONN_LAG = 170;  // мс после пункта → запуск линии
+
+  function schedule(delay, fn) { setTimeout(fn, delay); }
+
+  function runCycle(onComplete) {
+    // Сброс
+    itemStep = 0; connStep = 0; render();
+
+    // Шаг 1
+    schedule(0, function() { itemStep = 1; render(); });
+    schedule(CONN_LAG, function() { connStep = 1; render(); });
+    // Шаг 2
+    schedule(STEP, function() { itemStep = 2; render(); });
+    schedule(STEP + CONN_LAG, function() { connStep = 2; render(); });
+    // Шаг 3
+    schedule(STEP * 2, function() { itemStep = 3; render(); });
+    schedule(STEP * 2 + CONN_LAG, function() { connStep = 3; render(); });
+    // Шаг 4 — финал
+    schedule(STEP * 3, function() {
+      itemStep = 4; render();
+      // Добавляем мягкий пульс всем активным
+      setTimeout(function() {
+        for (var i = 1; i <= 4; i++) {
+          var el = document.getElementById('sys-' + i);
+          if (el) el.classList.add('pulse');
+        }
+      }, 500);
+      if (onComplete) setTimeout(onComplete, 2600);
+    });
+  }
+
+  // ── Loop: после паузы сбрасывает и повторяет ─────────
+  function startLoop() {
+    function cycle() {
+      runCycle(function() {
+        // Сброс с плавным затуханием
+        itemStep = 0; connStep = 0; render();
+        setTimeout(cycle, 350);
+      });
+    }
+    cycle();
+  }
+
+  // ── Trigger ───────────────────────────────────────────
+  function activate() {
+    if (started) return;
+    started = true;
+    startLoop();
+  }
+
+  // IntersectionObserver
   if ('IntersectionObserver' in window) {
     var obs = new IntersectionObserver(function(entries) {
       if (entries[0].isIntersecting) { obs.disconnect(); activate(); }
@@ -780,12 +842,12 @@ async function submitContact(e) {
 
   // Scroll-fallback
   window.addEventListener('scroll', function() {
-    if (sec.classList.contains('sys-active')) return;
+    if (started) return;
     var r = sec.getBoundingClientRect();
     if (r.top < window.innerHeight && r.bottom > 0) activate();
   }, { passive: true });
 
-  // Немедленная проверка — на случай если секция уже в viewport при загрузке
+  // Немедленная проверка при загрузке
   var r0 = sec.getBoundingClientRect();
   if (r0.top < window.innerHeight && r0.bottom > 0) activate();
 })();
