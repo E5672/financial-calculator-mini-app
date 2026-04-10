@@ -550,7 +550,7 @@
 </section>
 
 <!-- ══════════════════════ БЛОК 8: Как работает ══════════════════════ -->
-<section class="border-y border-white/10 bg-white/[.02]">
+<section id="sys-section" class="border-y border-white/10 bg-white/[.02]">
   <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-24 md:px-10 lg:grid-cols-2 lg:px-16">
     <div class="fade-up">
       <div class="mb-4 text-sm uppercase tracking-[.24em] text-green-400/80">Как работает</div>
@@ -559,7 +559,7 @@
       </h2>
     </div>
 
-    <div id="sys-chain" class="fade-up">
+    <div id="sys-chain">
       <!-- Пункт 1 -->
       <div class="sys-item" id="sys-1">
         <div class="sys-conn-wrap"><div class="sys-conn-fill" id="sys-conn-1"></div></div>
@@ -754,47 +754,56 @@ async function submitContact(e) {
 }
 
 // ── Активация цепочки "Система принимает решения" ────────
-let sysChainFired = false;
+var sysChainFired = false;
 
 function runSysChain() {
   if (sysChainFired) return;
   sysChainFired = true;
 
-  const STEP = 420;
-  const CONN = 180;
-  const ids  = ['sys-1','sys-2','sys-3','sys-4'];
-  const cids = ['sys-conn-1','sys-conn-2','sys-conn-3'];
+  var STEP = 400;
+  var CONN = 160;
+  var ids  = ['sys-1','sys-2','sys-3','sys-4'];
+  var cids = ['sys-conn-1','sys-conn-2','sys-conn-3'];
 
-  ids.forEach(function(id, i) {
-    var item = document.getElementById(id);
-    if (!item) return;
-    setTimeout(function() { item.classList.add('act'); }, i * STEP);
-    var conn = document.getElementById(cids[i]);
-    if (conn) setTimeout(function() { conn.classList.add('run'); }, i * STEP + CONN);
-  });
+  for (var i = 0; i < ids.length; i++) {
+    (function(idx) {
+      var item = document.getElementById(ids[idx]);
+      if (!item) return;
+      setTimeout(function() { item.classList.add('act'); }, idx * STEP);
+
+      var conn = document.getElementById(cids[idx]);
+      if (conn) setTimeout(function() { conn.classList.add('run'); }, idx * STEP + CONN);
+    })(i);
+  }
 
   setTimeout(function() {
-    ids.forEach(function(id) {
-      var el = document.getElementById(id);
+    for (var j = 0; j < ids.length; j++) {
+      var el = document.getElementById(ids[j]);
       if (el) el.classList.add('pulse-final');
-    });
-  }, ids.length * STEP + 500);
+    }
+  }, ids.length * STEP + 600);
 }
 
-function checkSysChain() {
-  if (sysChainFired) return;
-  var chain = document.getElementById('sys-chain');
-  if (!chain) return;
-  var rect = chain.getBoundingClientRect();
-  if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+// Observer на секцию — срабатывает один раз при входе в viewport
+var sysSection = document.getElementById('sys-section');
+if (sysSection) {
+  var sysObs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      sysObs.disconnect();
+      runSysChain();
+    }
+  }, { threshold: 0.15 });
+  sysObs.observe(sysSection);
+}
+
+// Scroll-fallback: подстраховка если observer не сработал
+window.addEventListener('scroll', function() {
+  if (sysChainFired || !sysSection) return;
+  var rect = sysSection.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.88 && rect.bottom > 0) {
     runSysChain();
   }
-}
-
-window.addEventListener('scroll', checkSysChain, { passive: true });
-// Проверяем сразу и через 600ms (если блок уже в зоне видимости при загрузке)
-setTimeout(checkSysChain, 300);
-setTimeout(checkSysChain, 600);
+}, { passive: true });
 
 // ── Анимации появления (IntersectionObserver) ─────
 const observer = new IntersectionObserver((entries) => {
