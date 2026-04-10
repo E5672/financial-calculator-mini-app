@@ -755,42 +755,52 @@ async function submitContact(e) {
 
 // ── Активация цепочки "Система принимает решения" ────────
 let sysChainFired = false;
+
 function runSysChain() {
   if (sysChainFired) return;
   sysChainFired = true;
 
-  const STEP  = 420; // мс между пунктами
-  const CONN  = 180; // задержка линии после активации пункта
+  const STEP = 420;
+  const CONN = 180;
+  const ids  = ['sys-1','sys-2','sys-3','sys-4'];
+  const cids = ['sys-conn-1','sys-conn-2','sys-conn-3'];
 
-  const ids   = ['sys-1','sys-2','sys-3','sys-4'];
-  const cids  = ['sys-conn-1','sys-conn-2','sys-conn-3'];
-
-  ids.forEach((id, i) => {
-    const item = document.getElementById(id);
+  ids.forEach(function(id, i) {
+    var item = document.getElementById(id);
     if (!item) return;
-    setTimeout(() => item.classList.add('act'), i * STEP);
-    if (cids[i]) {
-      const conn = document.getElementById(cids[i]);
-      if (conn) setTimeout(() => conn.classList.add('run'), i * STEP + CONN);
-    }
+    setTimeout(function() { item.classList.add('act'); }, i * STEP);
+    var conn = document.getElementById(cids[i]);
+    if (conn) setTimeout(function() { conn.classList.add('run'); }, i * STEP + CONN);
   });
 
-  setTimeout(() => {
-    ids.forEach(id => {
-      const el = document.getElementById(id);
+  setTimeout(function() {
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
       if (el) el.classList.add('pulse-final');
     });
   }, ids.length * STEP + 500);
 }
+
+function checkSysChain() {
+  if (sysChainFired) return;
+  var chain = document.getElementById('sys-chain');
+  if (!chain) return;
+  var rect = chain.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+    runSysChain();
+  }
+}
+
+window.addEventListener('scroll', checkSysChain, { passive: true });
+// Проверяем сразу и через 600ms (если блок уже в зоне видимости при загрузке)
+setTimeout(checkSysChain, 300);
+setTimeout(checkSysChain, 600);
 
 // ── Анимации появления (IntersectionObserver) ─────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     entry.target.classList.add('visible');
-    if (entry.target.id === 'sys-chain') {
-      setTimeout(runSysChain, 200); // небольшая пауза после появления
-    }
   });
 }, { threshold: 0.1 });
 
