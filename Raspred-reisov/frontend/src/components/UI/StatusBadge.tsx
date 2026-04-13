@@ -16,7 +16,7 @@ const ASSIGNMENT_LABELS: Record<AssignmentStatus, string> = {
 }
 
 const ROUTE_LABELS: Record<RouteStatus, string> = {
-  pending: 'Ожидает',
+  pending: 'Требует решения',
   assigned: 'Назначен',
   in_progress: 'В пути',
   completed: 'Завершён',

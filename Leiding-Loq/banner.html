@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Жилина Елена — Эксперт по логистике</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #0d0f14;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 24px;
+    }
+
+    .hint {
+      color: #8b90a0;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+    .hint-arrow {
+      font-size: 1.4rem;
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .banner {
+      display: block;
+      text-decoration: none;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid rgba(108,99,255,0.3);
+    }
+    .banner:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 32px 80px rgba(108,99,255,0.4);
+    }
+
+    .banner img.bg {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(13,15,20,0.75) 0%,
+        rgba(108,99,255,0.45) 50%,
+        rgba(0,212,170,0.3) 100%
+      );
+    }
+
+    .banner-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 48px;
+    }
+
+    .banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(108,99,255,0.25);
+      border: 1px solid rgba(108,99,255,0.5);
+      color: #c8c2ff;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: fit-content;
+      margin-bottom: 20px;
+    }
+
+    .banner-title {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+    .banner-title span {
+      background: linear-gradient(90deg, #a89cff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 28px;
+      max-width: 420px;
+    }
+
+    .banner-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #6c63ff, #00d4aa);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 50px;
+      width: fit-content;
+      box-shadow: 0 8px 24px rgba(108,99,255,0.45);
+      transition: opacity 0.2s;
+    }
+    .banner:hover .banner-cta { opacity: 0.9; }
+    .banner-cta-arrow { font-size: 1.1rem; transition: transform 0.2s; }
+    .banner:hover .banner-cta-arrow { transform: translateX(4px); }
+
+    .banner-name {
+      position: absolute;
+      bottom: 24px;
+      right: 32px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 500px) {
+      .banner-content { padding: 28px 24px; }
+      .banner img.bg { height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hint">
+    <span>Нажмите на баннер, чтобы перейти</span>
+    <span class="hint-arrow">👇</span>
+  </div>
+
+  <a class="banner" href="https://e5672.github.io/landing-logista/" target="_blank">
+    <img class="bg" src="photo1.png" alt="Логистика" />
+    <div class="overlay"></div>
+    <div class="banner-content">
+      <div class="banner-badge">🚛 Эксперт-практик · 10+ лет</div>
+      <div class="banner-title">Оптимизация логистики<br>и внедрение <span>нейросотрудников</span></div>
+      <div class="banner-sub">Сокращу ваши затраты на 30–40% и автоматизирую рутину с помощью ИИ</div>
+      <div class="banner-cta">
+        Узнать подробнее
+        <span class="banner-cta-arrow">→</span>
+      </div>
+    </div>
+    <div class="banner-name">Жилина Елена</div>
+  </a>
+
+</body>
+</html>

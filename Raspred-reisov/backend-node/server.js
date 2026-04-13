@@ -151,7 +151,7 @@ seedIfEmpty();
 // ── SCORING ENGINE ────────────────────────────────────────────────────────────
 function calcDistance(machine, route) {
   const dlat = machine.gps_lat - route.origin_lat;
-  const dlon = machine.gps_lon - route.origin_lon;
+  const dlon = (machine.gps_lon - route.origin_lon) * Math.cos(route.origin_lat * Math.PI / 180);
   return Math.sqrt(dlat * dlat + dlon * dlon) * 111;
 }
 
@@ -182,6 +182,11 @@ function computeScoring() {
   const pendingRoutes = db.prepare("SELECT * FROM routes WHERE status = 'pending'").all().map(hydrateRoute);
   const results = [];
 
+  const profits = pendingRoutes.map(r => r.profit);
+  const maxProfit = Math.max(...profits) || 1;
+  const minProfit = Math.min(...profits) || 0;
+  const profitRange = maxProfit - minProfit || 1;
+
   for (const route of pendingRoutes) {
     const valid = allMachines.filter(m => passesHardFilters(m, route));
     if (valid.length === 0) continue;
@@ -189,12 +194,13 @@ function computeScoring() {
     const distances = valid.map(m => calcDistance(m, route));
     const maxDist = Math.max(...distances) || 1;
 
+    const profitScore = (route.profit - minProfit) / profitRange;
+
     const scored = valid.map((machine, i) => {
-      const distanceScore   = 1 - distances[i] / maxDist;
-      const profitScore     = 1.0;
+      const distanceScore    = 1 - distances[i] / maxDist;
       const restrictionScore = calcRestrictionScore(machine);
-      const priorityScore   = (route.priority - 1) / 4;
-      const stabilityScore  = calcStabilityScore(machine);
+      const priorityScore    = (route.priority - 1) / 4;
+      const stabilityScore   = calcStabilityScore(machine);
       const total = 0.40 * distanceScore + 0.25 * profitScore + 0.20 * restrictionScore
                   + 0.10 * priorityScore + 0.05 * stabilityScore;
       return { machine, route, total, distanceScore, profitScore, restrictionScore, priorityScore, stabilityScore };
@@ -430,6 +436,10 @@ app.post('/api/assignments/:id/confirm', (req, res) => {
     locked_at=NULL, expires_at=NULL, notes=?, updated_at=? WHERE id=?`).run(notes || null, t, req.params.id);
   db.prepare("UPDATE routes SET status='assigned', version=version+1, updated_at=? WHERE id=?").run(t, a.route_id);
   db.prepare("UPDATE machines SET status='in_route', version=version+1, updated_at=? WHERE id=?").run(t, a.machine_id);
+
+  // Remove all other proposed assignments that use the same machine or the same route
+  db.prepare(`DELETE FROM assignments WHERE status = 'proposed' AND id != ? AND (machine_id = ? OR route_id = ?)`)
+    .run(req.params.id, a.machine_id, a.route_id);
 
   const updated = db.prepare('SELECT * FROM assignments WHERE id = ?').get(req.params.id);
   broadcast({ event: 'assignment_confirmed', assignment_id: updated.id, machine_id: a.machine_id, route_id: a.route_id });

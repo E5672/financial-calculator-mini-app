@@ -19,10 +19,14 @@ class ScoredOption:
 
 
 def calc_distance(machine: Machine, route: Route) -> float:
-    """Calculate Euclidean distance approximation in km."""
-    dlat = machine.gps_lat - route.origin_lat
-    dlon = machine.gps_lon - route.origin_lon
-    return math.sqrt(dlat ** 2 + dlon ** 2) * 111.0
+    """Calculate great-circle distance in km using Haversine formula."""
+    R = 6371.0
+    lat1 = math.radians(machine.gps_lat)
+    lat2 = math.radians(route.origin_lat)
+    dlat = math.radians(route.origin_lat - machine.gps_lat)
+    dlon = math.radians(route.origin_lon - machine.gps_lon)
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    return R * 2 * math.asin(math.sqrt(a))
 
 
 def passes_hard_filters(machine: Machine, route: Route) -> bool:
@@ -78,6 +82,9 @@ def calculate_assignments(routes: List[Route], machines: List[Machine]) -> List[
     """
     all_results: List[ScoredOption] = []
 
+    # Pre-compute max profit across all routes for normalization
+    max_profit = max((r.profit for r in routes), default=1.0) or 1.0
+
     for route in routes:
         # Stage 1: Hard filters
         valid_machines = [m for m in machines if passes_hard_filters(m, route)]
@@ -94,7 +101,7 @@ def calculate_assignments(routes: List[Route], machines: List[Machine]) -> List[
             dist = distances[i]
 
             distance_score = 1.0 - (dist / max_dist)
-            profit_score = 1.0  # normalized per route; all machines get same profit potential
+            profit_score = route.profit / max_profit  # normalized: 0.0–1.0 relative to most profitable route
             restriction_score = calc_restriction_score(machine, route)
             priority_score = (route.priority - 1) / 4.0  # priority 1-5 -> 0.0-1.0
             stability_score = calc_stability_score(machine)

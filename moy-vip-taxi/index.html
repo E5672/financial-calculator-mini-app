@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0C0A1E">
+    <meta name="theme-color" content="#111111">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>VIP TAXI</title>
@@ -13,28 +13,33 @@
 
         /* Фон на html — покрывает весь вьюпорт, включая боковые поля */
         html {
-            background: linear-gradient(160deg, #0C0A1E 0%, #130C2A 50%, #0C0A1E 100%);
+            background-color: #111111;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 36px 36px;
             min-height: 100%;
             overflow-x: hidden;
+            overflow-y: auto;
             color-scheme: dark;
         }
 
         :root {
-            --bg:       #0C0A1E;
-            --bg2:      #13112B;
-            --bg3:      #1C1935;
-            --bg4:      #2D2860;
-            --gold:     #7B6FF0;
-            --gold2:    #9D95F5;
-            --gold-dim: rgba(123,111,240,0.12);
-            --gold-glow:rgba(123,111,240,0.26);
+            --bg:       #111111;
+            --bg2:      #1A1A1A;
+            --bg3:      #222222;
+            --bg4:      #2A2A2A;
+            --gold:     #E8E0C8;
+            --gold2:    #F0EAD6;
+            --gold-dim: rgba(232,224,200,0.08);
+            --gold-glow:rgba(232,224,200,0.14);
             --green:    #22C55E;
             --red:      #EF4444;
-            --text:     #FAFAFA;
-            --text2:    #A1A1C0;
-            --text3:    #5A5680;
+            --text:     #F5F5F5;
+            --text2:    #8A8A8A;
+            --text3:    #4A4A4A;
             --border:   rgba(255,255,255,0.07);
-            --border2:  rgba(255,255,255,0.13);
+            --border2:  rgba(255,255,255,0.12);
             --r:        16px;
             --r-sm:     10px;
         }
@@ -47,8 +52,8 @@
             min-height: -webkit-fill-available;
             max-width: 480px;
             margin: 0 auto;
-            padding-bottom: 82px;
-            overscroll-behavior: none;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 20px));
+            overscroll-behavior-x: none;
             overflow-x: hidden;
         }
 
@@ -58,7 +63,7 @@
             width: 100%;
             height: 260px;
             overflow: hidden;
-            background: #0C0A1E;
+            background: #111111;
         }
 
         .hero-img {
@@ -66,7 +71,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center 40%;
-            filter: brightness(0.55) saturate(0.75);
+            filter: brightness(0.85) saturate(1.3) contrast(1.15);
             display: block;
         }
 
@@ -74,7 +79,7 @@
         .hero-img-fallback {
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 70% 50%, #1e1040 0%, #0C0A1E 70%);
+            background: radial-gradient(ellipse at 60% 50%, #2a2a2a 0%, #111111 70%);
         }
 
         .hero-overlay {
@@ -82,10 +87,10 @@
             inset: 0;
             background: linear-gradient(
                 180deg,
-                rgba(12,10,30,0.0)  0%,
-                rgba(12,10,30,0.20) 35%,
-                rgba(12,10,30,0.72) 65%,
-                rgba(12,10,30,1)    100%
+                rgba(17,17,17,0.0)  0%,
+                rgba(17,17,17,0.20) 35%,
+                rgba(17,17,17,0.75) 65%,
+                rgba(17,17,17,1)    100%
             );
             display: flex;
             flex-direction: column;
@@ -97,19 +102,20 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            background: rgba(123,111,240,0.15);
-            border: 1px solid rgba(123,111,240,0.35);
+            background: rgba(255,200,0,0.18);
+            border: 1px solid rgba(255,200,0,0.55);
             border-radius: 100px;
             padding: 5px 13px 5px 10px;
             margin-bottom: 12px;
             width: fit-content;
+            box-shadow: 0 0 14px rgba(255,200,0,0.20);
         }
 
         .hero-dot {
             width: 7px; height: 7px;
             border-radius: 50%;
-            background: var(--gold);
-            box-shadow: 0 0 6px var(--gold);
+            background: #FFC800;
+            box-shadow: 0 0 8px #FFC800;
             flex-shrink: 0;
         }
 
@@ -118,26 +124,27 @@
             font-weight: 800;
             letter-spacing: 1.8px;
             text-transform: uppercase;
-            color: var(--gold);
+            color: #FFC800;
         }
 
         .hero-title {
-            font-size: 36px;
+            font-size: clamp(38px, 10vw, 46px);
             font-weight: 900;
-            letter-spacing: -0.8px;
+            letter-spacing: -1px;
             line-height: 1;
-            background: linear-gradient(130deg, #FFFFFF 30%, #9D95F5 100%);
+            background: linear-gradient(130deg, #FFFFFF 10%, #FFE066 55%, #FFC800 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            filter: drop-shadow(0 2px 12px rgba(255,200,0,0.30));
         }
 
         .hero-sub {
-            font-size: 13px;
-            color: var(--text2);
-            margin-top: 7px;
-            font-weight: 400;
-            letter-spacing: 0.1px;
+            font-size: 14px;
+            color: #C0B8A8;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
 
         /* ─────────── SCREENS ─────────── */
@@ -152,9 +159,12 @@
             margin: 14px 16px 12px;
             background: var(--bg2);
             border-radius: var(--r);
-            border: 1px solid var(--border);
-            overflow: hidden;
+            border: 1px solid rgba(232,224,200,0.18);
+            box-shadow: 0 0 0 1px rgba(232,224,200,0.06), inset 0 1px 0 rgba(255,255,255,0.05);
         }
+
+        /* overflow:hidden только на body для анимации */
+        .settings-body { overflow: hidden; }
 
         .settings-header {
             display: flex;
@@ -197,7 +207,7 @@
             max-height: 0;
             transition: max-height 0.32s ease;
         }
-        .settings-body.open { max-height: 500px; }
+        .settings-body.open { max-height: 700px; }
 
         .settings-divider { height: 1px; background: var(--border); }
 
@@ -206,31 +216,52 @@
         .sfield {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 11px 0;
-            border-bottom: 1px solid var(--border);
+            gap: 10px;
+            padding: 8px 0;
         }
-        .sfield:last-child { border-bottom: none; }
 
-        .sfield-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+        .sfield-icon {
+            font-size: 20px;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            background: var(--bg3);
+            border-radius: 10px;
+        }
 
         .sfield-body { flex: 1; }
-        .sfield-label { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 3px; }
+
+        .sfield-label {
+            font-size: 11px; color: var(--text2);
+            font-weight: 600; margin-bottom: 6px;
+        }
 
         .sfield-body input,
         .sfield-body select {
             width: 100%;
-            background: none; border: none;
-            color: var(--text); font-size: 16px; font-weight: 600;
-            outline: none; -webkit-appearance: none; appearance: none; padding: 0;
+            background: var(--bg3);
+            border: 1.5px solid rgba(255,255,255,0.10);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px; font-weight: 700;
+            padding: 12px 14px;
+            outline: none;
+            -webkit-appearance: none; appearance: none;
+            transition: border-color 0.15s;
+        }
+
+        .sfield-body input::placeholder { color: var(--text3); }
+
+        .sfield-body input:focus,
+        .sfield-body select:focus {
+            border-color: rgba(255,200,0,0.5);
         }
 
         .sfield-body select {
-            font-size: 16px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2352525B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0 center;
-            padding-right: 16px;
+            background-position: right 14px center;
+            padding-right: 36px;
             cursor: pointer;
         }
 
@@ -245,12 +276,16 @@
         .inp-card {
             background: var(--bg2);
             border-radius: var(--r);
-            border: 1px solid var(--border);
+            border: 1px solid rgba(232,224,200,0.20);
             padding: 14px 14px 12px;
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            box-shadow: 0 0 0 1px rgba(232,224,200,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        .inp-card:focus-within { border-color: rgba(123,111,240,0.45); }
+        .inp-card:focus-within {
+            border-color: rgba(255,200,0,0.55);
+            box-shadow: 0 0 0 3px rgba(255,200,0,0.10), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
 
         .inp-label {
             font-size: 10px; font-weight: 800;
@@ -274,13 +309,35 @@
             margin: 0 16px 0;
             padding: 18px;
             border-radius: var(--r); border: none;
-            background: linear-gradient(135deg, #7B6FF0 0%, #5040D8 100%);
-            color: #fff; font-size: 17px; font-weight: 800;
+            background: linear-gradient(135deg, #FFE680 0%, #FFC800 50%, #E0A800 100%);
+            color: #111111; font-size: 17px; font-weight: 800;
             cursor: pointer; letter-spacing: 0.2px;
-            box-shadow: 0 8px 28px rgba(100,80,220,0.38);
+            box-shadow: 0 8px 28px rgba(255,200,0,0.30), 0 2px 8px rgba(255,200,0,0.15);
             transition: opacity .15s, transform .1s, box-shadow .15s;
         }
-        .btn-calc:active { opacity:.88; transform:scale(.98); box-shadow:0 4px 14px rgba(100,80,220,.22); }
+        .btn-calc:active { opacity:.88; transform:scale(.98); box-shadow:0 4px 14px rgba(255,200,0,.18); }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin: 0 16px 0;
+        }
+
+        .btn-calc-wrap { grid-column: 1 / -1; }
+        .btn-calc-wrap .btn-calc { width: 100%; margin: 0; }
+
+        .btn-decline {
+            padding: 18px 20px;
+            border-radius: var(--r); border: none;
+            background: linear-gradient(135deg, #FF6B6B 0%, #EF4444 50%, #B91C1C 100%);
+            color: #fff; font-size: 15px; font-weight: 800;
+            cursor: pointer; white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(239,68,68,0.38), 0 2px 8px rgba(239,68,68,0.20);
+            transition: opacity .15s, transform .1s;
+            touch-action: manipulation;
+        }
+        .btn-decline:active { opacity:.82; transform:scale(.97); }
 
         .btn-go {
             display: block; width: 100%;
@@ -291,11 +348,12 @@
             box-shadow: 0 8px 28px rgba(34,197,94,0.26);
             transition: opacity .15s, transform .1s;
             margin-top: 10px;
+            margin-bottom: 8px;
         }
         .btn-go:active { opacity:.88; transform:scale(.98); }
 
         /* ─────────── RESULT ─────────── */
-        .result-wrap { margin: 12px 16px 0; }
+        .result-wrap { margin: 12px 16px 0; padding-bottom: 16px; }
 
         .result-card {
             background: var(--bg2);
@@ -329,7 +387,7 @@
             font-size: clamp(48px, 16vw, 68px); font-weight: 900;
             line-height: 1; text-align: center; letter-spacing: -2px;
             white-space: nowrap; overflow: hidden;
-            background: linear-gradient(140deg, #D0CCFF 0%, #9D95F5 40%, #6655E8 100%);
+            background: linear-gradient(140deg, #FFFFFF 0%, #E8E0C8 45%, #B8A878 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
@@ -357,9 +415,10 @@
         .tab-bar {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 480px;
-            background: rgba(12,10,30,0.95);
+            background: rgba(10,10,10,0.96);
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.60), 0 -1px 0 rgba(255,255,255,0.06);
             display: flex; z-index: 100;
             padding-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -373,11 +432,27 @@
             cursor: pointer; transition: color 0.2s;
         }
         .tab-btn.active { color: var(--gold); }
+
+        #tab-profit.active {
+            color: #39FF6E;
+            text-shadow: 0 0 10px rgba(57,255,110,0.8), 0 0 20px rgba(57,255,110,0.4);
+        }
+        #tab-profit.active svg {
+            filter: drop-shadow(0 0 4px rgba(57,255,110,0.9));
+        }
+
+        #tab-stats.active {
+            color: #FFE033;
+            text-shadow: 0 0 10px rgba(255,224,51,0.8), 0 0 20px rgba(255,224,51,0.4);
+        }
+        #tab-stats.active svg {
+            filter: drop-shadow(0 0 4px rgba(255,224,51,0.9));
+        }
         .tab-btn svg { width: 22px; height: 22px; stroke-width: 1.8; }
 
         .tab-line {
             position: absolute; bottom: 0; height: 2px;
-            background: linear-gradient(90deg, #9D95F5, #7B6FF0);
+            background: linear-gradient(90deg, #F0EAD6, #C8B896);
             border-radius: 2px 2px 0 0;
             width: 50%; left: 0;
             transition: left 0.28s cubic-bezier(.4,0,.2,1);
@@ -406,8 +481,8 @@
             cursor: pointer; transition: all 0.18s;
         }
         .seg-btn.active {
-            background: linear-gradient(135deg, #7B6FF0, #5040D8);
-            color: #fff; font-weight: 800;
+            background: linear-gradient(135deg, #E8E0C8, #C8B896);
+            color: #111111; font-weight: 800;
         }
 
         .chart-wrap {
@@ -422,12 +497,20 @@
             color: var(--text3); font-size: 13px;
         }
 
+        #fireworks-canvas {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            display: none;
+            border-radius: var(--r);
+        }
+
         .btn-best {
             display: flex; align-items: center; justify-content: center; gap: 8px;
             width: calc(100% - 32px); margin: 0 16px 16px;
             padding: 15px; border-radius: var(--r);
-            border: 1px solid rgba(123,111,240,0.28);
-            background: rgba(123,111,240,0.07);
+            border: 1px solid rgba(232,224,200,0.20);
+            background: rgba(232,224,200,0.05);
             color: var(--gold); font-size: 14px; font-weight: 700;
             cursor: pointer; transition: opacity .15s;
         }
@@ -538,8 +621,8 @@
         }
         .btn-save {
             flex: 2;
-            background: linear-gradient(135deg, #7B6FF0, #5040D8);
-            color: #fff; padding: 15px; border-radius: var(--r); border: none;
+            background: linear-gradient(135deg, #F0EAD6, #C8B896);
+            color: #111111; padding: 15px; border-radius: var(--r); border: none;
             font-size: 16px; font-weight: 800; cursor: pointer;
         }
 
@@ -597,7 +680,7 @@
     <div class="hero">
         <div class="hero-img-fallback"></div>
         <img class="hero-img"
-             src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80"
+             src="./car.jpg"
              alt="luxury car"
              onerror="this.style.display='none'">
         <div class="hero-overlay">
@@ -686,7 +769,10 @@
         </div>
     </div>
 
-    <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+    <div class="btn-row">
+        <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+        <button class="btn-decline" onclick="declineTrip()">✕ Отказ</button>
+    </div>
 
     <!-- RESULT -->
     <div id="result" class="hidden">
@@ -738,6 +824,7 @@
 
     <div class="chart-wrap">
         <canvas id="myChart"></canvas>
+        <canvas id="fireworks-canvas"></canvas>
         <div class="chart-empty hidden" id="chart-empty">Нет данных для отображения</div>
     </div>
 
@@ -878,6 +965,17 @@ function getAggregatorLabel() {
 }
 
 // ═══════════════════════════════
+// DECLINE
+// ═══════════════════════════════
+function declineTrip() {
+    document.getElementById('order-price').value = '';
+    document.getElementById('km').value = '';
+    document.getElementById('result').classList.add('hidden');
+    pendingCalc = null;
+    showToast('Поездка отклонена');
+}
+
+// ═══════════════════════════════
 // CALCULATE
 // ═══════════════════════════════
 function calculate() {
@@ -948,7 +1046,14 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('screen-' + tab).classList.add('active');
     document.getElementById('tab-' + tab).classList.add('active');
-    document.getElementById('tab-line').style.left = tab === 'profit' ? '0%' : '50%';
+    const line = document.getElementById('tab-line');
+    if (tab === 'profit') {
+        line.style.left = '0%';
+        line.style.background = 'linear-gradient(90deg, #39FF6E, #00CC44)';
+    } else {
+        line.style.left = '50%';
+        line.style.background = 'linear-gradient(90deg, #FFE033, #FFA500)';
+    }
     if (tab === 'stats') renderChart();
 }
 
@@ -1012,6 +1117,15 @@ function buildChartData() {
     return { labels:[], data:[] };
 }
 
+// Цвет по диапазону дохода
+function incomeColor(v, alpha) {
+    const a = alpha !== undefined ? alpha : 1;
+    if (v <= 1500) return `rgba(239,68,68,${a})`;        // красный
+    if (v <= 3000) return `rgba(59,130,246,${a})`;       // синий
+    if (v <= 5000) return `rgba(34,197,94,${a})`;        // зелёный
+    return `rgba(245,197,24,${a})`;                      // золотой
+}
+
 function renderChart() {
     const {labels,data} = buildChartData();
     const isEmpty = !labels.length;
@@ -1023,7 +1137,10 @@ function renderChart() {
     if (isEmpty) return;
 
     const isPie = chartType === 'pie';
-    const pieColors = data.map((_,i) => `hsl(${Math.round(i*360/data.length)},60%,55%)`);
+    // Pie — радуга, остальное — по диапазону дохода
+    const barBg    = data.map(v => incomeColor(v, 0.75));
+    const barBorder= data.map(v => incomeColor(v, 1));
+    const pieColors= data.map((_,i) => `hsl(${Math.round(i*360/Math.max(data.length,1))},75%,58%)`);
 
     chartInstance = new Chart(ctx, {
         type: chartType,
@@ -1032,31 +1149,124 @@ function renderChart() {
             datasets: [{
                 label: 'Доход ₽',
                 data,
-                backgroundColor: isPie ? pieColors : 'rgba(123,111,240,0.18)',
-                borderColor:     isPie ? pieColors : 'rgba(155,148,245,0.9)',
+                backgroundColor: isPie ? pieColors : barBg,
+                borderColor:     isPie ? pieColors : barBorder,
                 borderWidth: isPie ? 0 : 2,
                 tension: 0.45,
                 fill: chartType === 'line',
-                pointBackgroundColor: '#9D95F5',
-                pointRadius: 3,
-                pointHoverRadius: 6,
+                pointBackgroundColor: data.map(v => incomeColor(v, 1)),
+                pointBorderColor:     data.map(v => incomeColor(v, 1)),
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                // Цвет линии между точками по значению правой точки
+                segment: chartType === 'line' ? {
+                    borderColor: seg => incomeColor(seg.p1.parsed.y, 1),
+                } : undefined,
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            animation: { duration: 280 },
+            animation: { duration: 400 },
             plugins: {
                 legend: { display: isPie, labels: { color:'#A1A1AA', font:{size:11}, boxWidth:10 } },
-                tooltip: { callbacks: { label: c => ` ${c.parsed.y ?? c.parsed} ₽` },
-                    backgroundColor: '#18181B', titleColor:'#FAFAFA', bodyColor:'#A1A1AA',
-                    borderColor:'rgba(255,255,255,0.1)', borderWidth:1, padding:10 }
+                tooltip: {
+                    callbacks: {
+                        label: c => {
+                            const v = c.parsed.y ?? c.parsed;
+                            const tag = v > 5000 ? ' 🏆' : v > 3000 ? ' ✅' : v > 1500 ? ' 📈' : ' ⚠️';
+                            return ` ${v} ₽${tag}`;
+                        }
+                    },
+                    backgroundColor: '#1A1A1A', titleColor:'#FAFAFA', bodyColor:'#A1A1AA',
+                    borderColor:'rgba(255,255,255,0.1)', borderWidth:1, padding:10
+                }
             },
             scales: isPie ? {} : {
-                x: { ticks:{color:'#52525B',font:{size:10},maxRotation:45}, grid:{color:'#18181B'}, border:{color:'#27272A'} },
-                y: { ticks:{color:'#52525B',font:{size:10},callback:v=>v+'₽'}, grid:{color:'#18181B'}, border:{color:'#27272A'} }
+                x: { ticks:{color:'#52525B',font:{size:10},maxRotation:45}, grid:{color:'#1A1A1A'}, border:{color:'#2A2A2A'} },
+                y: { ticks:{color:'#52525B',font:{size:10},callback:v=>v+'₽'}, grid:{color:'#1A1A1A'}, border:{color:'#2A2A2A'} }
             }
         }
     });
+
+    // Фейерверк если есть значения > 5000
+    if (!isPie && data.some(v => v > 5000)) {
+        setTimeout(() => launchFireworks(), 450);
+    }
+}
+
+// ═══════════════════════════════
+// FIREWORKS
+// ═══════════════════════════════
+function launchFireworks() {
+    const canvas = document.getElementById('fireworks-canvas');
+    if (!canvas) return;
+
+    const wrap = canvas.parentElement;
+    canvas.width  = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+    canvas.style.display = 'block';
+
+    const fCtx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const COLORS = ['#F5C518','#FFD700','#22C55E','#3B82F6','#FF6B6B','#FF8C00','#A78BFA','#34D399'];
+
+    // Несколько залпов из разных точек
+    const particles = [];
+    const launches = [
+        { x: W * 0.25, y: H * 0.55 },
+        { x: W * 0.75, y: H * 0.45 },
+        { x: W * 0.50, y: H * 0.60 },
+    ];
+
+    launches.forEach(origin => {
+        for (let i = 0; i < 40; i++) {
+            const angle = (Math.random() * Math.PI * 2);
+            const speed = Math.random() * 5 + 1.5;
+            particles.push({
+                x: origin.x, y: origin.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 2,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                life: 1,
+                size: Math.random() * 3.5 + 1.5,
+            });
+        }
+    });
+
+    let rafId;
+    function animate() {
+        fCtx.clearRect(0, 0, W, H);
+        let alive = false;
+        for (const p of particles) {
+            if (p.life <= 0) continue;
+            alive = true;
+            p.x  += p.vx;
+            p.y  += p.vy;
+            p.vy += 0.10;   // гравитация
+            p.vx *= 0.98;   // трение
+            p.life -= 0.018;
+            fCtx.globalAlpha = Math.max(0, p.life);
+            fCtx.fillStyle = p.color;
+            fCtx.beginPath();
+            fCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            fCtx.fill();
+        }
+        fCtx.globalAlpha = 1;
+        if (alive) {
+            rafId = requestAnimationFrame(animate);
+        } else {
+            canvas.style.display = 'none';
+        }
+    }
+
+    cancelAnimationFrame(rafId);
+    animate();
+    // Подстраховка — скрыть через 4 сек
+    setTimeout(() => {
+        cancelAnimationFrame(rafId);
+        fCtx.clearRect(0, 0, W, H);
+        canvas.style.display = 'none';
+    }, 4000);
 }
 
 // ═══════════════════════════════
@@ -1219,6 +1429,18 @@ function updateSettingsSummary() {
 // UTILS
 // ═══════════════════════════════
 function pad(n) { return String(n).padStart(2,'0'); }
+
+// ═══════════════════════════════
+// AUTO-SCROLL ON KEYBOARD OPEN
+// ═══════════════════════════════
+document.addEventListener('focusin', function(e) {
+    const el = e.target;
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+        setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+    }
+});
 
 // ═══════════════════════════════
 // BOOT

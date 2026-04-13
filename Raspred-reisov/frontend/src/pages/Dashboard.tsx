@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [rightTab, setRightTab] = useState<'table' | 'proposals'>('table')
   const wsRef = useRef<WebSocket | null>(null)
   const pingRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const reconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Initial data load
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function Dashboard() {
       ws.onclose = () => {
         setWsConnected(false)
         if (pingRef.current) clearInterval(pingRef.current)
-        setTimeout(connect, 3000)
+        reconnectRef.current = setTimeout(connect, 3000)
       }
     }
 
@@ -119,6 +120,7 @@ export default function Dashboard() {
     connect()
     return () => {
       if (pingRef.current) clearInterval(pingRef.current)
+      if (reconnectRef.current) clearTimeout(reconnectRef.current)
       wsRef.current?.close()
     }
   }, [])
@@ -252,7 +254,7 @@ export default function Dashboard() {
 
           {/* Tab content */}
           <div className="flex-1 overflow-hidden">
-            {activeTab === 'routes' && rightTab === 'table' && <RoutesTable />}
+            {activeTab === 'routes' && rightTab === 'table' && <RoutesTable onConflict={setConflictMsg} />}
             {activeTab === 'routes' && rightTab === 'proposals' && <AssignmentPanel />}
             {activeTab === 'machines' && <MachinesTable />}
           </div>

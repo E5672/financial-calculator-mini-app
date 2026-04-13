@@ -45,7 +45,7 @@ const PRIORITY_COLORS: Record<number, string> = {
 }
 
 export default function MapView() {
-  const { machines, assignments, selectMachine } = useStore()
+ const { machines, assignments, selectMachine, selectedMachineId } = useStore()
 
   // Only show confirmed/proposed assignments on map
   const visibleAssignments = assignments.filter(
@@ -97,7 +97,7 @@ export default function MapView() {
         <Marker
           key={machine.id}
           position={[machine.gps_lat, machine.gps_lon]}
-          icon={getMachineIcon(machine)}
+          icon={machine.id === selectedMachineId ? makeIcon('#f59e0b') : getMachineIcon(machine)}
           eventHandlers={{ click: () => selectMachine(machine.id) }}
         >
           <Popup>

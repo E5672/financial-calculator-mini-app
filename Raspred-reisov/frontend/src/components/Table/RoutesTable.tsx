@@ -9,8 +9,8 @@ import { deleteRoute } from '../../api/routes'
 
 type SortKey = 'priority' | 'profit' | 'distance_km' | 'name'
 
-export default function RoutesTable() {
-  const { routes, assignments, currentUser, setRoutes, updateAssignment, removeAssignment } = useStore()
+export default function RoutesTable({ onConflict }: { onConflict?: (msg: string) => void }) {
+  const { routes, assignments, currentUser, setRoutes, updateAssignment, removeAssignment, selectMachine, selectedMachineId } = useStore()
   const [sortKey, setSortKey] = useState<SortKey>('priority')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
   const [filterStatus, setFilterStatus] = useState<string>('all')
@@ -18,10 +18,9 @@ export default function RoutesTable() {
   const [error, setError] = useState<string | null>(null)
 
   const toggleSort = (key: SortKey) => {
-    if (sortKey === key) setDir(sortDir === 'asc' ? 'desc' : 'asc')
+    if (sortKey === key) setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
     else { setSortKey(key); setSortDir('desc') }
   }
-  const setDir = setSortDir
 
   const mainProposals = assignments.filter((a) => a.alternative_rank === 0)
 
@@ -48,7 +47,12 @@ export default function RoutesTable() {
       )
       updateAssignment(updated.id, updated)
     } catch (e: any) {
-      setError(e.response?.data?.detail ?? 'Ошибка подтверждения')
+      const msg = e.response?.data?.detail ?? 'Ошибка подтверждения'
+      if (e.response?.status === 409) {
+        onConflict?.(msg)
+      } else {
+        setError(msg)
+      }
     } finally {
       setConfirming(null)
     }
@@ -151,8 +155,15 @@ export default function RoutesTable() {
               return (
                 <tr
                   key={route.id}
-                  className="hover:bg-slate-700/30 transition-colors group"
+                  onClick={() => proposal?.machine_id && selectMachine(proposal.machine_id)}
+                  className={clsx(
+                    "transition-colors group cursor-pointer",
+                    proposal?.machine_id === selectedMachineId
+                      ? "bg-blue-900/40"
+                      : "hover:bg-slate-700/30"
+                  )}
                 >
+                
                   {/* Route name */}
                   <td className="px-3 py-2.5">
                     <div className="font-medium text-white">{route.name}</div>
@@ -211,14 +222,14 @@ export default function RoutesTable() {
                     {proposal && proposal.status === 'proposed' && !isLocked && (
                       <div className="flex gap-1">
                         <button
-                          onClick={() => handleConfirm(proposal)}
+                          onClick={(e) => { e.stopPropagation(); handleConfirm(proposal) }}
                           disabled={!!isConfirming}
                           className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs rounded transition-colors"
                         >
                           {isConfirming ? '...' : '✓'}
                         </button>
                         <button
-                          onClick={() => handleReject(proposal)}
+                          onClick={(e) => { e.stopPropagation(); handleReject(proposal) }}
                           className="px-2 py-1 bg-red-700 hover:bg-red-600 text-white text-xs rounded transition-colors"
                         >
                           ✕
@@ -230,7 +241,7 @@ export default function RoutesTable() {
                     )}
                     {route.status === 'pending' && !proposal && (
                       <button
-                        onClick={() => handleDeleteRoute(route.id)}
+                        onClick={(e) => { e.stopPropagation(); handleDeleteRoute(route.id) }}
                         className="px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded opacity-0 group-hover:opacity-100 transition-all"
                       >
                         ✕
@@ -267,8 +278,8 @@ function PriorityDots({ value }: { value: number }) {
               ? value >= 4
                 ? 'bg-red-500'
                 : value >= 3
-                ? 'bg-orange-500'
-                : 'bg-blue-500'
+                  ? 'bg-orange-500'
+                  : 'bg-blue-500'
               : 'bg-slate-700'
           )}
         />

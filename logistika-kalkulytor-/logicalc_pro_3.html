@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiCalc PRO — Калькулятор рейса</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --border2: #2e3547;
+    --accent: #00e5a0;
+    --accent2: #0091ff;
+    --danger: #ff4d6a;
+    --warn: #ffb830;
+    --text: #e8eaf2;
+    --text2: #8890aa;
+    --text3: #4a5270;
+    --green: #00e5a0;
+    --red: #ff4d6a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 1000;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
+  .logo-badge { background: var(--accent); color: #000; border-radius: 6px; padding: 3px 7px; font-size: 11px; font-weight: 800; }
+  .header-right { display: flex; gap: 8px; align-items: center; }
+
+  /* TABS */
+  .tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 20px;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* MAIN LAYOUT */
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 340px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .panel-section { padding: 16px; border-bottom: 1px solid var(--border); }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  /* INPUTS */
+  .field { margin-bottom: 10px; }
+  .field-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; font-weight: 600; }
+  .field-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 8px 11px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input::placeholder { color: var(--text3); }
+
+  /* AUTOCOMPLETE */
+  .autocomplete-wrapper { position: relative; }
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    z-index: 9999;
+    max-height: 180px;
+    overflow-y: auto;
+    display: none;
+  }
+  .autocomplete-list.show { display: block; }
+  .autocomplete-item {
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .autocomplete-item:hover { background: var(--border); }
+  .autocomplete-item small { color: var(--text3); display: block; font-size: 11px; margin-top: 2px; }
+
+  /* POINT INPUTS */
+  .point-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .point-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .point-dot.a { background: var(--accent); }
+  .point-dot.b { background: var(--accent2); }
+  .point-dot.c { background: var(--warn); }
+  .point-connector { width: 10px; height: 20px; display: flex; justify-content: center; flex-shrink: 0; }
+  .point-connector::before { content: ''; width: 1px; background: var(--border2); display: block; }
+
+  /* PARAMS */
+  .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* RESULTS PANEL */
+  .result-block {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .result-block-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 13px;
+  }
+  .result-row-label { color: var(--text2); }
+  .result-row-val { font-weight: 600; font-family: 'Courier New', monospace; font-size: 13px; }
+  .result-row.total { border-top: 1px solid var(--border2); margin-top: 6px; padding-top: 8px; }
+  .result-row.total .result-row-val { font-size: 15px; }
+
+  /* PROFIT INDICATOR */
+  .profit-indicator {
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+  }
+  .profit-indicator.green { background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.3); }
+  .profit-indicator.red { background: rgba(255,77,106,0.1); border: 1px solid rgba(255,77,106,0.3); }
+  .profit-indicator.neutral { background: var(--bg); border: 1px solid var(--border2); }
+  .profit-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
+  .profit-value { font-size: 20px; font-weight: 800; font-family: 'Courier New', monospace; }
+  .profit-value.green { color: var(--green); }
+  .profit-value.red { color: var(--red); }
+
+  /* MAP */
+  .map-area { flex: 1; position: relative; }
+  #map { width: 100%; height: 100%; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 280px;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  /* TABLE TAB */
+  .table-tab { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .table-tab.active { display: flex; }
+  .map-tab { display: none; flex: 1; overflow: hidden; }
+  .map-tab.active { display: flex; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #00ffb3; }
+  .btn-ghost { background: transparent; color: var(--text2); border-color: var(--border2); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+  .btn-full { width: 100%; justify-content: center; }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
+
+  /* TOLL ROAD ITEMS */
+  .toll-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .toll-item:last-child { border-bottom: none; }
+  .toll-name { color: var(--text2); }
+  .toll-cost { color: var(--warn); font-weight: 600; }
+
+  /* MAP SPINNER */
+  .map-loading {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-size: 13px;
+    color: var(--text2);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* NOTIF */
+  .notif {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 9999;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .notif.show { transform: translateY(0); opacity: 1; }
+  .notif.ok { border-color: var(--green); color: var(--green); }
+  .notif.err { border-color: var(--red); color: var(--red); }
+
+  /* TABLE */
+  .tbl-wrapper { flex: 1; overflow: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+  thead { position: sticky; top: 0; z-index: 5; }
+  th { background: var(--surface2); color: var(--text3); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+  th:first-child { text-align: center; width: 40px; }
+  td { padding: 0; border-bottom: 1px solid rgba(37,42,56,0.5); }
+  tr:hover td { background: #1e2333; }
+  td:first-child { text-align: center; color: var(--text3); font-size: 11px; padding: 7px; }
+  .cell-in { width: 100%; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Courier New', monospace; font-size: 12px; padding: 7px 10px; text-align: right; }
+  td:focus-within { background: #1c2135 !important; outline: 1px solid var(--accent); outline-offset: -1px; }
+  .calc-cell { font-family: 'Courier New', monospace; font-size: 12px; padding: 7px 10px; text-align: right; color: var(--text2); }
+  .pos { color: var(--green) !important; font-weight: 700; }
+  .neg { color: var(--red) !important; font-weight: 700; }
+
+  /* DASHBOARD */
+  .dash-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .dash-card { background: var(--surface); padding: 14px 18px; }
+  .dash-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; }
+  .dash-val { font-family: 'Courier New', monospace; font-size: 18px; font-weight: 700; }
+  .dash-val.pos { color: var(--green); }
+  .dash-val.neg { color: var(--red); }
+
+  .tbl-toolbar { padding: 10px 16px; display: flex; gap: 8px; border-bottom: 1px solid var(--border); flex-shrink: 0; align-items: center; }
+  .tbl-search { background: var(--bg); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); padding: 6px 10px; font-size: 12px; font-family: inherit; outline: none; flex: 1; }
+  .tbl-search:focus { border-color: var(--accent); }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .right-panel { display: none; }
+    .left-panel { width: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <span class="logo-badge">LC</span>
+    LogiCalc PRO
+    <span style="color:var(--text3);font-size:12px;font-weight:400">· Калькулятор рейса</span>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-ghost btn-sm" onclick="exportExcel()">⬇ Excel</button>
+    <button class="btn btn-ghost btn-sm" onclick="addTableRow()">+ Рейс в таблицу</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('map')">🗺 Карта маршрута</div>
+  <div class="tab" onclick="switchTab('table')">📊 Таблица рейсов</div>
+</div>
+
+<!-- MAP TAB -->
+<div class="map-tab active" id="tab-map">
+  <div class="main">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- МАРШРУТ -->
+      <div class="panel-section">
+        <div class="section-title">Маршрут</div>
+
+        <div class="point-row">
+          <div class="point-dot a"></div>
+          <div class="autocomplete-wrapper" style="flex:1">
+            <input class="field-input" id="point-a" placeholder="Точка постановки" oninput="geocode(this,'list-a')" autocomplete="off">
+            <div class="autocomplete-list" id="list-a"></div>
+          </div>
+        </div>
+        <div class="point-connector" style="margin-left:5px"></div>
+        <div class="point-row">
+          <div class="point-dot b"></div>
+          <div class="autocomplete-wrapper" style="flex:1">
+            <input class="field-input" id="point-b" placeholder="Точка выгрузки" oninput="geocode(this,'list-b')" autocomplete="off">
+            <div class="autocomplete-list" id="list-b"></div>
+          </div>
+        </div>
+        <div class="point-connector" style="margin-left:5px"></div>
+        <div class="point-row">
+          <div class="point-dot c"></div>
+          <div class="autocomplete-wrapper" style="flex:1">
+            <input class="field-input" id="point-c" placeholder="Точка сдачи (опционально)" oninput="geocode(this,'list-c')" autocomplete="off">
+            <div class="autocomplete-list" id="list-c"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="btn btn-primary btn-full" onclick="buildRoute()">Рассчитать рейс</button>
+        </div>
+      </div>
+
+      <!-- ПАРАМЕТРЫ ТС -->
+      <div class="panel-section">
+        <div class="section-title">Параметры транспорта</div>
+        <div class="param-grid">
+          <div class="field">
+            <div class="field-label">Расход (л/100км)</div>
+            <input class="field-input" id="p-cons" type="number" value="36" step="0.5" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Цена ДТ (₽/л)</div>
+            <input class="field-input" id="p-fuel" type="number" value="68" step="0.5" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Водитель (₽)</div>
+            <input class="field-input" id="p-driver" type="number" value="15000" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Прочие (₽)</div>
+            <input class="field-input" id="p-other" type="number" value="3000" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Амортизация (₽/км)</div>
+            <input class="field-input" id="p-amort" type="number" value="1.5" step="0.1" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Ставка клиента (₽)</div>
+            <input class="field-input" id="p-rate" type="number" value="0" oninput="recalc()">
+          </div>
+        </div>
+
+        <!-- ПЛАТОН -->
+        <div style="margin-top:8px;">
+          <div class="field-label" style="margin-bottom:6px;">Тариф Платон (₽/км)</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input class="field-input" id="p-platon" type="number" value="3.53" step="0.01" style="flex:1" oninput="recalc()">
+            <label style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;">
+              <input type="checkbox" id="p-platon-on" checked onchange="recalc()">
+              Включить
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- КОНТЕЙНЕР -->
+      <div class="panel-section">
+        <div class="section-title">Контейнер</div>
+        <div class="param-grid">
+          <div class="field">
+            <div class="field-label">Тип</div>
+            <select class="field-input" id="p-cont" onchange="recalc()">
+              <option value="0">Нет</option>
+              <option value="20">20'</option>
+              <option value="40">40'</option>
+              <option value="40hc">40' HC</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Демередж (₽/сут)</div>
+            <input class="field-input" id="p-demer" type="number" value="0" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Детеншн (₽/сут)</div>
+            <input class="field-input" id="p-deten" type="number" value="0" oninput="recalc()">
+          </div>
+          <div class="field">
+            <div class="field-label">Суток сверхнорм.</div>
+            <input class="field-input" id="p-days" type="number" value="0" oninput="recalc()">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end left-panel -->
+
+    <!-- MAP -->
+    <div class="map-area">
+      <div id="map"></div>
+      <div class="map-loading" id="map-loading">
+        <div class="spinner"></div>
+        Строю маршрут...
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL — RESULTS -->
+    <div class="right-panel">
+      <div style="padding:14px 14px 0;">
+        <div class="section-title">Результаты расчёта</div>
+      </div>
+
+      <!-- PROFIT INDICATOR -->
+      <div style="padding:0 14px 14px;">
+        <div class="profit-indicator neutral" id="profit-ind">
+          <div>
+            <div class="profit-label">Прибыль рейса</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="margin-label">—</div>
+          </div>
+          <div class="profit-value" id="profit-val">—</div>
+        </div>
+
+        <!-- РАССТОЯНИЕ -->
+        <div class="result-block">
+          <div class="result-block-title">Расстояние</div>
+          <div class="result-row"><span class="result-row-label">A → B</span><span class="result-row-val" id="r-dist-ab">—</span></div>
+          <div class="result-row" id="row-bc"><span class="result-row-label">B → C</span><span class="result-row-val" id="r-dist-bc">—</span></div>
+          <div class="result-row total"><span class="result-row-label">Итого</span><span class="result-row-val" id="r-dist-total">—</span></div>
+        </div>
+
+        <!-- ТОПЛИВО -->
+        <div class="result-block">
+          <div class="result-block-title">Топливо</div>
+          <div class="result-row"><span class="result-row-label">Расход</span><span class="result-row-val" id="r-fuel-liters">—</span></div>
+          <div class="result-row total"><span class="result-row-label">Стоимость</span><span class="result-row-val" id="r-fuel-cost">—</span></div>
+        </div>
+
+        <!-- ПЛАТНЫЕ ДОРОГИ -->
+        <div class="result-block">
+          <div class="result-block-title">Платные дороги</div>
+          <div id="r-tolls-list">
+            <div style="font-size:12px;color:var(--text3);">Рассчитается после построения маршрута</div>
+          </div>
+          <div class="result-row total"><span class="result-row-label">Итого</span><span class="result-row-val" style="color:var(--warn);" id="r-tolls-total">0 ₽</span></div>
+        </div>
+
+        <!-- ПЛАТОН -->
+        <div class="result-block">
+          <div class="result-block-title">Платон</div>
+          <div class="result-row"><span class="result-row-label">Км по фед. трассам</span><span class="result-row-val" id="r-platon-km">—</span></div>
+          <div class="result-row"><span class="result-row-label">Тариф</span><span class="result-row-val" id="r-platon-rate">3.53 ₽/км</span></div>
+          <div class="result-row total"><span class="result-row-label">Итого</span><span class="result-row-val" style="color:var(--warn);" id="r-platon-cost">0 ₽</span></div>
+        </div>
+
+        <!-- КОНТЕЙНЕР -->
+        <div class="result-block" id="r-cont-block" style="display:none">
+          <div class="result-block-title">Контейнер</div>
+          <div class="result-row"><span class="result-row-label">Демередж</span><span class="result-row-val" id="r-demer">—</span></div>
+          <div class="result-row"><span class="result-row-label">Детеншн</span><span class="result-row-val" id="r-deten">—</span></div>
+        </div>
+
+        <!-- СЕБЕСТОИМОСТЬ -->
+        <div class="result-block">
+          <div class="result-block-title">Себестоимость</div>
+          <div class="result-row"><span class="result-row-label">Топливо</span><span class="result-row-val" id="r-s-fuel">—</span></div>
+          <div class="result-row"><span class="result-row-label">Платон</span><span class="result-row-val" id="r-s-platon">—</span></div>
+          <div class="result-row"><span class="result-row-label">Платные дороги</span><span class="result-row-val" id="r-s-tolls">—</span></div>
+          <div class="result-row"><span class="result-row-label">Водитель</span><span class="result-row-val" id="r-s-driver">—</span></div>
+          <div class="result-row"><span class="result-row-label">Амортизация</span><span class="result-row-val" id="r-s-amort">—</span></div>
+          <div class="result-row"><span class="result-row-label">Прочие</span><span class="result-row-val" id="r-s-other">—</span></div>
+          <div class="result-row total"><span class="result-row-label">Итого</span><span class="result-row-val" id="r-s-total">—</span></div>
+        </div>
+
+        <!-- МИН. СТАВКА -->
+        <div class="result-block">
+          <div class="result-block-title">Рекомендации</div>
+          <div class="result-row"><span class="result-row-label">Мин. ставка +30%</span><span class="result-row-val" style="color:var(--accent);" id="r-min-rate">—</span></div>
+          <div class="result-row"><span class="result-row-label">Рентабельность</span><span class="result-row-val" id="r-rent">—</span></div>
+          <div class="result-row"><span class="result-row-label">Маржа</span><span class="result-row-val" id="r-margin">—</span></div>
+          <div class="result-row"><span class="result-row-label">₽/км</span><span class="result-row-val" id="r-per-km">—</span></div>
+        </div>
+
+      </div>
+    </div><!-- end right-panel -->
+
+  </div>
+</div><!-- end map-tab -->
+
+<!-- TABLE TAB -->
+<div class="table-tab" id="tab-table">
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-label">Рейсов</div>
+      <div class="dash-val" id="d-count">0</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-label">Общая прибыль</div>
+      <div class="dash-val" id="d-profit">0 ₽</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-label">Ср. рентабельность</div>
+      <div class="dash-val" id="d-rent">0%</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-label">Общий доход</div>
+      <div class="dash-val" id="d-rev">0 ₽</div>
+    </div>
+  </div>
+  <div class="tbl-toolbar">
+    <button class="btn btn-primary btn-sm" onclick="addTableRow()">+ Добавить рейс</button>
+    <input class="tbl-search" placeholder="Поиск..." oninput="renderTable(this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="exportExcel()">⬇ Excel</button>
+  </div>
+  <div class="tbl-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Расстояние (км)</th>
+          <th>Расход (л/100)</th>
+          <th>ДТ (₽/л)</th>
+          <th>Водитель (₽)</th>
+          <th>Прочие (₽)</th>
+          <th>Ставка (₽)</th>
+          <th>Топливо (₽)</th>
+          <th>Себестоимость (₽)</th>
+          <th>Прибыль (₽)</th>
+          <th>Рентаб. (%)</th>
+          <th>Маржа (%)</th>
+          <th>Мин. ставка (₽)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// СПРАВОЧНИК ПЛАТНЫХ ДОРОГ (грузовые, 3+ оси)
+// ═══════════════════════════════════════════
+const TOLL_ROADS = [
+  { id:'m11', name:'М11 «Нева»', cost:10050, bbox:[59.9,30.3,55.7,37.6] },
+  { id:'m4',  name:'М4 «Дон»',  cost:4200,  bbox:[48.5,37.8,55.6,37.7] },
+  { id:'m12', name:'М12 «Восток»',cost:5800, bbox:[55.7,37.6,55.8,49.1] },
+  { id:'ckad',name:'ЦКАД',      cost:950,   bbox:[55.4,36.8,56.1,38.2] },
+  { id:'m1',  name:'М1 «Беларусь»',cost:450,bbox:[55.4,35.2,55.8,37.5] },
+  { id:'m3',  name:'М3 «Украина»',cost:860, bbox:[54.8,34.2,55.6,37.4] },
+  { id:'zsd', name:'ЗСД (СПб)', cost:600,   bbox:[59.8,30.1,60.1,30.4] },
+];
+
+// Доля федеральных трасс (коэффициент для Платона)
+const FEDERAL_RATIO = 0.75;
+
+// ═══════════════════════════════════════════
+// MAP INIT
+// ═══════════════════════════════════════════
+const map = L.map('map', { zoomControl: true }).setView([55.75, 37.62], 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap',
+  maxZoom: 18
+}).addTo(map);
+
+// Стиль тёмной темы для карты
+const darkPane = map.createPane('dark');
+darkPane.style.filter = 'invert(90%) hue-rotate(180deg) brightness(0.9)';
+map.eachLayer(l => { if(l._url) l.options.pane = 'dark'; });
+
+let routeLayers = [];
+let markers = [];
+let routeData = { distAB: 0, distBC: 0, distTotal: 0, tolls: [], platonKm: 0 };
+let coords = { a: null, b: null, c: null };
+
+const COLORS = { ab: '#00e5a0', bc: '#0091ff' };
+
+function clearRoute() {
+  routeLayers.forEach(l => map.removeLayer(l));
+  routeLayers = [];
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+}
+
+function addMarker(latlng, label, color) {
+  const icon = L.divIcon({
+    className: '',
+    html: `<div style="background:${color};color:#000;font-size:11px;font-weight:800;padding:4px 8px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.4)">${label}</div>`,
+    iconAnchor: [0, 0]
+  });
+  const m = L.marker(latlng, { icon }).addTo(map);
+  markers.push(m);
+}
+
+// ═══════════════════════════════════════════
+// GEOCODING — Nominatim
+// ═══════════════════════════════════════════
+const geocodeCache = {};
+let geocodeTimers = {};
+
+async function geocode(input, listId) {
+  const q = input.value.trim();
+  const list = document.getElementById(listId);
+  if (q.length < 2) { list.classList.remove('show'); return; }
+
+  clearTimeout(geocodeTimers[listId]);
+  geocodeTimers[listId] = setTimeout(async () => {
+    const cacheKey = q.toLowerCase();
+    let results = geocodeCache[cacheKey];
+    if (!results) {
+      try {
+        const params = new URLSearchParams({
+          q: q,
+          format: 'json',
+          limit: '8',
+          addressdetails: '1',
+          extratags: '1',
+          namedetails: '1',
+          'accept-language': 'ru',
+          countrycodes: 'ru,by,kz,ua,md,ge,am,az',
+        });
+        params.append('email', 'logicalc@logicalc.app');
+        const url = 'https://nominatim.openstreetmap.org/search?' + params.toString();
+        const res = await fetch(url, { headers: { 'Accept-Language': 'ru', 'Referer': location.href } });
+        results = await res.json();
+        geocodeCache[cacheKey] = results;
+      } catch(e) { return; }
+    }
+
+    list.innerHTML = '';
+    if (!results.length) {
+      list.innerHTML = '<div class="autocomplete-item" style="color:var(--text3);cursor:default">Ничего не найдено — уточни запрос или добавь город</div>';
+      list.classList.add('show');
+      return;
+    }
+
+    results.forEach(r => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+
+      const addr = r.address || {};
+      const nd = r.namedetails || {};
+
+      // Название объекта
+      const objName = nd['name:ru'] || nd['name'] || r.name || '';
+
+      // Улица + дом
+      const street = addr.road || addr.street || '';
+      const house = addr.house_number || '';
+      const streetFull = street ? (street + (house ? ', ' + house : '')) : '';
+
+      // Город/посёлок
+      const city = addr.city || addr.town || addr.village || addr.hamlet || addr.suburb || '';
+
+      // Регион
+      const region = addr.state || addr.region || '';
+
+      // Формируем строки
+      const mainLine = objName || streetFull || city || r.display_name.split(',')[0];
+      const subParts = [];
+      if (objName && streetFull) subParts.push(streetFull);
+      if (city && !mainLine.includes(city)) subParts.push(city);
+      if (region && !mainLine.includes(region)) subParts.push(region);
+      if (!subParts.length) subParts.push(...r.display_name.split(',').slice(1,4).map(s=>s.trim()));
+      const subLine = subParts.join(', ');
+
+      // Иконка по типу
+      const cls = r.class || '';
+      const typ = r.type || '';
+      let icon = '📍';
+      if (cls === 'highway') icon = '🛣';
+      else if (['industrial','warehouse','logistics','depot'].includes(typ)) icon = '🏭';
+      else if (['city','town'].includes(typ)) icon = '🏙';
+      else if (['village','hamlet'].includes(typ)) icon = '🏘';
+      else if (cls === 'amenity') icon = '🏢';
+      else if (cls === 'shop' || cls === 'office') icon = '🏢';
+
+      item.innerHTML = '<span style="margin-right:5px">' + icon + '</span>' +
+        '<span style="font-weight:600">' + mainLine + '</span>' +
+        (subLine ? '<small style="display:block;margin-top:2px;color:var(--text3)">' + subLine + '</small>' : '');
+
+      item.onclick = () => {
+        const displayVal = [mainLine, city, region].filter(Boolean).join(', ');
+        input.value = displayVal;
+        list.classList.remove('show');
+        const key = input.id.split('-')[1];
+        coords[key] = [parseFloat(r.lat), parseFloat(r.lon)];
+      };
+      list.appendChild(item);
+    });
+    list.classList.add('show');
+  }, 300);
+}
+
+document.addEventListener('click', e => {
+  document.querySelectorAll('.autocomplete-list').forEach(l => {
+    if (!l.parentElement.contains(e.target)) l.classList.remove('show');
+  });
+});
+
+// ═══════════════════════════════════════════
+// ROUTING — OSRM публичный сервер (бесплатно, без ключа, реальные дороги)
+// ═══════════════════════════════════════════
+
+// Строим один сегмент A→B через OSRM
+async function osrmRoute(from, to) {
+  const url = `https://router.project-osrm.org/route/v1/driving/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson&steps=false`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('OSRM ' + res.status);
+  const data = await res.json();
+  if (data.code !== 'Ok') throw new Error('OSRM: ' + data.code);
+  const route = data.routes[0];
+  return {
+    distKm: route.distance / 1000,
+    durationMin: route.duration / 60,
+    geometry: route.geometry.coordinates.map(c => [c[1], c[0]]) // [lat, lon]
+  };
+}
+
+async function buildRoute() {
+  if (!coords.a || !coords.b) {
+    notify('Укажите минимум точку А и точку Б', 'err');
+    return;
+  }
+
+  const loading = document.getElementById('map-loading');
+  loading.style.display = 'flex';
+  clearRoute();
+
+  try {
+    // Строим плечо A→B
+    const segAB = await osrmRoute(coords.a, coords.b);
+    const distAB = segAB.distKm;
+
+    // Рисуем плечо A→B зелёным
+    const layerAB = L.polyline(segAB.geometry, {
+      color: COLORS.ab, weight: 5, opacity: 0.9
+    }).addTo(map);
+    routeLayers.push(layerAB);
+
+    let distBC = 0;
+    let allBounds = layerAB.getBounds();
+
+    // Строим плечо B→C если есть
+    if (coords.c) {
+      const segBC = await osrmRoute(coords.b, coords.c);
+      distBC = segBC.distKm;
+      const layerBC = L.polyline(segBC.geometry, {
+        color: COLORS.bc, weight: 5, opacity: 0.9
+      }).addTo(map);
+      routeLayers.push(layerBC);
+      allBounds = allBounds.extend(layerBC.getBounds());
+    }
+
+    const distTotal = distAB + distBC;
+
+    // Маркеры
+    addMarker(coords.a, 'А · Постановка', '#00e5a0');
+    addMarker(coords.b, 'Б · Выгрузка', '#0091ff');
+    if (coords.c) addMarker(coords.c, 'В · Сдача', '#ffb830');
+
+    map.fitBounds(allBounds, { padding: [40, 40] });
+
+    // Определяем платные дороги: проверяем, проходят ли реальные точки маршрута через bbox дороги
+    const allRoutePoints = [...segAB.geometry, ...(coords.c ? segBC.geometry : [])];
+    const detectedTolls = TOLL_ROADS.filter(t => {
+      const minLat = Math.min(t.bbox[0], t.bbox[2]);
+      const maxLat = Math.max(t.bbox[0], t.bbox[2]);
+      const minLon = Math.min(t.bbox[1], t.bbox[3]);
+      const maxLon = Math.max(t.bbox[1], t.bbox[3]);
+      return allRoutePoints.some(([lat, lon]) =>
+        lat >= minLat && lat <= maxLat && lon >= minLon && lon <= maxLon
+      );
+    });
+
+    // Платон: доля федеральных трасс минус платные участки (~50 км на каждый)
+    const tollKm = detectedTolls.length * 50;
+    const platonKm = Math.max(0, distTotal * FEDERAL_RATIO - tollKm);
+
+    routeData = { distAB, distBC, distTotal, tolls: detectedTolls, platonKm };
+    updateResults();
+
+    notify(`Маршрут по дорогам: ${Math.round(distTotal)} км`, 'ok');
+
+  } catch(e) {
+    console.error('Routing error:', e);
+    // Fallback: прямая линия с предупреждением
+    if (coords.a && coords.b) {
+      const distAB = haversine(coords.a, coords.b) * 1.25; // коэффициент дорожной петли
+      const distBC = coords.c ? haversine(coords.b, coords.c) * 1.25 : 0;
+      const distTotal = distAB + distBC;
+
+      const pts = [coords.a, coords.b];
+      if (coords.c) pts.push(coords.c);
+      const layer = L.polyline(pts, { color: '#ffb830', weight: 3, dashArray: '8 4' }).addTo(map);
+      routeLayers.push(layer);
+      addMarker(coords.a, 'А', '#00e5a0');
+      addMarker(coords.b, 'Б', '#0091ff');
+      if (coords.c) addMarker(coords.c, 'В', '#ffb830');
+      map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+
+      routeData = { distAB, distBC, distTotal, tolls: [], platonKm: distTotal * FEDERAL_RATIO };
+      updateResults();
+      notify('Маршрут по прямой (API недоступен)', 'err');
+    }
+  }
+  loading.style.display = 'none';
+}
+
+function haversine(a, b) {
+  const R = 6371;
+  const dLat = (b[0]-a[0]) * Math.PI/180;
+  const dLon = (b[1]-a[1]) * Math.PI/180;
+  const x = Math.sin(dLat/2)**2 + Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+}
+
+// ═══════════════════════════════════════════
+// CALCULATIONS
+// ═══════════════════════════════════════════
+function recalc() {
+  if (!routeData.distTotal) return;
+  updateResults();
+}
+
+function updateResults() {
+  const dist = routeData.distTotal;
+  const cons = parseFloat(document.getElementById('p-cons').value) || 0;
+  const fuelPrice = parseFloat(document.getElementById('p-fuel').value) || 0;
+  const driver = parseFloat(document.getElementById('p-driver').value) || 0;
+  const other = parseFloat(document.getElementById('p-other').value) || 0;
+  const amort = parseFloat(document.getElementById('p-amort').value) || 0;
+  const rate = parseFloat(document.getElementById('p-rate').value) || 0;
+  const platonRate = parseFloat(document.getElementById('p-platon').value) || 3.53;
+  const platonOn = document.getElementById('p-platon-on').checked;
+  const demer = parseFloat(document.getElementById('p-demer').value) || 0;
+  const deten = parseFloat(document.getElementById('p-deten').value) || 0;
+  const days = parseFloat(document.getElementById('p-days').value) || 0;
+  const contType = document.getElementById('p-cont').value;
+
+  // Расчёты
+  const fuelLiters = dist * cons / 100;
+  const fuelCost = fuelLiters * fuelPrice;
+  const platonCost = platonOn ? routeData.platonKm * platonRate : 0;
+  const tollTotal = routeData.tolls.reduce((s, t) => s + t.cost, 0);
+  const amortCost = dist * amort;
+  const contCost = (demer + deten) * days;
+  const cost = fuelCost + platonCost + tollTotal + driver + amortCost + other + contCost;
+  const profit = rate - cost;
+  const rent = cost > 0 ? profit / cost * 100 : null;
+  const margin = rate > 0 ? profit / rate * 100 : null;
+  const minRate = cost * 1.3;
+  const perKm = dist > 0 ? cost / dist : 0;
+
+  // DOM обновления
+  const fmt = (n, dec=0) => n != null && !isNaN(n) ? n.toLocaleString('ru-RU', {minimumFractionDigits:dec, maximumFractionDigits:dec}) + ' ₽' : '—';
+  const fmtp = (n) => n != null && !isNaN(n) ? n.toFixed(1) + '%' : '—';
+
+  document.getElementById('r-dist-ab').textContent = routeData.distAB ? Math.round(routeData.distAB) + ' км' : '—';
+  document.getElementById('r-dist-bc').textContent = routeData.distBC ? Math.round(routeData.distBC) + ' км' : '—';
+  document.getElementById('r-dist-total').textContent = Math.round(dist) + ' км';
+  document.getElementById('row-bc').style.display = routeData.distBC ? '' : 'none';
+
+  document.getElementById('r-fuel-liters').textContent = Math.round(fuelLiters) + ' л';
+  document.getElementById('r-fuel-cost').textContent = fmt(fuelCost);
+
+  // Платные дороги
+  const tollList = document.getElementById('r-tolls-list');
+  if (routeData.tolls.length) {
+    tollList.innerHTML = routeData.tolls.map(t =>
+      `<div class="toll-item"><span class="toll-name">${t.name}</span><span class="toll-cost">${t.cost.toLocaleString('ru-RU')} ₽</span></div>`
+    ).join('');
+  } else {
+    tollList.innerHTML = '<div style="font-size:12px;color:var(--text3)">Платных дорог не обнаружено</div>';
+  }
+  document.getElementById('r-tolls-total').textContent = fmt(tollTotal);
+
+  document.getElementById('r-platon-km').textContent = Math.round(routeData.platonKm) + ' км';
+  document.getElementById('r-platon-rate').textContent = platonRate.toFixed(2) + ' ₽/км';
+  document.getElementById('r-platon-cost').textContent = fmt(platonCost);
+
+  // Контейнер
+  const contBlock = document.getElementById('r-cont-block');
+  contBlock.style.display = contType !== '0' ? '' : 'none';
+  document.getElementById('r-demer').textContent = fmt(demer * days);
+  document.getElementById('r-deten').textContent = fmt(deten * days);
+
+  // Себестоимость
+  document.getElementById('r-s-fuel').textContent = fmt(fuelCost);
+  document.getElementById('r-s-platon').textContent = fmt(platonCost);
+  document.getElementById('r-s-tolls').textContent = fmt(tollTotal);
+  document.getElementById('r-s-driver').textContent = fmt(driver);
+  document.getElementById('r-s-amort').textContent = fmt(amortCost);
+  document.getElementById('r-s-other').textContent = fmt(other + contCost);
+  document.getElementById('r-s-total').textContent = fmt(cost);
+
+  // Рекомендации
+  document.getElementById('r-min-rate').textContent = fmt(minRate);
+  document.getElementById('r-rent').textContent = rent != null ? fmtp(rent) : '—';
+  document.getElementById('r-margin').textContent = margin != null ? fmtp(margin) : '—';
+  document.getElementById('r-per-km').textContent = perKm ? Math.round(perKm) + ' ₽/км' : '—';
+
+  // Индикатор прибыли
+  const ind = document.getElementById('profit-ind');
+  const val = document.getElementById('profit-val');
+  const ml = document.getElementById('margin-label');
+
+  if (rate === 0) {
+    ind.className = 'profit-indicator neutral';
+    val.className = 'profit-value';
+    val.textContent = 'Введите ставку';
+    ml.textContent = '—';
+  } else if (profit >= 0) {
+    ind.className = 'profit-indicator green';
+    val.className = 'profit-value green';
+    val.textContent = '+' + fmt(profit);
+    ml.textContent = 'Маржа ' + fmtp(margin) + ' · Рентаб. ' + fmtp(rent);
+  } else {
+    ind.className = 'profit-indicator red';
+    val.className = 'profit-value red';
+    val.textContent = fmt(profit);
+    ml.textContent = 'Убыток · Мин. ставка ' + fmt(minRate);
+  }
+}
+
+// ═══════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════
+let tableRows = [];
+
+function calcRow(r) {
+  const fuelCost = r.dist * r.cons / 100 * r.fuel;
+  const cost = fuelCost + r.driver + r.other + (r.platon || 0) + (r.tolls || 0);
+  const profit = r.rate - cost;
+  const rent = cost > 0 ? profit / cost * 100 : null;
+  const margin = r.rate > 0 ? profit / r.rate * 100 : null;
+  const minRate = cost * 1.3;
+  return { fuelCost, cost, profit, rent, margin, minRate };
+}
+
+function renderTable(search = '') {
+  const q = search.toLowerCase();
+  const data = tableRows.map((r, i) => ({ ...r, _i: i, ...calcRow(r) }))
+    .filter(r => !q || String(r.dist).includes(q) || String(Math.round(r.profit)).includes(q));
+
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = '';
+
+  data.forEach((r, idx) => {
+    const tr = document.createElement('tr');
+    const pc = r.profit >= 0 ? 'pos' : 'neg';
+    const fmt0 = v => v != null && !isNaN(v) ? Math.round(v).toLocaleString('ru-RU') : '—';
+    const fmt1 = v => v != null && !isNaN(v) ? v.toFixed(1) : '—';
+
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td><input class="cell-in" type="number" value="${r.dist||''}" onchange="updateTblRow(${r._i},'dist',this.value)"></td>
+      <td><input class="cell-in" type="number" value="${r.cons||''}" onchange="updateTblRow(${r._i},'cons',this.value)" step="0.5"></td>
+      <td><input class="cell-in" type="number" value="${r.fuel||''}" onchange="updateTblRow(${r._i},'fuel',this.value)" step="0.5"></td>
+      <td><input class="cell-in" type="number" value="${r.driver||''}" onchange="updateTblRow(${r._i},'driver',this.value)"></td>
+      <td><input class="cell-in" type="number" value="${r.other||''}" onchange="updateTblRow(${r._i},'other',this.value)"></td>
+      <td><input class="cell-in" type="number" value="${r.rate||''}" onchange="updateTblRow(${r._i},'rate',this.value)"></td>
+      <td class="calc-cell">${fmt0(r.fuelCost)}</td>
+      <td class="calc-cell">${fmt0(r.cost)}</td>
+      <td class="calc-cell ${pc}">${fmt0(r.profit)}</td>
+      <td class="calc-cell ${r.rent >= 0 ? 'pos' : 'neg'}">${fmt1(r.rent)}%</td>
+      <td class="calc-cell">${fmt1(r.margin)}%</td>
+      <td class="calc-cell">${fmt0(r.minRate)}</td>
+      <td style="text-align:center;padding:4px;">
+        <button onclick="deleteTblRow(${r._i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">✕</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  updateDash();
+}
+
+function addTableRow() {
+  const dist = routeData.distTotal ? Math.round(routeData.distTotal) : 0;
+  const cons = parseFloat(document.getElementById('p-cons').value) || 36;
+  const fuel = parseFloat(document.getElementById('p-fuel').value) || 68;
+  const driver = parseFloat(document.getElementById('p-driver').value) || 0;
+  const other = parseFloat(document.getElementById('p-other').value) || 0;
+  const rate = parseFloat(document.getElementById('p-rate').value) || 0;
+  const platonRate = parseFloat(document.getElementById('p-platon').value) || 3.53;
+  const platonOn = document.getElementById('p-platon-on').checked;
+  const platon = platonOn ? routeData.platonKm * platonRate : 0;
+  const tolls = routeData.tolls ? routeData.tolls.reduce((s, t) => s + t.cost, 0) : 0;
+  tableRows.push({ dist, cons, fuel, driver, other, rate, platon, tolls });
+  renderTable();
+  notify('Рейс добавлен в таблицу', 'ok');
+  switchTab('table');
+}
+
+function updateTblRow(i, f, v) {
+  tableRows[i][f] = parseFloat(v) || 0;
+  renderTable();
+}
+
+function deleteTblRow(i) {
+  tableRows.splice(i, 1);
+  renderTable();
+}
+
+function updateDash() {
+  const valid = tableRows.map(r => calcRow(r)).filter((_, i) => tableRows[i].rate > 0);
+  const totalProfit = valid.reduce((s, r) => s + r.profit, 0);
+  const avgRent = valid.length ? valid.reduce((s, r) => s + (r.rent||0), 0) / valid.length : 0;
+  const totalRev = tableRows.filter(r => r.rate > 0).reduce((s, r) => s + r.rate, 0);
+
+  const fmt = v => Math.round(v).toLocaleString('ru-RU') + ' ₽';
+
+  const pe = document.getElementById('d-profit');
+  pe.textContent = fmt(totalProfit);
+  pe.className = 'dash-val ' + (totalProfit >= 0 ? 'pos' : 'neg');
+
+  const re = document.getElementById('d-rent');
+  re.textContent = avgRent.toFixed(1) + '%';
+  re.className = 'dash-val ' + (avgRent >= 0 ? 'pos' : 'neg');
+
+  document.getElementById('d-count').textContent = tableRows.length;
+  document.getElementById('d-rev').textContent = fmt(totalRev);
+}
+
+// ═══════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════
+function exportExcel() {
+  const data = tableRows.map((r, i) => {
+    const c = calcRow(r);
+    return {
+      '№': i+1,
+      'Расстояние (км)': r.dist,
+      'Расход (л/100км)': r.cons,
+      'ДТ (₽/л)': r.fuel,
+      'Водитель (₽)': r.driver,
+      'Прочие (₽)': r.other,
+      'Ставка (₽)': r.rate,
+      'Топливо (₽)': Math.round(c.fuelCost),
+      'Себестоимость (₽)': Math.round(c.cost),
+      'Прибыль (₽)': Math.round(c.profit),
+      'Рентабельность (%)': c.rent != null ? +c.rent.toFixed(1) : '',
+      'Маржа (%)': c.margin != null ? +c.margin.toFixed(1) : '',
+      'Мин. ставка (₽)': Math.round(c.minRate),
+    };
+  });
+  if (!data.length) { notify('Нет данных для экспорта', 'err'); return; }
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Рейсы');
+  XLSX.writeFile(wb, 'LogiCalc_PRO.xlsx');
+  notify('Excel готов', 'ok');
+}
+
+// ═══════════════════════════════════════════
+// UI UTILS
+// ═══════════════════════════════════════════
+function switchTab(name) {
+  document.getElementById('tab-map').classList.toggle('active', name === 'map');
+  document.getElementById('tab-table').classList.toggle('active', name === 'table');
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && name === 'map') || (i === 1 && name === 'table'));
+  });
+  if (name === 'map') setTimeout(() => map.invalidateSize(), 100);
+}
+
+function notify(msg, type = 'ok') {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = `notif ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// Инициализация с демо-данными
+tableRows = [
+  { dist: 123, cons: 36, fuel: 68, driver: 15000, other: 3000, rate: 35000 },
+  { dist: 450, cons: 38, fuel: 68, driver: 15000, other: 5000, rate: 85000 },
+  { dist: 55,  cons: 36, fuel: 68, driver: 8000,  other: 2000, rate: 18000 },
+];
+renderTable();
+</script>
+</body>
+</html>
