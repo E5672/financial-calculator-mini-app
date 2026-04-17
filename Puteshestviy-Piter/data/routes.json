@@ -1,0 +1,864 @@
+[
+  {
+    "id": "vyborg",
+    "name": "Выборг — средневековый город",
+    "description": "Один из немногих европейских средневековых городов России. Замок на острове, старый город с узкими брусчатыми улочками, башня Олафа с панорамой залива и шхер.",
+    "lat": 60.7076,
+    "lng": 28.7521,
+    "distanceKm": 130,
+    "driveTimeMin": 100,
+    "types": ["исторические", "панорамы"],
+    "difficulty": "легко",
+    "durationHours": 7,
+    "hasRailStation": true,
+    "railStationName": "Выборг",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Платная парковка у замка, бесплатная в 10 минутах ходьбы на улице Ленина",
+    "baseCost": 2500,
+    "highlights": ["Выборгский замок", "Башня Олафа", "Парк Монрепо", "Старый город"],
+    "dayScenario": [
+      { "time": "08:00", "activity": "Выезд из СПб, трасса Скандинавия" },
+      { "time": "09:40", "activity": "Прибытие в Выборг, парковка" },
+      { "time": "10:00", "activity": "Посещение Выборгского замка и башни Олафа" },
+      { "time": "12:30", "activity": "Обед в историческом центре" },
+      { "time": "13:30", "activity": "Прогулка по старому городу, Рыночная площадь" },
+      { "time": "15:00", "activity": "Парк Монрепо — скалы, шхеры, деревянные мостики" },
+      { "time": "17:30", "activity": "Выезд домой или на электричку" },
+      { "time": "19:30", "activity": "Прибытие в СПб" }
+    ],
+    "warnings": [
+      "Замок закрыт по понедельникам",
+      "Летом много туристов — лучше приехать пораньше",
+      "Парк Монрепо может быть частично закрыт на реставрацию"
+    ],
+    "returnNote": "Электрички из Выборга каждые 1-2 часа до Финляндского вокзала, время в пути ~2ч 20мин",
+    "photos": [
+      "https://picsum.photos/seed/vyborg1/800/450",
+      "https://picsum.photos/seed/vyborg2/800/450",
+      "https://picsum.photos/seed/vyborg3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Выборг",
+        "duration": "2ч 20мин",
+        "costFrom": 350,
+        "schedule": "каждые 1–2 часа",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "museum", "name": "Выборгский замок + башня Олафа", "cost": 350, "schedule": "10:00–18:00, пн закрыт", "departure": "Ул. Замковый остров", "buyUrl": "https://viborgmuseum.ru" },
+      { "type": "park", "name": "Парк Монрепо", "cost": 200, "schedule": "09:00–20:00", "departure": null, "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Бастион", "type": "ресторан", "cuisine": "Европейская", "priceRange": "700–1500 ₽", "note": "У стен замка" },
+      { "name": "Круглая башня", "type": "кафе", "cuisine": "Русская", "priceRange": "400–900 ₽", "note": "Рыночная площадь" }
+    ]
+  },
+  {
+    "id": "korela",
+    "name": "Крепость Корела в Приозерске",
+    "description": "Средневековая крепость на берегу реки Вуоксы. Рядом — живописное озеро и скалистые берега карельского ландшафта, идеально для прогулок вдоль воды.",
+    "lat": 61.0326,
+    "lng": 30.1289,
+    "distanceKm": 140,
+    "driveTimeMin": 110,
+    "types": ["исторические", "вода"],
+    "difficulty": "легко",
+    "durationHours": 6,
+    "hasRailStation": true,
+    "railStationName": "Приозерск",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка рядом с крепостью",
+    "baseCost": 2000,
+    "highlights": ["Крепость Корела", "Река Вуокса", "Берег Ладоги", "Острова на реке"],
+    "dayScenario": [
+      { "time": "07:30", "activity": "Выезд из СПб" },
+      { "time": "09:20", "activity": "Прибытие в Приозерск" },
+      { "time": "09:30", "activity": "Осмотр крепости Корела" },
+      { "time": "11:30", "activity": "Прогулка вдоль Вуоксы" },
+      { "time": "13:00", "activity": "Обед в Приозерске" },
+      { "time": "14:00", "activity": "Поездка на берег Ладоги, отдых у воды" },
+      { "time": "16:30", "activity": "Выезд или электричка домой" }
+    ],
+    "warnings": [
+      "Крепость закрыта по понедельникам",
+      "Берег Ладоги может быть ветреным"
+    ],
+    "returnNote": "Электричка Приозерск — Финляндский вокзал, время в пути ~2ч, ходит несколько раз в день",
+    "photos": [
+      "https://picsum.photos/seed/korela1/800/450",
+      "https://picsum.photos/seed/korela2/800/450",
+      "https://picsum.photos/seed/korela3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Приозерск",
+        "duration": "~2 часа",
+        "costFrom": 300,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "museum", "name": "Крепость Корела", "cost": 200, "schedule": "10:00–18:00, пн закрыт", "departure": "Ул. Ленина, 1", "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Кафе у крепости", "type": "кафе", "cuisine": "Русская", "priceRange": "300–700 ₽", "note": "напротив крепости" },
+      { "name": "Рыбное место", "type": "ресторан", "cuisine": "Рыбная кухня", "priceRange": "500–1200 ₽", "note": "у берега Вуоксы" }
+    ]
+  },
+  {
+    "id": "shlisselburg",
+    "name": "Шлиссельбург и крепость Орешек",
+    "description": "Легендарная крепость на острове в истоке Невы. Место трагической истории и невероятных пейзажей на слиянии Невы и Ладоги.",
+    "lat": 59.9437,
+    "lng": 31.0374,
+    "distanceKm": 55,
+    "driveTimeMin": 60,
+    "types": ["исторические", "вода"],
+    "difficulty": "легко",
+    "durationHours": 5,
+    "hasRailStation": false,
+    "railStationName": "",
+    "dogFriendly": false,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у пристани",
+    "baseCost": 1500,
+    "highlights": ["Крепость Орешек (остров)", "Исток Невы", "Панорама Ладоги", "Набережная"],
+    "dayScenario": [
+      { "time": "09:00", "activity": "Выезд из СПб" },
+      { "time": "10:00", "activity": "Прибытие, паром до острова" },
+      { "time": "10:30", "activity": "Экскурсия по крепости Орешек" },
+      { "time": "13:00", "activity": "Обед в Шлиссельбурге" },
+      { "time": "14:00", "activity": "Прогулка по набережной Невы" },
+      { "time": "16:00", "activity": "Выезд обратно в СПб" }
+    ],
+    "warnings": [
+      "На остров только на пароме (работает с мая по октябрь)",
+      "Собак на остров не пускают",
+      "Зимой крепость закрыта"
+    ],
+    "returnNote": "Только на машине или автобус 440 от ст. м. Улица Дыбенко. Электричек нет",
+    "photos": [
+      "https://picsum.photos/seed/shliss1/800/450",
+      "https://picsum.photos/seed/shliss2/800/450",
+      "https://picsum.photos/seed/shliss3/800/450"
+    ],
+    "transportInfo": {
+      "train": null,
+      "bus": {
+        "from": "м. Улица Дыбенко",
+        "to": "Шлиссельбург",
+        "duration": "~1 час",
+        "costFrom": 120,
+        "schedule": "маршрут 440, каждые ~30 мин",
+        "buyUrl": null
+      },
+      "ferry": {
+        "from": "Пристань у крепостной стены",
+        "to": "Остров Орешек",
+        "duration": "5 мин",
+        "costFrom": 400,
+        "schedule": "май–октябрь, каждые 30 мин",
+        "buyUrl": null
+      }
+    },
+    "tickets": [
+      { "type": "museum", "name": "Крепость Орешек + паром", "cost": 700, "schedule": "май–окт, 10:00–18:00", "departure": "Пристань у крепости", "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Набережная", "type": "кафе", "cuisine": "Европейская", "priceRange": "400–800 ₽", "note": "у берега Невы" }
+    ]
+  },
+  {
+    "id": "sablino",
+    "name": "Саблинские пещеры и водопады",
+    "description": "Рукотворные пещеры XIX века и два живописных водопада на реке Тосне. Отличный вариант для короткой поездки — всего 35 км от города.",
+    "lat": 59.6667,
+    "lng": 30.7833,
+    "distanceKm": 35,
+    "driveTimeMin": 40,
+    "types": ["исторические", "вода", "лес"],
+    "difficulty": "легко",
+    "durationHours": 4,
+    "hasRailStation": true,
+    "railStationName": "Саблино",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у входа в пещеры",
+    "baseCost": 1200,
+    "highlights": ["Пещеры (экскурсия с летучими мышами)", "Водопад на реке Тосне", "Горловинский водопад", "Лесные тропы"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "10:40", "activity": "Прибытие, экскурсия в пещеры (~1.5ч)" },
+      { "time": "12:30", "activity": "Прогулка к водопадам на реке Тосне" },
+      { "time": "14:00", "activity": "Пикник или кафе у пещер" },
+      { "time": "15:00", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Экскурсия в пещеры только с гидом, нужна предварительная запись",
+      "В пещерах +8°C круглый год — возьмите теплую куртку",
+      "Тропа к водопаду может быть скользкой"
+    ],
+    "returnNote": "Электричка со ст. Саблино до Витебского вокзала, ~40 минут",
+    "photos": [
+      "https://picsum.photos/seed/sablino1/800/450",
+      "https://picsum.photos/seed/sablino2/800/450",
+      "https://picsum.photos/seed/sablino3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Витебский вокзал",
+        "to": "Саблино",
+        "duration": "~40 мин",
+        "costFrom": 150,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "excursion", "name": "Экскурсия в Саблинские пещеры", "cost": 350, "schedule": "выходные 10:00–16:00, запись обязательна", "departure": "Вход в пещеры", "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Пикник-зона у пещер", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "столики и мангальные зоны" },
+      { "name": "Кафе Саблино", "type": "кафе", "cuisine": "Домашняя", "priceRange": "300–600 ₽", "note": "у въезда" }
+    ]
+  },
+  {
+    "id": "gatchina",
+    "name": "Гатчина — дворец и парк",
+    "description": "Императорский дворец с великолепным пейзажным парком, озёрами, гротами и мраморными мостиками. Идеально для прогулки с детьми в любую погоду.",
+    "lat": 59.5627,
+    "lng": 30.1238,
+    "distanceKm": 45,
+    "driveTimeMin": 50,
+    "types": ["исторические", "лес", "вода"],
+    "difficulty": "легко",
+    "durationHours": 5,
+    "hasRailStation": true,
+    "railStationName": "Гатчина-Балтийская",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Платная парковка у дворца, бесплатная на соседних улицах",
+    "baseCost": 1800,
+    "highlights": ["Гатчинский дворец", "Парковые озёра и мосты", "Грот Эхо", "Приоратский дворец"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "10:50", "activity": "Прогулка по парку, озёра и мосты" },
+      { "time": "12:30", "activity": "Посещение Гатчинского дворца" },
+      { "time": "14:30", "activity": "Обед в городе" },
+      { "time": "15:30", "activity": "Приоратский дворец и Чёрное озеро" },
+      { "time": "17:00", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Дворец закрыт по вторникам",
+      "Парк большой — нужна удобная обувь",
+      "Вход в дворец платный, парк бесплатный"
+    ],
+    "returnNote": "Электрички от Гатчина-Балтийской до Балтийского вокзала каждый час, 1ч 10мин",
+    "photos": [
+      "https://picsum.photos/seed/gatchina1/800/450",
+      "https://picsum.photos/seed/gatchina2/800/450",
+      "https://picsum.photos/seed/gatchina3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Балтийский вокзал",
+        "to": "Гатчина-Балтийская",
+        "duration": "1ч 10мин",
+        "costFrom": 150,
+        "schedule": "каждый час",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": {
+        "from": "м. Московская",
+        "to": "Гатчина",
+        "duration": "~1ч 15мин",
+        "costFrom": 120,
+        "schedule": "каждые 30 мин",
+        "buyUrl": null
+      },
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "museum", "name": "Гатчинский дворец", "cost": 600, "schedule": "10:00–18:00, вт закрыт", "departure": "Ул. Красноармейский пр., 1", "buyUrl": "https://gatchinapalace.ru" },
+      { "type": "park", "name": "Парк (вход свободный)", "cost": 0, "schedule": "круглосуточно", "departure": null, "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Кафе у ворот", "type": "кафе", "cuisine": "Русская", "priceRange": "400–800 ₽", "note": "у главных ворот парка" },
+      { "name": "Трактир Гатчина", "type": "ресторан", "cuisine": "Русская", "priceRange": "600–1200 ₽", "note": "центр города" }
+    ]
+  },
+  {
+    "id": "toksovo",
+    "name": "Токсово — холмы и озёра Карелии",
+    "description": "Живописный карельский ландшафт в 35 км от города: холмы, озёра, сосновые леса. Зимой лыжи, летом купание и прогулки.",
+    "lat": 60.1626,
+    "lng": 30.5221,
+    "distanceKm": 35,
+    "driveTimeMin": 40,
+    "types": ["лес", "вода", "панорамы"],
+    "difficulty": "средне",
+    "durationHours": 5,
+    "hasRailStation": true,
+    "railStationName": "Токсово",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Парковки у озёр, бесплатно",
+    "baseCost": 800,
+    "highlights": ["Озеро Кавголовское", "Смотровые высоты", "Сосновые боры", "Пляж (летом)"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "10:40", "activity": "Прибытие, подъём на холм с панорамой" },
+      { "time": "12:00", "activity": "Озеро Кавголовское — пляж или прогулка" },
+      { "time": "13:30", "activity": "Пикник или кафе" },
+      { "time": "15:00", "activity": "Лесные тропы, второе озеро" },
+      { "time": "17:00", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Летом в выходные много людей на озере",
+      "Тропы могут быть грязными после дождя"
+    ],
+    "returnNote": "Электричка Токсово — Финляндский вокзал, ~50 минут",
+    "photos": [
+      "https://picsum.photos/seed/toksovo1/800/450",
+      "https://picsum.photos/seed/toksovo2/800/450",
+      "https://picsum.photos/seed/toksovo3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Токсово",
+        "duration": "~50 мин",
+        "costFrom": 100,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Пляжное кафе", "type": "кафе", "cuisine": "Фастфуд", "priceRange": "200–500 ₽", "note": "у Кавголовского озера (летом)" },
+      { "name": "Пикник-зона", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "у озера, есть мангальные зоны" }
+    ]
+  },
+  {
+    "id": "losevo",
+    "name": "Лосево — пороги на Вуоксе",
+    "description": "Мощные пороги реки Вуоксы — одно из самых впечатляющих природных мест Карелии. Бурная вода, скалистые берега, сосновый бор.",
+    "lat": 60.681,
+    "lng": 29.964,
+    "distanceKm": 110,
+    "driveTimeMin": 90,
+    "types": ["вода", "скалы", "лес"],
+    "difficulty": "средне",
+    "durationHours": 6,
+    "hasRailStation": true,
+    "railStationName": "Лосево",
+    "dogFriendly": true,
+    "kidFriendly": false,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у порогов",
+    "baseCost": 1500,
+    "highlights": ["Пороги Вуоксы", "Скалы по берегам", "Рыбалка", "Сосновый бор"],
+    "dayScenario": [
+      { "time": "07:30", "activity": "Выезд из СПб" },
+      { "time": "09:00", "activity": "Прибытие к порогам" },
+      { "time": "09:15", "activity": "Прогулка вдоль порогов, фотосессия" },
+      { "time": "11:00", "activity": "Подъём на скалы, панорамы реки" },
+      { "time": "12:30", "activity": "Обед-пикник у воды" },
+      { "time": "14:00", "activity": "Лесные тропы вдоль реки" },
+      { "time": "16:00", "activity": "Выезд в СПб" }
+    ],
+    "warnings": [
+      "Берег скользкий у воды — нужна подходящая обувь",
+      "Для детей место небезопасно из-за сильного течения",
+      "Весной паводок — пороги особенно мощные"
+    ],
+    "returnNote": "Электричка Лосево — Финляндский вокзал, ~2 часа",
+    "photos": [
+      "https://picsum.photos/seed/losevo1/800/450",
+      "https://picsum.photos/seed/losevo2/800/450",
+      "https://picsum.photos/seed/losevo3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Лосево",
+        "duration": "~2 часа",
+        "costFrom": 250,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Пикник у порогов", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "оборудованные места у воды" }
+    ]
+  },
+  {
+    "id": "koporye",
+    "name": "Копорская крепость",
+    "description": "Суровая крепость XIII века на краю обрыва, окружённая лесами. Один из самых впечатляющих средневековых памятников России, почти без туристов.",
+    "lat": 59.7069,
+    "lng": 29.0447,
+    "distanceKm": 100,
+    "driveTimeMin": 90,
+    "types": ["исторические", "скалы", "лес"],
+    "difficulty": "средне",
+    "durationHours": 6,
+    "hasRailStation": false,
+    "railStationName": "",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка прямо у крепости",
+    "baseCost": 1200,
+    "highlights": ["Крепость XIII века", "Обрыв с видом на долину", "Старинное кладбище", "Лесная дорога"],
+    "dayScenario": [
+      { "time": "09:00", "activity": "Выезд из СПб" },
+      { "time": "10:30", "activity": "Прибытие в Копорье" },
+      { "time": "10:40", "activity": "Осмотр крепости снаружи и изнутри" },
+      { "time": "13:00", "activity": "Пикник с видом на долину" },
+      { "time": "14:00", "activity": "Прогулка по лесу вокруг крепости" },
+      { "time": "15:30", "activity": "Выезд в СПб" }
+    ],
+    "warnings": [
+      "Крепость частично в аварийном состоянии — быть осторожным внутри",
+      "Только на машине, автобусы очень редки"
+    ],
+    "returnNote": "Только на машине. Автобус до Копорья от ст. м. Автово ходит редко — уточнять расписание",
+    "photos": [
+      "https://picsum.photos/seed/koporye1/800/450",
+      "https://picsum.photos/seed/koporye2/800/450",
+      "https://picsum.photos/seed/koporye3/800/450"
+    ],
+    "transportInfo": {
+      "train": null,
+      "bus": {
+        "from": "м. Автово",
+        "to": "Копорье",
+        "duration": "~2 часа",
+        "costFrom": 200,
+        "schedule": "редко, уточнять расписание",
+        "buyUrl": null
+      },
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "museum", "name": "Вход в крепость", "cost": 100, "schedule": "10:00–18:00 (уточнять)", "departure": null, "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Пикник у крепости", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "столики на обрыве с видом" }
+    ]
+  },
+  {
+    "id": "staraya-ladoga",
+    "name": "Старая Ладога — первая столица Руси",
+    "description": "Древнейшая крепость и первая столица Руси на берегу Волхова. Несколько церквей IX–XII вв, курганы, сельский пейзаж вне времени.",
+    "lat": 60.0048,
+    "lng": 32.2924,
+    "distanceKm": 130,
+    "driveTimeMin": 110,
+    "types": ["исторические", "вода"],
+    "difficulty": "легко",
+    "durationHours": 6,
+    "hasRailStation": false,
+    "railStationName": "",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у крепости",
+    "baseCost": 1800,
+    "highlights": ["Ладожская крепость", "Церковь Георгия XII в", "Курганы Вещего Олега", "Берег Волхова"],
+    "dayScenario": [
+      { "time": "08:00", "activity": "Выезд из СПб" },
+      { "time": "10:00", "activity": "Прибытие в Старую Ладогу" },
+      { "time": "10:15", "activity": "Осмотр Ладожской крепости" },
+      { "time": "12:00", "activity": "Церкви и краеведческий музей" },
+      { "time": "13:30", "activity": "Обед в местном кафе" },
+      { "time": "14:30", "activity": "Курганы и берег Волхова" },
+      { "time": "16:00", "activity": "Выезд в СПб" }
+    ],
+    "warnings": [
+      "Музей закрыт по понедельникам и вторникам",
+      "Дорога ~2 часа — можно совместить с Волховом"
+    ],
+    "returnNote": "Только на машине. Автобус от автовокзала на Обводном канале",
+    "photos": [
+      "https://picsum.photos/seed/starladoga1/800/450",
+      "https://picsum.photos/seed/starladoga2/800/450",
+      "https://picsum.photos/seed/starladoga3/800/450"
+    ],
+    "transportInfo": {
+      "train": null,
+      "bus": {
+        "from": "Автовокзал (Обводный канал)",
+        "to": "Старая Ладога",
+        "duration": "~2 часа",
+        "costFrom": 250,
+        "schedule": "несколько раз в день",
+        "buyUrl": null
+      },
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "museum", "name": "Ладожская крепость", "cost": 200, "schedule": "10:00–18:00, пн–вт закрыт", "departure": "Ул. Варяжская, 1", "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Старая Ладога", "type": "кафе", "cuisine": "Русская", "priceRange": "400–800 ₽", "note": "у крепости" }
+    ]
+  },
+  {
+    "id": "dudergof",
+    "name": "Дудергоф — холмы с панорамой на СПб",
+    "description": "Уникальные для Ленинградской области холмы: Воронья и Ореховая горы. Смотровые площадки с видом на весь Петербург, сосновый лес.",
+    "lat": 59.7437,
+    "lng": 30.1649,
+    "distanceKm": 28,
+    "driveTimeMin": 35,
+    "types": ["лес", "панорамы"],
+    "difficulty": "легко",
+    "durationHours": 3,
+    "hasRailStation": true,
+    "railStationName": "Можайская",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у подножья",
+    "baseCost": 500,
+    "highlights": ["Вид на СПб с Вороньей горы", "Памятник Победы", "Сосновый лес", "Озеро Малый Дудергоф"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "10:35", "activity": "Прибытие, подъём на Воронью гору" },
+      { "time": "11:00", "activity": "Панорама на СПб, фотографии" },
+      { "time": "11:30", "activity": "Переход на Ореховую гору" },
+      { "time": "12:30", "activity": "Прогулка у озера" },
+      { "time": "13:30", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Подъём крутой — нужна хорошая обувь",
+      "В туманную погоду панорама закрыта"
+    ],
+    "returnNote": "Электричка от ст. Можайская на Балтийский вокзал, 35 минут",
+    "photos": [
+      "https://picsum.photos/seed/dudergof1/800/450",
+      "https://picsum.photos/seed/dudergof2/800/450",
+      "https://picsum.photos/seed/dudergof3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Балтийский вокзал",
+        "to": "Можайская",
+        "duration": "35 мин",
+        "costFrom": 100,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Пикник у озера", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "оборудованные места у озера" }
+    ]
+  },
+  {
+    "id": "lindulovskaya",
+    "name": "Линдуловская роща — реликтовые лиственницы",
+    "description": "Старейшая в Европе рукотворная роща лиственниц, посаженная по указу Петра I. Мощные деревья до 50 метров высотой, тишина заповедника.",
+    "lat": 60.1534,
+    "lng": 28.9187,
+    "distanceKm": 75,
+    "driveTimeMin": 70,
+    "types": ["лес"],
+    "difficulty": "легко",
+    "durationHours": 4,
+    "hasRailStation": true,
+    "railStationName": "Рощино",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Небольшая парковка у входа, бесплатно",
+    "baseCost": 700,
+    "highlights": ["Вековые лиственницы", "Река Линдуловка", "Тишина заповедника", "Редкие птицы"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "11:10", "activity": "Прибытие, вход в рощу" },
+      { "time": "11:15", "activity": "Прогулка по тропам среди лиственниц" },
+      { "time": "13:00", "activity": "Берег реки Линдуловки, пикник" },
+      { "time": "14:30", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Заповедная зона — с тропы не сходить, костры запрещены",
+      "Летом много комаров — возьмите репеллент"
+    ],
+    "returnNote": "Электричка от ст. Рощино до Финляндского вокзала, ~1ч 20мин",
+    "photos": [
+      "https://picsum.photos/seed/lindulov1/800/450",
+      "https://picsum.photos/seed/lindulov2/800/450",
+      "https://picsum.photos/seed/lindulov3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Рощино",
+        "duration": "~1ч 20мин",
+        "costFrom": 200,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Пикник у реки", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "берег Линдуловки" }
+    ]
+  },
+  {
+    "id": "vuoksa",
+    "name": "Вуокса — острова и заливы",
+    "description": "Живописная система озёр и проток реки Вуоксы у Приозерска. Тысячи островов, чистая вода, карельские берега с соснами на скалах.",
+    "lat": 61.015,
+    "lng": 30.07,
+    "distanceKm": 140,
+    "driveTimeMin": 110,
+    "types": ["вода", "лес"],
+    "difficulty": "легко",
+    "durationHours": 6,
+    "hasRailStation": true,
+    "railStationName": "Приозерск",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Парковки у берегов, бесплатно",
+    "baseCost": 1500,
+    "highlights": ["Острова Вуоксы", "Рыбалка", "Байдарки (аренда)", "Карельские берега"],
+    "dayScenario": [
+      { "time": "07:30", "activity": "Выезд из СПб" },
+      { "time": "09:20", "activity": "Прибытие на Вуоксу" },
+      { "time": "09:30", "activity": "Прогулка по берегу, выбор места" },
+      { "time": "10:00", "activity": "Аренда лодки или байдарки (по желанию)" },
+      { "time": "13:00", "activity": "Обед-пикник на берегу" },
+      { "time": "15:00", "activity": "Купание, рыбалка" },
+      { "time": "17:00", "activity": "Выезд в СПб" }
+    ],
+    "warnings": [
+      "Комары с мая по август — возьмите репеллент",
+      "Купание — проверяйте глубину у берега"
+    ],
+    "returnNote": "Электричка Приозерск — Финляндский вокзал, ~2 часа",
+    "photos": [
+      "https://picsum.photos/seed/vuoksa1/800/450",
+      "https://picsum.photos/seed/vuoksa2/800/450",
+      "https://picsum.photos/seed/vuoksa3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Финляндский вокзал",
+        "to": "Приозерск",
+        "duration": "~2 часа",
+        "costFrom": 300,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [
+      { "type": "excursion", "name": "Аренда байдарки (2 часа)", "cost": 1000, "schedule": "май–сентябрь, с 09:00", "departure": "Берег Вуоксы", "buyUrl": null },
+      { "type": "excursion", "name": "Аренда лодки (целый день)", "cost": 1500, "schedule": "май–сентябрь, с 08:00", "departure": "Берег Вуоксы", "buyUrl": null }
+    ],
+    "cafes": [
+      { "name": "Кафе у воды", "type": "кафе", "cuisine": "Рыбная кухня", "priceRange": "500–1000 ₽", "note": "у берега Вуоксы" },
+      { "name": "Пикник на берегу", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "берег реки, мангальные зоны" }
+    ]
+  },
+  {
+    "id": "siverskaya",
+    "name": "Сиверская — река Оредеж и красные обрывы",
+    "description": "Дачная столица Ленинградской области: обрывы из красного песчаника над рекой, пляжи и сосновые леса. Тихий отдых у воды.",
+    "lat": 59.3636,
+    "lng": 29.9905,
+    "distanceKm": 80,
+    "driveTimeMin": 70,
+    "types": ["вода", "лес", "скалы"],
+    "difficulty": "легко",
+    "durationHours": 5,
+    "hasRailStation": true,
+    "railStationName": "Сиверская",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Парковка у реки, бесплатно",
+    "baseCost": 900,
+    "highlights": ["Красные обрывы реки Оредеж", "Пляж у реки", "Сосновый бор", "Дачные дорожки"],
+    "dayScenario": [
+      { "time": "09:00", "activity": "Выезд из СПб" },
+      { "time": "10:10", "activity": "Прибытие в Сиверскую" },
+      { "time": "10:20", "activity": "Прогулка к обрывам Оредежа" },
+      { "time": "12:00", "activity": "Пляж, купание (летом)" },
+      { "time": "13:30", "activity": "Пикник в сосновом лесу" },
+      { "time": "15:30", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Обрывы осыпаются — не подходить к самому краю",
+      "Купание только в знакомых местах, течение есть"
+    ],
+    "returnNote": "Электричка Сиверская — Витебский вокзал, ~1ч 20мин",
+    "photos": [
+      "https://picsum.photos/seed/siverskaya1/800/450",
+      "https://picsum.photos/seed/siverskaya2/800/450",
+      "https://picsum.photos/seed/siverskaya3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Витебский вокзал",
+        "to": "Сиверская",
+        "duration": "~1ч 20мин",
+        "costFrom": 200,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Дачный дворик", "type": "кафе", "cuisine": "Домашняя", "priceRange": "300–700 ₽", "note": "у реки" },
+      { "name": "Пикник у воды", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "берег Оредежа" }
+    ]
+  },
+  {
+    "id": "bolota-mshaga",
+    "name": "Мшинские болота — дикая природа",
+    "description": "Один из крупнейших болотных массивов Ленинградской области. Редкие растения, клюква, журавли и абсолютная тишина дикой природы.",
+    "lat": 58.9800,
+    "lng": 30.2500,
+    "distanceKm": 130,
+    "driveTimeMin": 110,
+    "types": ["болота", "лес"],
+    "difficulty": "сложно",
+    "durationHours": 7,
+    "hasRailStation": true,
+    "railStationName": "Мшинская",
+    "dogFriendly": false,
+    "kidFriendly": false,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у края болота",
+    "baseCost": 1000,
+    "highlights": ["Болотные озёра", "Клюква и морошка", "Журавли осенью", "Дикая тишина"],
+    "dayScenario": [
+      { "time": "07:00", "activity": "Выезд из СПб" },
+      { "time": "09:00", "activity": "Прибытие, подготовка" },
+      { "time": "09:30", "activity": "Выход на болото по гати" },
+      { "time": "11:00", "activity": "Первое болотное озеро, наблюдение за птицами" },
+      { "time": "13:00", "activity": "Привал, перекус на сухом острове" },
+      { "time": "15:00", "activity": "Возвращение к краю болота" },
+      { "time": "16:00", "activity": "Выезд в СПб" }
+    ],
+    "warnings": [
+      "Нужна специальная непромокаемая обувь (болотники или резиновые сапоги)",
+      "Идти строго по гати — трясина опасна",
+      "Не подходит для детей и собак",
+      "Берите с собой компас или GPS"
+    ],
+    "returnNote": "Электричка Мшинская — Витебский вокзал, ~2 часа",
+    "photos": [
+      "https://picsum.photos/seed/mshaga1/800/450",
+      "https://picsum.photos/seed/mshaga2/800/450",
+      "https://picsum.photos/seed/mshaga3/800/450"
+    ],
+    "transportInfo": {
+      "train": {
+        "from": "Витебский вокзал",
+        "to": "Мшинская",
+        "duration": "~2 часа",
+        "costFrom": 250,
+        "schedule": "несколько раз в день",
+        "buyUrl": "https://pass.rzd.ru"
+      },
+      "bus": null,
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Перекус на маршруте", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "кафе нет, берите с собой" }
+    ]
+  },
+  {
+    "id": "ladoga-lighthouse",
+    "name": "Осиновецкий маяк и берег Ладоги",
+    "description": "Один из самых высоких маяков России на берегу Ладожского озера. Рядом — мемориал Дороги жизни и пляж с волнами.",
+    "lat": 60.0140,
+    "lng": 31.0790,
+    "distanceKm": 60,
+    "driveTimeMin": 65,
+    "types": ["исторические", "вода", "панорамы"],
+    "difficulty": "легко",
+    "durationHours": 4,
+    "hasRailStation": false,
+    "railStationName": "",
+    "dogFriendly": true,
+    "kidFriendly": true,
+    "hasParking": true,
+    "parkingNote": "Бесплатная парковка у маяка",
+    "baseCost": 1000,
+    "highlights": ["Осиновецкий маяк", "Берег Ладоги", "Мемориал Дороги жизни", "Панорама озера"],
+    "dayScenario": [
+      { "time": "10:00", "activity": "Выезд из СПб" },
+      { "time": "11:05", "activity": "Прибытие к маяку" },
+      { "time": "11:15", "activity": "Осмотр маяка, берег Ладоги" },
+      { "time": "12:30", "activity": "Мемориал Дороги жизни" },
+      { "time": "13:30", "activity": "Пикник у воды" },
+      { "time": "15:00", "activity": "Возвращение в СПб" }
+    ],
+    "warnings": [
+      "Ладога непредсказуема — не заходите далеко в воду",
+      "Ветер у Ладоги может быть сильным"
+    ],
+    "returnNote": "Только на машине. До маяка ходит автобус от Всеволожска",
+    "photos": [
+      "https://picsum.photos/seed/ladogalight1/800/450",
+      "https://picsum.photos/seed/ladogalight2/800/450",
+      "https://picsum.photos/seed/ladogalight3/800/450"
+    ],
+    "transportInfo": {
+      "train": null,
+      "bus": {
+        "from": "Всеволожск",
+        "to": "Осиновец",
+        "duration": "~30 мин",
+        "costFrom": 80,
+        "schedule": "уточнять расписание",
+        "buyUrl": null
+      },
+      "ferry": null
+    },
+    "tickets": [],
+    "cafes": [
+      { "name": "Пикник у маяка", "type": "пикник", "cuisine": "Своя еда", "priceRange": "0 ₽", "note": "берег Ладоги" }
+    ]
+  }
+]
