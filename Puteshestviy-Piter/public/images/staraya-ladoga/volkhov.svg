@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a2f45"/>
+      <stop offset="40%" stop-color="#2a4a5a"/>
+      <stop offset="100%" stop-color="#1e3a28"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e4060"/>
+      <stop offset="100%" stop-color="#0f2535"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <!-- Shore line with trees -->
+  <rect y="240" width="800" height="30" fill="rgba(20,50,25,0.7)"/>
+  <!-- Trees silhouette -->
+  <ellipse cx="80" cy="220" rx="50" ry="65" fill="rgba(15,40,20,0.7)"/>
+  <ellipse cx="160" cy="210" rx="40" ry="75" fill="rgba(12,35,18,0.75)"/>
+  <ellipse cx="620" cy="225" rx="45" ry="55" fill="rgba(15,40,20,0.7)"/>
+  <ellipse cx="700" cy="215" rx="55" ry="70" fill="rgba(12,35,18,0.75)"/>
+  <!-- River -->
+  <rect y="270" width="800" height="180" fill="url(#river)"/>
+  <!-- Water ripples -->
+  <ellipse cx="300" cy="320" rx="120" ry="8" fill="rgba(255,255,255,0.04)"/>
+  <ellipse cx="500" cy="360" rx="90" ry="6" fill="rgba(255,255,255,0.03)"/>
+  <ellipse cx="200" cy="390" rx="70" ry="5" fill="rgba(255,255,255,0.03)"/>
+  <rect x="0" y="375" width="800" height="75" fill="rgba(0,0,0,0.4)"/>
+  <text x="400" y="412" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="18" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif" font-weight="600">Берег Волхова</text>
+  <text x="400" y="436" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="12" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif">TODO: добавить фото берега · volkhov.jpg</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3030"/>
+      <stop offset="100%" stop-color="#2a3d20"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a3d18"/>
+      <stop offset="100%" stop-color="#1a2a10"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <!-- Ground -->
+  <rect y="290" width="800" height="160" fill="url(#ground)"/>
+  <!-- Kurgans (burial mounds) as smooth hills -->
+  <ellipse cx="200" cy="290" rx="180" ry="75" fill="rgba(50,70,30,0.7)"/>
+  <ellipse cx="480" cy="295" rx="220" ry="65" fill="rgba(45,65,28,0.75)"/>
+  <ellipse cx="700" cy="300" rx="150" ry="55" fill="rgba(48,68,30,0.7)"/>
+  <!-- Grass texture on top -->
+  <ellipse cx="200" cy="255" rx="160" ry="40" fill="rgba(60,90,35,0.4)"/>
+  <ellipse cx="480" cy="265" rx="190" ry="35" fill="rgba(60,90,35,0.4)"/>
+  <!-- Horizon trees -->
+  <rect y="265" width="800" height="30" fill="rgba(20,40,15,0.3)"/>
+  <rect x="0" y="375" width="800" height="75" fill="rgba(0,0,0,0.4)"/>
+  <text x="400" y="412" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="18" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif" font-weight="600">Курганы Старой Ладоги</text>
+  <text x="400" y="436" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="12" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif">TODO: добавить фото курганов · kurgans.jpg</text>
+</svg>

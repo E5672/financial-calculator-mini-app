@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a3045"/>
+      <stop offset="100%" stop-color="#2a4a30"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3f5a"/>
+      <stop offset="100%" stop-color="#0f2535"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <rect y="280" width="800" height="170" fill="url(#water)"/>
+  <!-- Horizon line -->
+  <rect y="275" width="800" height="10" fill="rgba(255,255,255,0.05)"/>
+  <!-- Castle on shore -->
+  <rect x="300" y="160" width="200" height="120" fill="rgba(255,255,255,0.05)"/>
+  <rect x="290" y="140" width="50" height="60" fill="rgba(255,255,255,0.06)"/>
+  <rect x="460" y="145" width="50" height="55" fill="rgba(255,255,255,0.06)"/>
+  <!-- Reflection -->
+  <rect x="310" y="285" width="180" height="90" fill="rgba(255,255,255,0.03)" rx="0"/>
+  <rect x="0" y="375" width="800" height="75" fill="rgba(0,0,0,0.4)"/>
+  <text x="400" y="412" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="18" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif" font-weight="600">Крепость и Волхов</text>
+  <text x="400" y="436" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="12" font-family="-apple-system,BlinkMacSystemFont,Helvetica,sans-serif">TODO: добавить вид с реки · fortress-river.jpg</text>
+</svg>

@@ -1,46 +1,72 @@
 import { useState, useRef } from 'react';
 
-export default function PhotoGallery({ routeId, photos = [] }) {
+// Принимает gallery (курированные изображения) или photos (старый формат, может быть picsum).
+// НЕ подставляет случайные фото автоматически.
+// Если изображение не загрузилось — показывает аккуратную заглушку с именем файла.
+
+function ImagePlaceholder({ src }) {
+  const name = src?.split('/').pop()?.replace(/\.(jpg|png|svg|webp)$/i, '') || 'фото';
+  return (
+    <div className="h-48 w-72 flex-shrink-0 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center gap-2 border border-gray-200">
+      <span className="text-3xl opacity-30">🖼</span>
+      <span className="text-xs text-gray-400 text-center px-3 leading-tight">{name}</span>
+      <span className="text-xs text-gray-300">TODO: добавить фото</span>
+    </div>
+  );
+}
+
+export default function PhotoGallery({ routeId, gallery = [], photos = [] }) {
+  // gallery — приоритет (локальные, курированные); photos — старый fallback
+  const sources = gallery.length > 0 ? gallery : photos;
+
   const [lightbox, setLightbox] = useState(null);
+  const [failedSrcs, setFailedSrcs] = useState(new Set());
   const [userPhotos, setUserPhotos] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(`photos_${routeId}`) || '[]');
-    } catch { return []; }
+    try { return JSON.parse(localStorage.getItem(`uphotos_${routeId}`) || '[]'); }
+    catch { return []; }
   });
   const fileRef = useRef();
 
-  const allPhotos = [...photos, ...userPhotos];
+  const allSources = [...sources, ...userPhotos];
+
+  const handleError = (src) => {
+    setFailedSrcs(prev => new Set([...prev, src]));
+  };
 
   const handleUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const newPhotos = [...userPhotos, ev.target.result];
-      setUserPhotos(newPhotos);
-      try {
-        localStorage.setItem(`photos_${routeId}`, JSON.stringify(newPhotos));
-      } catch {}
+      const updated = [...userPhotos, ev.target.result];
+      setUserPhotos(updated);
+      try { localStorage.setItem(`uphotos_${routeId}`, JSON.stringify(updated)); } catch {}
     };
     reader.readAsDataURL(file);
     e.target.value = '';
   };
 
-  if (allPhotos.length === 0) return null;
+  if (allSources.length === 0) return null;
 
   return (
     <div>
-      {/* Horizontal scroll gallery */}
-      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory">
-        {allPhotos.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt=""
-            onClick={() => setLightbox(i)}
-            className="h-48 w-72 object-cover rounded-2xl flex-shrink-0 cursor-pointer snap-start hover:opacity-95 transition-opacity"
-            onError={e => { e.target.style.display = 'none'; }}
-          />
+      {/* Horizontal scroll */}
+      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+        {allSources.map((src, i) => (
+          failedSrcs.has(src) ? (
+            <div key={i} className="flex-shrink-0 snap-start">
+              <ImagePlaceholder src={src} />
+            </div>
+          ) : (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              onClick={() => setLightbox(i)}
+              onError={() => handleError(src)}
+              className="h-48 w-72 object-cover rounded-2xl flex-shrink-0 cursor-pointer snap-start hover:opacity-95 transition-opacity"
+            />
+          )
         ))}
         {/* Upload button */}
         <button
@@ -54,39 +80,35 @@ export default function PhotoGallery({ routeId, photos = [] }) {
       </div>
 
       {/* Lightbox */}
-      {lightbox !== null && (
+      {lightbox !== null && !failedSrcs.has(allSources[lightbox]) && (
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setLightbox(null)}
         >
           <img
-            src={allPhotos[lightbox]}
+            src={allSources[lightbox]}
             alt=""
             className="max-w-full max-h-full object-contain rounded-xl"
             onClick={e => e.stopPropagation()}
           />
           <button
             onClick={() => setLightbox(null)}
-            className="absolute top-4 right-4 w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center text-lg font-bold"
+            className="absolute top-4 right-4 w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center text-xl font-bold"
           >
             ×
           </button>
           <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
             <button
-              onClick={(e) => { e.stopPropagation(); setLightbox(l => Math.max(0, l - 1)); }}
-              className="px-4 py-2 bg-white/20 text-white rounded-full text-sm disabled:opacity-30"
+              onClick={e => { e.stopPropagation(); setLightbox(l => Math.max(0, l - 1)); }}
               disabled={lightbox === 0}
-            >
-              ←
-            </button>
-            <span className="px-4 py-2 text-white/60 text-sm">{lightbox + 1} / {allPhotos.length}</span>
-            <button
-              onClick={(e) => { e.stopPropagation(); setLightbox(l => Math.min(allPhotos.length - 1, l + 1)); }}
               className="px-4 py-2 bg-white/20 text-white rounded-full text-sm disabled:opacity-30"
-              disabled={lightbox === allPhotos.length - 1}
-            >
-              →
-            </button>
+            >←</button>
+            <span className="px-4 py-2 text-white/60 text-sm">{lightbox + 1} / {allSources.length}</span>
+            <button
+              onClick={e => { e.stopPropagation(); setLightbox(l => Math.min(allSources.length - 1, l + 1)); }}
+              disabled={lightbox === allSources.length - 1}
+              className="px-4 py-2 bg-white/20 text-white rounded-full text-sm disabled:opacity-30"
+            >→</button>
           </div>
         </div>
       )}
