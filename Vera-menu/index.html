@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Планировщик меню на неделю</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Шапка и форма -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero__title">🥗 Планировщик меню на неделю</h1>
+      <p class="hero__subtitle">Подберёт блюда, список покупок и примерный бюджет</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Форма настроек -->
+    <section class="form-card" id="formSection">
+      <h2 class="form-card__heading">Настройте параметры</h2>
+      <form id="menuForm" class="form-grid">
+
+        <div class="field">
+          <label for="people">Количество человек</label>
+          <select id="people" name="people">
+            <option value="1">1 человек</option>
+            <option value="2" selected>2 человека</option>
+            <option value="3">3 человека</option>
+            <option value="4">4 человека</option>
+            <option value="5">5 человек</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="budget">Бюджет на неделю</label>
+          <select id="budget" name="budget">
+            <option value="3000">до 3 000 ₽</option>
+            <option value="5000" selected>до 5 000 ₽</option>
+            <option value="7000">до 7 000 ₽</option>
+            <option value="10000">до 10 000 ₽</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="style">Стиль питания</label>
+          <select id="style" name="style">
+            <option value="обычное" selected>Обычное</option>
+            <option value="полезное">Более полезное</option>
+            <option value="экономное">Экономное</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="cookTime">Время на готовку</label>
+          <select id="cookTime" name="cookTime">
+            <option value="15">До 15 минут</option>
+            <option value="30">До 30 минут</option>
+            <option value="any" selected>Без разницы</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="meals">Приёмов пищи в день</label>
+          <select id="meals" name="meals">
+            <option value="2">2 приёма (обед и ужин)</option>
+            <option value="3" selected>3 приёма (завтрак, обед, ужин)</option>
+          </select>
+        </div>
+
+        <div class="field field--full">
+          <button type="submit" class="btn btn--primary btn--large">
+            Составить меню
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Блок результатов (скрыт до генерации) -->
+    <section class="results" id="results" hidden>
+
+      <!-- Вкладки -->
+      <div class="tabs">
+        <button class="tab tab--active" data-tab="menu">📅 Меню</button>
+        <button class="tab" data-tab="groceries">🛒 Продукты</button>
+        <button class="tab" data-tab="budget">💰 Бюджет</button>
+        <button class="tab" data-tab="recipes">👨‍🍳 Рецепты</button>
+      </div>
+
+      <!-- Панель: Меню -->
+      <div class="tab-panel tab-panel--active" id="tab-menu"></div>
+
+      <!-- Панель: Продукты -->
+      <div class="tab-panel" id="tab-groceries"></div>
+
+      <!-- Панель: Бюджет -->
+      <div class="tab-panel" id="tab-budget"></div>
+
+      <!-- Панель: Рецепты -->
+      <div class="tab-panel" id="tab-recipes"></div>
+
+      <!-- Кнопка «Составить заново» -->
+      <div class="results__footer">
+        <button class="btn btn--secondary" id="resetBtn">↩ Составить заново</button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Учебный прототип · HTML + CSS + JS · 2025</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
